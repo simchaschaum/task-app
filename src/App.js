@@ -1,26 +1,43 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import {Header} from './header';
+import {Tasks} from './tasks';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      taskList: [
+        {
+          rank: 1,
+          title: "The most important thing",
+          details: "no details yet",
+          done: false
+        },
+        {
+          rank: 2,
+          title: "The second most important thing",
+          details: "no details yet",
+          done: false
+        }
+      ]
+    }
+  }
+  render(){
+    var taskDetails = "";
+    var taskRank; 
+    this.state.taskList.forEach(item => {
+      taskRank = item.rank;
+      taskDetails += item.details + ", rank: " + taskRank + "; ";
+      });
+    
+    return (
+      <div className="App">
+        <Header taskNumber={this.state.taskList.length}/>
+        <Tasks taskDetails={taskDetails} taskRank={taskRank}/>
+      </div>
+    )
+  };
 }
 
 export default App;
