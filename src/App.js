@@ -3,38 +3,39 @@ import './App.css';
 import {Header} from './header';
 import {Tasks} from './tasks';
 
+var taskList = [
+  {
+    rank: 1,
+    title: "The most important thing",
+    details: "no details yet",
+    done: false
+  },
+  {
+    rank: 2,
+    title: "The second most important thing",
+    details: "no details yet",
+    done: true
+  }
+];
+
 class App extends React.Component {
   constructor(props){
     super(props);
-    this.state = {
-      taskList: [
-        {
-          rank: 1,
-          title: "The most important thing",
-          details: "no details yet",
-          done: false
-        },
-        {
-          rank: 2,
-          title: "The second most important thing",
-          details: "no details yet",
-          done: false
-        }
-      ]
-    }
-  }
-  render(){
-    var taskDetails = "";
-    var taskRank; 
-    this.state.taskList.forEach(item => {
-      taskRank = item.rank;
-      taskDetails += item.details + ", rank: " + taskRank + "; ";
-      });
     
-    return (
+  // this.toggleDone = this.toggleDone.bind(this);
+  }
+
+render(){
+  return (
       <div className="App">
-        <Header taskNumber={this.state.taskList.length}/>
-        <Tasks taskDetails={taskDetails} taskRank={taskRank}/>
+        <Header taskNumber={taskList.length}/>
+        <div>{taskList.map((task)=> ( 
+              <Tasks taskTitle={task.title} taskDetails={task.details} taskRank={task.rank} doneButton={"Mark Done"} toggleDone={() => {
+                task.done = (task.done === true ? false : true);}} 
+              />
+            ))           
+          }
+        </div>
       </div>
     )
   };

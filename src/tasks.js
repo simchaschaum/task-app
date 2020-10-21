@@ -9,7 +9,7 @@ export class Tasks extends React.Component{
             expanded: false
         };
         this.expand = this.expand.bind(this);
-    };
+};
     
     expand(){
         if(this.state.expanded===false){
@@ -20,16 +20,20 @@ export class Tasks extends React.Component{
             expanded = "expand"
         }
     }
+    
     render(){
         return(
             <div className="taskContainer">
                 <div className="taskTitle">
                     {this.props.taskTitle}
                 </div>
-                <button className="doneButton">
-                    Done?
+                <div className="taskRank">
+                    Ranking: {this.props.taskRank}
+                </div>
+                <button className="doneButton" onClick={this.props.toggleDone}>
+                    {this.props.doneButton} 
                 </button>
-                <button className="expandButton" onClick={this.expand}>
+               <button className="expandButton" onClick={this.expand}>
                     {expanded}
                 </button>
                 <p className="detailsParagraph">
