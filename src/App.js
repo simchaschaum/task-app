@@ -23,7 +23,12 @@ class App extends React.Component {
     super(props);
     
   // this.toggleDone = this.toggleDone.bind(this);
+  this.submitDetails = this.submitDetails.bind(this);
   }
+
+submitDetails(){
+
+}
 
 render(){
   return (
@@ -31,7 +36,7 @@ render(){
         <Header taskNumber={taskList.length}/>
         <div>{taskList.map((task)=> ( 
               <Tasks taskTitle={task.title} taskDetails={task.details} taskRank={task.rank} doneButton={"Mark Done"} toggleDone={() => {
-                task.done = (task.done === true ? false : true);}} 
+                task.done = (task.done === true ? false : true)}} submitDetails={this.submitDetails}
               />
             ))           
           }
