@@ -41,11 +41,6 @@ export class Tasks extends React.Component{
                <button className="expandButton" onClick={this.expand}>
                     {expanded}
                 </button>
-                {/* <form>
-                    <label for="taskDetails">The Details:</label>
-                    <input id="taskDetails" name="taskDetails" type="text" placeholder="Type task details here"></input>
-                    <button type="button" >Submit Details</button>
-                </form> */}
                 <p className="detailsParagraph">
                     {this.props.taskDetails}
                 </p>
