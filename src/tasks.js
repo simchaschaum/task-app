@@ -22,10 +22,6 @@ export class Tasks extends React.Component{
         }
     };
 
-    // submitDetails(){
-        
-    //     }
-    
     render(){
         return(
             <div className="taskContainer">

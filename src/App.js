@@ -2,45 +2,73 @@ import React from 'react';
 import './App.css';
 import {Header} from './header';
 import {Tasks} from './tasks';
+import {OverView} from './overView';
+import {FirebaseContext} from './components/Firebase';
 
 var taskList = [
   {
-    rank: 1,
     title: "The most important thing",
     details: "no details yet",
     done: false
   },
   {
-    rank: 2,
     title: "The second most important thing",
     details: "no details yet",
     done: true
+  }, 
+  {
+    title: "So so",
+    details: "no details yet",
+    done: false
   }
 ];
 
 class App extends React.Component {
   constructor(props){
     super(props);
-    
+    this.state ={
+      newTaskTitle: "",
+      newTaskDetails: ""
+    }
   // this.toggleDone = this.toggleDone.bind(this);
   this.submitDetails = this.submitDetails.bind(this);
+  this.input = this.input.bind(this);
   }
 
-submitDetails(){
+input = event => this.setState({[event.target.name] : event.target.value})
 
-}
+  submitDetails(event){
+    alert(this.state.newTaskTitle + this.state.newTaskDetails);
+    taskList.push( {
+      title: this.state.newTaskTitle,
+      details: this.state.newTaskDetails,
+      done: false
+    } )
+    console.log(taskList);
+  }
 
 render(){
   return (
       <div className="App">
         <Header taskNumber={taskList.length}/>
+        <form className="taskContainer" onSubmit={this.submitDetails}>
+          <label>New Task Title: 
+            <input id="newTaskTitle" name="newTaskTitle" value={this.state.newTaskTitle} type="text" placeholder="Give it a title" onChange={this.input}></input>
+          </label>
+          <label>New Task Details: 
+            <input id="newTaskDetails" name="newTaskDetails" value={this.state.newTaskDetails} type="text" placeholder="What are the details?" onChange={this.input}></input>
+          </label>
+          <input type="submit"></input>
+       </form>
         <div>{taskList.map((task)=> ( 
               <Tasks taskTitle={task.title} taskDetails={task.details} taskRank={task.rank} doneButton={"Mark Done"} toggleDone={() => {
-                task.done = (task.done === true ? false : true)}} submitDetails={this.submitDetails}
-              />
+                task.done = (task.done === true ? false : true)}} />
             ))           
           }
         </div>
+        <div className="overView">
+          {taskList.map(task =>  <OverView taskNumber={taskList.indexOf(task) + 1} taskTitle={task.title}/>)}
+         </div>
       </div>
     )
   };
