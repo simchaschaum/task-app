@@ -3,7 +3,8 @@ import './App.css';
 import {Header} from './header';
 import {Tasks} from './tasks';
 import {OverView} from './overView';
-import {FirebaseContext} from './components/Firebase';
+// import {FirebaseContext} from './components/Firebase';
+// import {SignUpPage} from './components/SignUp'
 
 var taskList = [
   {
@@ -38,13 +39,13 @@ class App extends React.Component {
 input = event => this.setState({[event.target.name] : event.target.value})
 
   submitDetails(event){
-    alert(this.state.newTaskTitle + this.state.newTaskDetails);
+    event.preventDefault(); // prevents the page from reloading after 'submit' is pressed. 
     taskList.push( {
       title: this.state.newTaskTitle,
       details: this.state.newTaskDetails,
       done: false
     } )
-    console.log(taskList);
+    alert(taskList[taskList.length-1].title);
   }
 
 render(){
@@ -60,15 +61,18 @@ render(){
           </label>
           <input type="submit"></input>
        </form>
-        <div>{taskList.map((task)=> ( 
+       <div className="completeContainer">
+          <div>{taskList.map((task)=> ( 
               <Tasks taskTitle={task.title} taskDetails={task.details} taskRank={task.rank} doneButton={"Mark Done"} toggleDone={() => {
                 task.done = (task.done === true ? false : true)}} />
             ))           
-          }
-        </div>
-        <div className="overView">
-          {taskList.map(task =>  <OverView taskNumber={taskList.indexOf(task) + 1} taskTitle={task.title}/>)}
-         </div>
+            }
+          </div>
+          <div className="overView">
+            {taskList.map(task =>  <OverView taskNumber={taskList.indexOf(task) + 1} taskTitle={task.title}/>)}
+          </div>
+       </div>
+
       </div>
     )
   };

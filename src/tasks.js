@@ -37,9 +37,9 @@ export class Tasks extends React.Component{
                <button className="expandButton" onClick={this.expand}>
                     {expanded}
                 </button>
-                <p className="detailsParagraph">
+                <div className="detailsParagraph" style={{display: this.state.expanded ? 'block' : 'none'}}>
                     {this.props.taskDetails}
-                </p>
+                </div>
             </div>
         )
     }
