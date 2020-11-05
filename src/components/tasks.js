@@ -2,7 +2,7 @@ import React from 'react';
 
 var expanded = "expand"
 
-export class Tasks extends React.Component{
+class Tasks extends React.Component{
     constructor(props){
         super(props);
         this.state={
@@ -44,3 +44,5 @@ export class Tasks extends React.Component{
         )
     }
 }
+
+export default Tasks;
