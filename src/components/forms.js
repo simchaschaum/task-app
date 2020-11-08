@@ -6,7 +6,8 @@ class Form extends Component{
     state ={
         title: "",
         details: "", 
-        priority: ""
+        priority: "",
+        date: ""
     }
 
     input = (event) => {
@@ -22,11 +23,12 @@ class Form extends Component{
             done: false,
             addedAt: firebaseTimestamp()
         })
+        this.props.updateDisp();
         this.clearState();
     }
 
     clearState = () => {
-        this.setState({title: "", details: "", priority: ""});
+        this.setState({title: "", details: "", priority: "", date: ""});
     }
 
     render(){
@@ -42,10 +44,13 @@ class Form extends Component{
                     <label>Priority:
                         <select id="newTaskPriority" name="priority" type="select" onChange={(e) => this.input(e)} required>
                             <option value=""></option>
-                            <option value="high">High</option>
-                            <option value="medium">Medium</option>
-                            <option value="low">Low</option>
+                            <option value="1">High</option>
+                            <option value="2">Medium</option>
+                            <option value="3">Low</option>
                         </select>
+                    </label>
+                    <label>Due Date:
+                        <input id="newTaskDate" type="date" name="date" value={this.state.date} onChange={(e)=>this.input(e)}></input>
                     </label>
 
                     <input type="submit"></input>

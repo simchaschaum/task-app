@@ -12,15 +12,12 @@ import Form from './components/forms';
 var taskList = [];
 
 class App extends React.Component {
-  constructor(props){ 
-    super(props);
-    this.state ={
-      tasks: null,
-      newTaskTitle: "",
-      newTaskDetails: ""
-    }
 
-  }
+state = {
+  tasks: null,
+  property: "addedAt",
+  order: "desc"
+}
 
 componentDidMount(){
   this.showTasks();
@@ -31,29 +28,58 @@ showTasks(){
     taskList = firebaseArrMaker(snapshot);
     this.setState({
       tasks: taskList
-    });
-    console.log(taskList);
-    }).catch( error => console.log(error))
+    }, ()=> console.log(this.state.tasks));
+    }
+    ).catch( error => console.log(error));
 }
 
-submitDetails(event){
-    event.preventDefault(); // prevents the page from reloading after 'submit' is pressed. 
-    taskList.push( {
-      title: this.state.newTaskTitle,
-      details: this.state.newTaskDetails,
-      done: false
-    } )
-    alert(taskList[taskList.length-1].title);
-}
+  taskSort = (e) => {
+    switch(e.target.value){
+      case "priority":
+        var property = "priority";
+        break;
+      case "dateEntered":
+        var property = "addedAt";
+        break;
+      case "dateDue":
+        var property = "date";
+        break;
+    }
+    var order = this.state.order == "desc" ? "asc" : "desc";
+    this.setState({property: order, order: order}, () => this.taskDisplay(property, order))
+  }
 
+  taskDisplay = (property,order) => {
+    tasksCollection
+    .orderBy(property, order)
+    .get()
+    .then( snapshot => {
+      taskList = firebaseArrMaker(snapshot);
+      this.setState({
+        tasks: taskList
+      }, ()=> console.log(this.state.tasks));
+    })
+    .catch( error => console.log(error));
+  }
+
+  updateDisp = () => {
+    this.taskDisplay(this.state.property, this.state.order)
+  }
+ 
 render(){
+
   return (
       <div className="App">
         <Header taskNumber={taskList.length}/>
-        <Form />
-       <div className="completeContainer">
+        <Form updateDisp={this.updateDisp}/>
+        <div className="buttonContainer"> Display: 
+          <button value="priority" onClick={this.taskSort}>By Priority ({this.state.order == "desc" ? "Ascending" : "Descending"})</button>
+          <button value="dateEntered" onClick={this.taskSort}>By Date Entered</button>
+          <button value="dateDue" onClick={this.taskSort}>By Date Due</button>
+        </div>
+        <div className="completeContainer">
           <div>{taskList.map((task)=> ( 
-              <Tasks taskTitle={task.title} taskDetails={task.details} taskRank={task.rank} doneButton={"Mark Done"} toggleDone={() => {
+              <Tasks taskID={task.id} taskTitle={task.title} taskDetails={task.details} taskPriority={task.priority} taskDone={task.done} taskDelete={this.updateDisp} dateDue={task.date} toggleDone={() => {
                 task.done = (task.done === true ? false : true)}} />
             ))           
             }
@@ -61,7 +87,7 @@ render(){
           <div className="overView">
             {taskList.map(task =>  <OverView taskNumber={taskList.indexOf(task) + 1} taskTitle={task.title}/>)}
           </div>
-       </div>
+        </div>
 
       </div>
     )
