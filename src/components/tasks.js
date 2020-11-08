@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import firebase, {db, tasksCollection, firebaseTimestamp} from '../utils/firebase';
 import { firebaseArrMaker } from '../utils/tools';
 
@@ -90,6 +90,17 @@ class Tasks extends React.Component{
                 <button className="deleteButton" onClick={this.deleteTask}>
                     Delete Task
                 </button>
+            </div>
+        )
+    }
+}
+
+
+export class Notasks extends Component{
+    render(){
+        return(
+            <div id="noTasksDiv" className="taskContainer">
+                You have no tasks!
             </div>
         )
     }
