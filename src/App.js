@@ -64,7 +64,7 @@ showTasks(){
   }
 
   updateDisp = () => {
-    this.taskDisplay(this.state.property, this.state.order)
+    this.taskDisplay(this.state.property, this.state.order);
   }
 
   toggleForm = () => {
@@ -77,29 +77,29 @@ render(){
       <div className="App">
         <Header taskNumber={taskList.length}/>
         <div className="formContainer">
-          <button onClick={this.toggleForm}>{this.state.formDisp ? "Close Form" : "Add New Task"}</button>
-          <div className="form" style={{display: this.state.formDisp ? 'block' : 'none'}}> 
-           <Form updateDisp={this.updateDisp} />
+          {this.state.formDisp ? null : <button className="btn btn-primary" onClick={this.toggleForm}>Add Task</button>}
+         <div className="form jumbotron" style={{display: this.state.formDisp ? 'flex' : 'none'}}> 
+           <Form updateDisp={this.updateDisp} closeForm={this.toggleForm}/>
           </div>
         </div>
         <div className="buttonContainer"> Display: 
-          <button value="priority" onClick={this.taskSort}>By Priority ({this.state.order == "desc" ? "Ascending" : "Descending"})</button>
-          <button value="dateEntered" onClick={this.taskSort}>By Date Entered</button>
-          <button value="dateDue" onClick={this.taskSort}>By Date Due</button>
+          <button className="btn btn-primary" value="priority" onClick={this.taskSort}>By Priority ({this.state.order == "desc" ? "Ascending" : "Descending"})</button>
+          <button className="btn btn-primary" value="dateEntered" onClick={this.taskSort}>By Date Entered</button>
+          <button className="btn btn-primary" value="dateDue" onClick={this.taskSort}>By Date Due</button>
         </div>
         <div className="completeContainer">
+        <div className="overView">
+            {taskList.length > 0 ? 
+              taskList.map(task =>  <OverView taskNumber={taskList.indexOf(task) + 1} taskTitle={task.title}/>)
+            : "No tasks"
+            }
+          </div>
           <div>{taskList.length > 0 ? 
             taskList.map((task)=> ( 
               <Tasks taskID={task.id} taskTitle={task.title} taskDetails={task.details} taskPriority={task.priority} taskDone={task.done} taskDelete={this.updateDisp} dateDue={task.date} toggleDone={() => {
                 task.done = (task.done === true ? false : true)}} />
             ))           
             : <Notasks />}
-          </div>
-          <div className="overView">
-            {taskList.length > 0 ? 
-              taskList.map(task =>  <OverView taskNumber={taskList.indexOf(task) + 1} taskTitle={task.title}/>)
-            : "No tasks"
-            }
           </div>
         </div>
 

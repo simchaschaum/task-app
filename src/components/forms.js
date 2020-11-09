@@ -24,6 +24,7 @@ class Form extends Component{
             addedAt: firebaseTimestamp()
         })
         this.props.updateDisp();
+        this.props.closeForm();
         this.clearState();
     }
 
@@ -34,26 +35,26 @@ class Form extends Component{
     render(){
         return(
             <div>
-                  <form className="taskContainer" onSubmit={(e)=>this.submitDetails(e)}>
+                  <form className="taskContainer form-group" onSubmit={(e)=>this.submitDetails(e)}>
                     <label>New Task Title: 
-                        <input id="newTaskTitle" name="title" value={this.state.title} type="text" placeholder="Give it a title" onChange={(e) => this.input(e)} required></input>
+                        <input id="newTaskTitle" className="form-control-lg" name="title" value={this.state.title} type="text" placeholder="Give it a title" onChange={(e) => this.input(e)} required></input>
                     </label>
                     <label>New Task Details: 
-                        <input id="newTaskDetails" name="details" value={this.state.details} type="text" placeholder="What are the details?" onChange={(e) => this.input(e)} required></input>
+                        <input id="newTaskDetails" className="form-control-lg" name="details" value={this.state.details} type="text" placeholder="What are the details?" onChange={(e) => this.input(e)} required></input>
                     </label>
                     <label>Priority:
-                        <select id="newTaskPriority" name="priority" type="select" onChange={(e) => this.input(e)} required>
-                            <option value=""></option>
+                        <select id="newTaskPriority" className="form-control-lg"name="priority" type="select" onChange={(e) => this.input(e)} required>
+                            <option value="no priority">No Priority</option>
                             <option value="1">High</option>
                             <option value="2">Medium</option>
                             <option value="3">Low</option>
                         </select>
                     </label>
                     <label>Due Date:
-                        <input id="newTaskDate" type="date" name="date" value={this.state.date} onChange={(e)=>this.input(e)}></input>
+                        <input id="newTaskDate" className="form-control-lg" type="date" name="date" value={this.state.date} onChange={(e)=>this.input(e)}></input>
                     </label>
 
-                    <input type="submit"></input>
+                    <input type="submit"></input> <button onClick={this.props.closeForm}>Close Form</button>
                 </form>
             </div>
         )

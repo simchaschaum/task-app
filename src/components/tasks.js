@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import firebase, {db, tasksCollection, firebaseTimestamp} from '../utils/firebase';
 import { firebaseArrMaker } from '../utils/tools';
 
-var expanded = "expand"
+var expanded = "Show Details"
 
 class Tasks extends React.Component{
     constructor(props){
@@ -22,10 +22,10 @@ class Tasks extends React.Component{
     expand = () => {
         if(this.state.expanded===false){
             this.setState({expanded:true});
-            expanded = "collapse"
+            expanded = "Hide Details"
         } else {
             this.setState({expanded:false});
-            expanded = "expand"
+            expanded = "Show Details"
         }
     };
 
@@ -54,42 +54,56 @@ class Tasks extends React.Component{
         this.props.taskDelete();
     }
 
+    editTask = () => {
+        alert("editing in progress!")
+    }
+
     render(){
         switch (this.props.taskPriority) {
                 case "1":
-                    var priority = "High";
+                    var priority = "Priority: High";
                     break;
                 case "2":
-                    var priority = "Medium";
+                    var priority = "Priority: Medium";
                     break;
                 case "3":
-                    var priority = "Low";
+                    var priority = "Priority: Low";
+                    break;
+                case "no priority":
+                    var priority = "";
                     break;
             }
 
         return(
-            <div className="taskContainer">
-                <div className="taskTitle">
-                    {this.props.taskTitle}  {this.state.done ? "**DONE!!**" : null}
+            <div className="taskContainer card">
+                <div className="card-body">
+                    <div className="taskTitle">
+                        <h2 className="card-title"> {this.props.taskTitle} 
+                        </h2>  {this.state.done ? "**DONE!!**" : null}
+                    </div>
+                    <div className="taskPriority"> 
+                        <h3 className="card-subtitle">{priority}
+                        </h3>
+                    </div>
+                    <div className="dateDue">
+                        {this.props.dateDue == "" ? null : "Due: " + this.props.dateDue}
+                    </div>
+                    <button className="doneButton btn btn-primary" onClick={this.toggleDone}>
+                        Mark as {this.state.done ? "Undone" : "Done"}
+                    </button>
+                    <button className="expandButton btn btn-primary" onClick={this.expand}>
+                        {expanded}
+                    </button>
+                    <button className="editButton btn btn-primary" onClick={this.editTask}>
+                        Edit Task
+                    </button>
+                    <button className="deleteButton btn btn-primary" onClick={this.deleteTask}>
+                        Delete Task
+                    </button>
+                    <div className="detailsParagraph" style={{display: this.state.expanded ? 'block' : 'none'}}>
+                        {this.props.taskDetails}
+                    </div>
                 </div>
-                <div className="taskPriority">
-                    Priority: {priority}
-                </div>
-                <div className="detailsParagraph" style={{display: this.state.expanded ? 'block' : 'none'}}>
-                    {this.props.taskDetails}
-                </div>
-                <div className="dateDue">
-                    Due Date: {this.props.dateDue == "" ? "No Due Date" : this.props.dateDue}
-                </div>
-                <button className="doneButton" onClick={this.toggleDone}>
-                    Mark as {this.state.done ? "Undone" : "Done"}
-                </button>
-                <button className="expandButton" onClick={this.expand}>
-                    {expanded}
-                </button>
-                <button className="deleteButton" onClick={this.deleteTask}>
-                    Delete Task
-                </button>
             </div>
         )
     }

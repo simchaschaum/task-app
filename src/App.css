@@ -21,13 +21,24 @@ html{
   scroll-behavior: smooth;
 }
 
+header{
+  /* position: fixed; */
+}
 .completeContainer{
   display: grid;
-  grid-template-columns: 1 fr 2fr;
+  grid-template-columns: 1fr 3fr;
+}
+
+.form{
+  position: fixed;
+  z-index: 1000;
+  margin-left: 120px;
+  margin-right: 120px;
+  background: var(--clr-ter);
 }
 
 .taskContainer{
-  border: .5px solid black;
+  background: var(--clr-sec);
   max-width: 75%;
   margin: 10px auto;
   padding: 10px;
