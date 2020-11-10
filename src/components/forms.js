@@ -1,3 +1,4 @@
+import { render } from '@testing-library/react';
 import React, { Component } from 'react'; 
 import firebase, {db, tasksCollection, firebaseTimestamp} from '../utils/firebase';
 import { firebaseArrMaker } from '../utils/tools';
@@ -8,8 +9,8 @@ class Form extends Component{
         details: "", 
         priority: "",
         date: ""
-    }
-
+    };
+  
     input = (event) => {
         let name = event.target.name;
         let value = event.target.value;
@@ -18,11 +19,23 @@ class Form extends Component{
 
     submitDetails = (event) => {
         event.preventDefault();
-        tasksCollection.add({
-            ...this.state,
-            done: false,
-            addedAt: firebaseTimestamp()
-        })
+        if(this.props.formState === "newTask"){
+            tasksCollection.add({
+                ...this.state,
+                done: false,
+                addedAt: firebaseTimestamp()
+            });
+        } else {
+            var editTitle = document.getElementById("editTitle").innerHTML;
+            var editDetails = document.getElementById("editDetails").innerHTML; 
+            tasksCollection.doc(this.props.taskID)
+                .update({
+                    title: editTitle,
+                    details: editDetails,
+                    priority: this.state.priority,
+                    date: this.state.date
+                })
+        };
         this.props.updateDisp();
         this.props.closeForm();
         this.clearState();
@@ -33,17 +46,32 @@ class Form extends Component{
     }
 
     render(){
+
+        var title = this.props.formState === "editTask" ? 
+                <label>Edit Title:
+                    <div id="editTitle" className="editText" contentEditable="true">{this.props.taskToEdit.title}</div> 
+                </label>
+            :   <label>
+                    <input id="newTaskTitle" className="form-control" name="title" value={this.state.title} type="text" placeholder="Enter Title" onChange={(e) => this.input(e)} required></input>
+                </label>
+
+        var details = this.props.formState === "editTask" ?
+                <label>Edit Details:
+                    <div id="editDetails" className="editText" contentEditable="true">{this.props.taskToEdit.details}</div> 
+                </label>
+            :   <label>
+                    <input id="newTaskDetails" className="form-control" name="details" value={this.state.details} type="text" placeholder="Enter Details" onChange={(e) => this.input(e)} required></input>
+                </label>
+
         return(
-            <div>
-                  <form className="taskContainer form-group" onSubmit={(e)=>this.submitDetails(e)}>
-                    <label>New Task Title: 
-                        <input id="newTaskTitle" className="form-control-lg" name="title" value={this.state.title} type="text" placeholder="Give it a title" onChange={(e) => this.input(e)} required></input>
-                    </label>
-                    <label>New Task Details: 
-                        <input id="newTaskDetails" className="form-control-lg" name="details" value={this.state.details} type="text" placeholder="What are the details?" onChange={(e) => this.input(e)} required></input>
-                    </label>
+            <div> 
+                <form className="taskContainer form form-group" onSubmit={(e)=>this.submitDetails(e)}>
+                   {title} <br />
+                   
+                   {details} <br />
+
                     <label>Priority:
-                        <select id="newTaskPriority" className="form-control-lg"name="priority" type="select" onChange={(e) => this.input(e)} required>
+                        <select id="newTaskPriority" className="form-control-sm" name="priority" type="select" onChange={(e) => this.input(e)} required>
                             <option value="no priority">No Priority</option>
                             <option value="1">High</option>
                             <option value="2">Medium</option>
@@ -51,14 +79,15 @@ class Form extends Component{
                         </select>
                     </label>
                     <label>Due Date:
-                        <input id="newTaskDate" className="form-control-lg" type="date" name="date" value={this.state.date} onChange={(e)=>this.input(e)}></input>
+                        <input id="newTaskDate" className="form-control-sm" type="date" name="date" value={this.state.date} onChange={(e)=>this.input(e)}></input>
                     </label>
-
-                    <input type="submit"></input> <button onClick={this.props.closeForm}>Close Form</button>
+                    <input className="btn btn-primary" type="submit"></input> 
+                    <button className="btn btn-primary" onClick={this.props.closeForm}>Cancel</button>
                 </form>
             </div>
         )
     }
 }
+
 
 export default Form;

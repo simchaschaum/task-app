@@ -8,16 +8,13 @@ class Tasks extends React.Component{
     constructor(props){
         super(props);
         this.state={
-            expanded: false,
+            expanded: true,
             taskID: this.props.taskID,
             done: this.props.taskDone,
             };
         this.expand = this.expand.bind(this);
         this.deleteTask = this.deleteTask.bind(this);
 };
-    
-    // componentDidMount = () => {
-    // }
     
     expand = () => {
         if(this.state.expanded===false){
@@ -30,7 +27,7 @@ class Tasks extends React.Component{
     };
 
     toggleDone = () => {
-        if(this.state.done == true){
+        if(this.state.done === true){
             this.setState({done: false}, this.updateDone(false));
         } else {
             this.setState({done: true}, this.updateDone(true));
@@ -55,7 +52,7 @@ class Tasks extends React.Component{
     }
 
     editTask = () => {
-        alert("editing in progress!")
+        this.props.editTask(this.props.taskID);
     }
 
     render(){
@@ -69,7 +66,7 @@ class Tasks extends React.Component{
                 case "3":
                     var priority = "Priority: Low";
                     break;
-                case "no priority":
+                default:
                     var priority = "";
                     break;
             }
@@ -80,6 +77,9 @@ class Tasks extends React.Component{
                     <div className="taskTitle">
                         <h2 className="card-title"> {this.props.taskTitle} 
                         </h2>  {this.state.done ? "**DONE!!**" : null}
+                    </div>
+                    <div className="detailsParagraph" style={{display: this.state.expanded ? 'block' : 'none'}}>
+                        {this.props.taskDetails}
                     </div>
                     <div className="taskPriority"> 
                         <h3 className="card-subtitle">{priority}
@@ -100,9 +100,6 @@ class Tasks extends React.Component{
                     <button className="deleteButton btn btn-primary" onClick={this.deleteTask}>
                         Delete Task
                     </button>
-                    <div className="detailsParagraph" style={{display: this.state.expanded ? 'block' : 'none'}}>
-                        {this.props.taskDetails}
-                    </div>
                 </div>
             </div>
         )
@@ -114,7 +111,7 @@ export class Notasks extends Component{
     render(){
         return(
             <div id="noTasksDiv" className="taskContainer">
-                You have no tasks!
+                You have no tasks! *Whew!* 
             </div>
         )
     }

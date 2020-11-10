@@ -24,21 +24,20 @@ html{
 header{
   /* position: fixed; */
 }
-.completeContainer{
-  display: grid;
-  grid-template-columns: 1fr 3fr;
+
+.btn {
+  /* background: var(--clr-pri); */
+  border: none;
+  margin: 5px 5px;
 }
 
-.form{
-  position: fixed;
-  z-index: 1000;
-  margin-left: 120px;
-  margin-right: 120px;
-  background: var(--clr-ter);
+.completeContainer{
+  display: grid;
+  grid-template-columns: 1fr 4fr;
 }
 
 .taskContainer{
-  background: var(--clr-sec);
+  /* background: var(--clr-sec); */
   max-width: 75%;
   margin: 10px auto;
   padding: 10px;
@@ -47,8 +46,47 @@ header{
 .overView{
   border: .5px solid black;
   text-align: justify;
-  max-width: 45%;
-  margin: 10px auto;
+  width: 100%;
+  margin-left: 10px;
   padding: 10px;
 }
+
+/* Form component: */
+
+.form{
+  position: fixed;
+  z-index: 1000;
+  margin: 0 auto;
+  /* background: var(--clr-ter); */
+  background: gray;
+}
+
+.editText{
+  color: black;
+  opacity: 90%;
+  background: white !important;
+  border-radius: 5% / 5%;
+  border-top: solid black 1px;
+  border-left: solid black 1px;
+  border-right: solid grey 1px;
+  border-bottom: solid grey 1px;
+  height: 3em;
+  width: 400px;
+  text-align: justify;
+  padding: 1em;
+}
+
+.form-control {
+  width: 400px;
+}
+
+#newTaskDetails{
+  height: 10em;
+}
+
+#editDetails{
+  height: 10em;
+}
+
+
 
