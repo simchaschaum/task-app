@@ -29,7 +29,7 @@ class Search extends Component{
         return(
             <div>
                 <form className="form-group" onSubmit={this.handleSearch}> 
-                    <input type="text" className="form-control" placeholder="Search for... (this doesn't work yet)" onChange={(e)=>this.handleChange(e)}></input>
+                    <input type="text" className="form-control" placeholder="Search for a word or phrase" onChange={(e)=>this.handleChange(e)} required></input>
                     <input type="submit" className="form-control btn btn-primary"></input>
                 </form>
                 

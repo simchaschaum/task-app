@@ -48,7 +48,7 @@ class Tasks extends React.Component{
             .delete()
             .then(()=>console.log(this.props.taskTitle + "  Deleted!"))
             .catch(error => console.log(error));
-        this.props.taskDelete();
+        this.props.updateDisp();
     }
 
     editTask = () => {

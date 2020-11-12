@@ -53,6 +53,12 @@ header{
 
 /* Form component: */
 
+#newTaskDetails {
+  text-align: justify;
+  vertical-align: top;
+  
+}
+
 .form{
   position: fixed;
   z-index: 1000;
@@ -73,6 +79,7 @@ header{
   height: 3em;
   width: 400px;
   text-align: justify;
+  vertical-align: top;
   padding: 1em;
 }
 

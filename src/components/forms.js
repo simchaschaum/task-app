@@ -5,16 +5,21 @@ import { firebaseArrMaker } from '../utils/tools';
 
 class Form extends Component{
     state ={
+        // taskID: this.props.taskID,
+        // taskToEdit: this.props.taskToEdit,
         title: "",
         details: "", 
         priority: "",
         date: ""
+        
     };
   
     input = (event) => {
         let name = event.target.name;
         let value = event.target.value;
-        this.setState({[name]:value})
+        this.setState({
+            [name]:value
+        })
     }
 
     submitDetails = (event) => {
@@ -28,12 +33,14 @@ class Form extends Component{
         } else {
             var editTitle = document.getElementById("editTitle").innerHTML;
             var editDetails = document.getElementById("editDetails").innerHTML; 
+            var priority = this.state.priority === "" ? this.props.taskToEdit.priority : this.state.priority;
+            var date = this.state.date === "" ? this.props.taskToEdit.date : this.state.date;
             tasksCollection.doc(this.props.taskID)
                 .update({
                     title: editTitle,
                     details: editDetails,
-                    priority: this.state.priority,
-                    date: this.state.date
+                    priority: priority,
+                    date: date
                 })
         };
         this.props.updateDisp();
@@ -62,6 +69,22 @@ class Form extends Component{
             :   <label>
                     <input id="newTaskDetails" className="form-control" name="details" value={this.state.details} type="text" placeholder="Enter Details" onChange={(e) => this.input(e)} required></input>
                 </label>
+        
+        switch (this.props.taskToEdit.priority) {
+            case "1":
+                var priority = "Previous Priority: High";
+                break;
+            case "2":
+                var priority = "Previous Priority: Medium";
+                break;
+            case "3":
+                var priority = "Priority: Low";
+                break;
+            default:
+                var priority = "";
+                break;
+        }
+        var pri = this.props.formState === "newTask" ? "Select a priority" : priority;
 
         return(
             <div> 
@@ -72,6 +95,7 @@ class Form extends Component{
 
                     <label>Priority:
                         <select id="newTaskPriority" className="form-control-sm" name="priority" type="select" onChange={(e) => this.input(e)} required>
+                            <option selected hidden disabled>{pri}</option>
                             <option value="no priority">No Priority</option>
                             <option value="1">High</option>
                             <option value="2">Medium</option>

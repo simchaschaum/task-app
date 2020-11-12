@@ -56,12 +56,12 @@ getTasks(){
     this.setState({property: order, order: order}, () => this.taskDisplay(property, order))
   }
 
-  
   updateDisp = () => {
     this.taskDisplay(this.state.property, this.state.order);
   }
 
   taskDisplay = (property,order) => {
+    this.getTasks();
     var num = order === "asc" ? 1 : -1
     this.state.tasks.sort((a, b) => {
       return a.property > b.property ? num : - num
@@ -75,7 +75,11 @@ getTasks(){
 
   // opens form to edit existing task:
   editTask = (task, num) => {
-    this.setState({formState: "editTask", id: num, taskToEdit: task}, () => this.setState({formDisp: true}));
+    this.setState({
+      formState: "editTask", 
+      taskToEdit: task,
+      id: num, 
+    }, () => this.setState({formDisp: true}));
   }
   
   displaySearch = (filteredList, searchParams) => {
@@ -104,7 +108,14 @@ render(){
         <div className="formContainer container">
           {this.state.formDisp ? null : <button className="btn btn-primary" onClick={this.toggleForm}>Add Task</button>}
          <div style={{display: this.state.formDisp ? 'block' : 'none'}}> 
-           <Form formState={this.state.formState} updateDisp={this.updateDisp} closeForm={this.toggleForm} taskID={this.state.id} taskList={this.state.tasks} taskToEdit={this.state.taskToEdit} />
+           <Form 
+            formState={this.state.formState} 
+            updateDisp={this.updateDisp} 
+            closeForm={this.toggleForm} 
+            taskList={this.state.tasks} 
+            taskToEdit={this.state.taskToEdit} 
+            taskID={this.state.id} 
+            />
           </div>
         </div>
 
@@ -125,7 +136,7 @@ render(){
             {this.state.showSearch === false ? null : searchDisp}
             {taskList.length > 0 ? 
               taskList.map((task)=> ( 
-                <Tasks taskID={task.id} taskTitle={task.title} taskDetails={task.details} taskPriority={task.priority} taskDone={task.done} taskDelete={this.updateDisp} editTask={() => this.editTask(task,task.id)} dateDue={task.date} toggleDone={() => {
+                <Tasks taskID={task.id} taskTitle={task.title} taskDetails={task.details} taskPriority={task.priority} taskDone={task.done} updateDisp={this.updateDisp} editTask={() => this.editTask(task,task.id)} dateDue={task.date} toggleDone={() => {
                   task.done = (task.done === true ? false : true)}} />
               ))           
               : <Notasks />}
