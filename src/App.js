@@ -15,15 +15,17 @@ var property;
 class App extends React.Component {
 
 state = {
-  tasks: null,
-  formDisp: false,
-  property: "addedAt",
-  order: "desc",
-  formState: "newTask",
+  tasks: null,      // will be the array of tasks from Firebase 
+  formDisp: false,  // whether to display the form to add or edit tasks
+  property: "addedAt", // the property by which to sort the tasks
+  order: "desc",      // descending or ascending
+  formState: "newTask", // determines whether the form will be editing or adding a task
   id: "",
   taskToEdit: "", 
   searchParams: "",
-  showSearch: false
+  showSearch: false, 
+  taskDisp: "rows", // displays tasks in "rows" or "boxes" (3 or 4 per row)
+  star: false  // will be set when opening the form to edit task 
 }
 
 componentDidMount(){
@@ -31,10 +33,13 @@ componentDidMount(){
 };
 
 getTasks(){
-  tasksCollection.get().then( snapshot => {
-    taskList = firebaseArrMaker(snapshot);
-    this.setState({
-      tasks: taskList
+  tasksCollection
+    .orderBy(this.state.property, this.state.order)
+    .get()
+    .then( snapshot => {
+      taskList = firebaseArrMaker(snapshot);
+      this.setState({
+        tasks: taskList
     }, ()=> console.log(this.state.tasks));
     }
     ).catch( error => console.log(error));
@@ -53,24 +58,21 @@ getTasks(){
         break;
     }
     var order = this.state.order === "desc" ? "asc" : "desc";
-    this.setState({property: order, order: order}, () => this.taskDisplay(property, order))
+    this.setState({property: property, order: order}, () => this.getTasks(property, order))
   }
 
   updateDisp = () => {
-    this.taskDisplay(this.state.property, this.state.order);
+    this.getTasks(this.state.property, this.state.order);
   }
 
-  taskDisplay = (property,order) => {
-    this.getTasks();
-    var num = order === "asc" ? 1 : -1
-    this.state.tasks.sort((a, b) => {
-      return a.property > b.property ? num : - num
-    })
+  // toggles the display between boxes and rows
+  toggleDisplay = (e) => {
+    this.setState({taskDisp: e})
   }
 
-  // toggles form between entering new task and editing existing task:
+  // opens and closes form for starting new task
   toggleForm = () => {
-    this.state.formDisp ? this.setState({formDisp: false, formState: "newTask"}): this.setState({formDisp: true, formState: "newTask"});
+    this.state.formDisp ? this.setState({formDisp: false, formState: "newTask"}): this.setState({formDisp: true, formState: "newTask", star: false});
   }
 
   // opens form to edit existing task:
@@ -79,6 +81,7 @@ getTasks(){
       formState: "editTask", 
       taskToEdit: task,
       id: num, 
+      star: task.star,
     }, () => this.setState({formDisp: true}));
   }
   
@@ -98,50 +101,76 @@ render(){
       <p>Showing results for "{this.state.searchParams}"</p>
       <button className="btn btn-primary" onClick={this.finishSearch}>Close Search</button>
     </div>  
+  
+  // var cont = this.state.taskdisp === "boxes" ? "taskContainerCols" : "taskContainerRows";
+  var cols = this.state.taskDisp === "boxes" ? "taskContainerCols" : "taskContainerRows";
 
   return (
       <div className="App">
+        <Header 
+          taskNumber={taskList.length}
+          toggleDisplay={(e) => this.toggleDisplay(e)}
+          />
 
-        <Header taskNumber={taskList.length}/>
         <Search taskList={taskList} displaySearch={(e,p) => this.displaySearch(e,p)}/>
 
+{/* The new task/edit task form */}
         <div className="formContainer container">
           {this.state.formDisp ? null : <button className="btn btn-primary" onClick={this.toggleForm}>Add Task</button>}
          <div style={{display: this.state.formDisp ? 'block' : 'none'}}> 
            <Form 
-            formState={this.state.formState} 
-            updateDisp={this.updateDisp} 
-            closeForm={this.toggleForm} 
-            taskList={this.state.tasks} 
-            taskToEdit={this.state.taskToEdit} 
-            taskID={this.state.id} 
+              formState={this.state.formState} 
+              updateDisp={this.updateDisp} 
+              closeForm={this.toggleForm} 
+              taskList={this.state.tasks} 
+              taskToEdit={this.state.taskToEdit} 
+              taskID={this.state.id} 
+              taskStar={this.state.star}
             />
           </div>
         </div>
-
+{/* The buttons - should change to menu */}
         <div className="buttonContainer"> Display: 
-          <button className="btn btn-primary" value="priority" onClick={this.taskSort}>By Priority ({this.state.order === "desc" ? "Ascending" : "Descending"})</button>
+          <button className="btn btn-primary" value="priority" onClick={this.taskSort}>By Priority ({this.state.order === "desc" ? "Descending" : "Ascending"})</button>
           <button className="btn btn-primary" value="dateEntered" onClick={this.taskSort}>By Date Entered</button>
           <button className="btn btn-primary" value="dateDue" onClick={this.taskSort}>By Date Due</button>
         </div>
 
-        <div className="completeContainer">
-        <div className="overView card">
+      
+{/* The complete quick list - bring back as a dropdown */}
+          {/* <div className="overView card">
             {taskList.length > 0 ? 
               taskList.map(task =>  <OverView taskNumber={taskList.indexOf(task) + 1} taskTitle={task.title}/>)
             : "No tasks"
             }
-          </div>
-          <div>
-            {this.state.showSearch === false ? null : searchDisp}
+          </div> */}
+
+        {this.state.showSearch === false ? null : searchDisp}
+
+        <div className={cols}>
             {taskList.length > 0 ? 
               taskList.map((task)=> ( 
-                <Tasks taskID={task.id} taskTitle={task.title} taskDetails={task.details} taskPriority={task.priority} taskDone={task.done} updateDisp={this.updateDisp} editTask={() => this.editTask(task,task.id)} dateDue={task.date} toggleDone={() => {
-                  task.done = (task.done === true ? false : true)}} />
+                <div className="taskContainer">
+                    <Tasks 
+                      taskID={task.id} 
+                      taskTitle={task.title} 
+                      taskDetails={task.details} 
+                      taskStar={task.star} 
+                      taskDone={task.done} 
+                      updateDisp={this.updateDisp} 
+                      dateDue={task.date} 
+                      editTask={() => 
+                        this.editTask(task,task.id)
+                      } 
+                      toggleDone={() => {
+                        task.done = (task.done === true ? false : true)
+                      }} 
+                    />
+                  </div>
               ))           
               : <Notasks />}
-          </div>
         </div>
+        
 
       </div>
     )
@@ -152,11 +181,3 @@ render(){
 
 export default App;
 
-
-/*
-To Do:
-1. edit task 
-2. search feature
-3. Layout... 
-4. Buttons - make menus for search, overview, and display order 
-*/

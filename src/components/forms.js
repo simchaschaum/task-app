@@ -3,13 +3,15 @@ import React, { Component } from 'react';
 import firebase, {db, tasksCollection, firebaseTimestamp} from '../utils/firebase';
 import { firebaseArrMaker } from '../utils/tools';
 
+var star;
+
 class Form extends Component{
     state ={
         // taskID: this.props.taskID,
         // taskToEdit: this.props.taskToEdit,
         title: "",
         details: "", 
-        priority: "",
+        star: this.props.taskStar,
         date: ""
         
     };
@@ -33,17 +35,34 @@ class Form extends Component{
         } else {
             var editTitle = document.getElementById("editTitle").innerHTML;
             var editDetails = document.getElementById("editDetails").innerHTML; 
-            var priority = this.state.priority === "" ? this.props.taskToEdit.priority : this.state.priority;
+            var star = this.state.star;
             var date = this.state.date === "" ? this.props.taskToEdit.date : this.state.date;
             tasksCollection.doc(this.props.taskID)
                 .update({
                     title: editTitle,
                     details: editDetails,
-                    priority: priority,
+                    star: star,
                     date: date
                 })
         };
         this.props.updateDisp();
+        this.props.closeForm();
+        this.clearState();
+    }
+
+    toggleStar = (e) => {
+        e.preventDefault();
+        if(this.state.star === true){
+            this.setState({star: false});
+            star = "https://img.icons8.com/ios-filled/24/000000/star.png"
+        }  else {
+            this.setState({star:true});
+            star =  "https://img.icons8.com/ios/24/000000/star--v1.png"
+        } 
+ 
+    } 
+
+    closeForm = () => {
         this.props.closeForm();
         this.clearState();
     }
@@ -67,25 +86,11 @@ class Form extends Component{
                     <div id="editDetails" className="editText" contentEditable="true">{this.props.taskToEdit.details}</div> 
                 </label>
             :   <label>
-                    <input id="newTaskDetails" className="form-control" name="details" value={this.state.details} type="text" placeholder="Enter Details" onChange={(e) => this.input(e)} required></input>
+                    <input id="newTaskDetails" className="form-control" name="details" value={this.state.details} type="text" placeholder="Enter Details" onChange={(e) => this.input(e)} ></input>
                 </label>
         
-        switch (this.props.taskToEdit.priority) {
-            case "1":
-                var priority = "Previous Priority: High";
-                break;
-            case "2":
-                var priority = "Previous Priority: Medium";
-                break;
-            case "3":
-                var priority = "Priority: Low";
-                break;
-            default:
-                var priority = "";
-                break;
-        }
-        var pri = this.props.formState === "newTask" ? "Select a priority" : priority;
-
+        star = this.state.star ? "https://img.icons8.com/ios/24/000000/star--v1.png" : "https://img.icons8.com/ios-filled/24/000000/star.png";
+        
         return(
             <div> 
                 <form className="taskContainer form form-group" onSubmit={(e)=>this.submitDetails(e)}>
@@ -93,21 +98,18 @@ class Form extends Component{
                    
                    {details} <br />
 
-                    <label>Priority:
-                        <select id="newTaskPriority" className="form-control-sm" name="priority" type="select" onChange={(e) => this.input(e)} required>
-                            <option selected hidden disabled>{pri}</option>
-                            <option value="no priority">No Priority</option>
-                            <option value="1">High</option>
-                            <option value="2">Medium</option>
-                            <option value="3">Low</option>
-                        </select>
-                    </label>
+                    <button className="btn" name="star" onClick={this.toggleStar}>
+                        <img src={star}/>
+                    </button>
+                    
                     <label>Due Date:
                         <input id="newTaskDate" className="form-control-sm" type="date" name="date" value={this.state.date} onChange={(e)=>this.input(e)}></input>
                     </label>
+                    
                     <input className="btn btn-primary" type="submit"></input> 
-                    <button className="btn btn-primary" onClick={this.props.closeForm}>Cancel</button>
-                </form>
+                    <button className="btn btn-primary" onClick={this.closeForm}>Cancel</button>
+
+               </form>
             </div>
         )
     }

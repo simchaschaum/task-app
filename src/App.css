@@ -21,9 +21,9 @@ html{
   scroll-behavior: smooth;
 }
 
-header{
-  /* position: fixed; */
-}
+/* header{
+  position: fixed;
+} */
 
 .btn {
   /* background: var(--clr-pri); */
@@ -31,16 +31,55 @@ header{
   margin: 5px 5px;
 }
 
-.completeContainer{
+/* elements in Search */
+#searchContainer{
+  width: 75%;
+  margin: 0 auto;
+}
+#searchInput{
+  width: 90%;
+}
+#searchSubmit{
+  width: 10%;
+}
+
+/* These are for both task titles in Tasks and input and button in Search */
+.inlineGroup{
+  white-space: nowrap;
+}
+.taskTitle{
+  display: inline-block;
+}
+
+.taskContainerCols{
   display: grid;
-  grid-template-columns: 1fr 4fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+@media(max-width: 1000px){
+  .taskContainerCols{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+}
+
+.taskContainerRows{
+  display: grid;
+  grid-template-columns: 1fr;
 }
 
 .taskContainer{
   /* background: var(--clr-sec); */
-  max-width: 75%;
+  width: 75%;
   margin: 10px auto;
   padding: 10px;
+  border: .5px solid black;
+  border-radius: 1%;
+  overflow-wrap: break-word;
+}
+
+.taskIcon{
+  width: 3em;
+  height: auto;
 }
 
 .overView{
@@ -95,5 +134,13 @@ header{
   height: 10em;
 }
 
-
-
+footer{
+  /* position: fixed; */
+  bottom: 0;
+  margin-top: 5em;
+  border-top: .5px black solid;
+  width: 100%;
+  background-color: white;
+  font-size: .75em;
+  z-index: 100;
+}
