@@ -3,44 +3,69 @@ import React, { Component } from 'react';
 import firebase, {db, tasksCollection, firebaseTimestamp} from '../utils/firebase';
 import { firebaseArrMaker } from '../utils/tools';
 
-var star;
+var starIcon;
 
 class Form extends Component{
-    state ={
-        // taskID: this.props.taskID,
-        // taskToEdit: this.props.taskToEdit,
+    state = {
         title: "",
         details: "", 
-        star: this.props.taskStar,
-        date: ""
-        
+        star: "",
+        date: "",
+        titleEdited: false,   // checking if these were edited
+        detailsEdited: false,
+        starEdited: false,
+        dateEdited: false        
     };
-  
+
+    setEditForm = (star) => {
+        this.setState({star:star});
+        star ? 
+            starIcon = "https://img.icons8.com/ios-filled/24/000000/star.png"
+            : starIcon =  "https://img.icons8.com/ios/24/000000/star--v1.png";
+    }
+
     input = (event) => {
         let name = event.target.name;
         let value = event.target.value;
         this.setState({
             [name]:value
-        })
+        });
+        switch(name){
+            case "title":
+                this.setState({titleEdited: true})
+                break;
+            case "details":
+                this.setState({detailsEdited: true})
+                break;
+            case "star":
+                this.setState({starEdited: true})
+                break;
+            default:
+                this.setState({dateEdited: true})
+                break;
+        }
     }
 
     submitDetails = (event) => {
         event.preventDefault();
         if(this.props.formState === "newTask"){
             tasksCollection.add({
-                ...this.state,
+                title: this.state.title,
+                details: this.state.details,
+                date: this.state.date,
+                star: this.state.star,
                 done: false,
                 addedAt: firebaseTimestamp()
             });
         } else {
-            var editTitle = document.getElementById("editTitle").innerHTML;
-            var editDetails = document.getElementById("editDetails").innerHTML; 
-            var star = this.state.star;
-            var date = this.state.date === "" ? this.props.taskToEdit.date : this.state.date;
+            var title = this.state.titleEdited === false ? this.props.taskToEdit.title : this.state.title;
+            var details = this.state.detailsEdited === false ? this.props.taskToEdit.details : this.state.details;
+            var star = this.state.starEdited === false ? this.props.taskToEdit.star : this.state.star;
+            var date = this.state.dateEdited === false ? this.props.taskToEdit.date : this.state.date;
             tasksCollection.doc(this.props.taskID)
                 .update({
-                    title: editTitle,
-                    details: editDetails,
+                    title: title,
+                    details: details,
                     star: star,
                     date: date
                 })
@@ -48,19 +73,19 @@ class Form extends Component{
         this.props.updateDisp();
         this.props.closeForm();
         this.clearState();
-    }
+      }
 
     toggleStar = (e) => {
         e.preventDefault();
-        if(this.state.star === true){
-            this.setState({star: false});
-            star = "https://img.icons8.com/ios-filled/24/000000/star.png"
-        }  else {
-            this.setState({star:true});
-            star =  "https://img.icons8.com/ios/24/000000/star--v1.png"
+        if(this.props.taskStar === true){
+            starIcon = "https://img.icons8.com/ios/24/000000/star--v1.png";
+            var cs = false;
+            }  else {
+            starIcon =  "https://img.icons8.com/ios-filled/24/000000/star.png";
+            var cs = true;
         } 
- 
-    } 
+        this.setState({star: cs, starEdited: true});
+ } 
 
     closeForm = () => {
         this.props.closeForm();
@@ -68,14 +93,24 @@ class Form extends Component{
     }
 
     clearState = () => {
-        this.setState({title: "", details: "", priority: "", date: ""});
+        this.setState({
+            title: "", 
+            details: "", 
+            priority: "", 
+            date: "", 
+            star: this.props.taskStar,
+            titleEdited: false, 
+            detailsEdited: false, 
+            dateEdited: false, 
+            starEdited: false
+        }, ()=>console.log("star = " + this.state.star));
     }
 
     render(){
 
         var title = this.props.formState === "editTask" ? 
                 <label>Edit Title:
-                    <div id="editTitle" className="editText" contentEditable="true">{this.props.taskToEdit.title}</div> 
+                    <textarea id="editTitle" className="editText" name="title" contentEditable="true" onChange={(e) => this.input(e)}>{this.props.taskToEdit.title}</textarea> 
                 </label>
             :   <label>
                     <input id="newTaskTitle" className="form-control" name="title" value={this.state.title} type="text" placeholder="Enter Title" onChange={(e) => this.input(e)} required></input>
@@ -83,14 +118,16 @@ class Form extends Component{
 
         var details = this.props.formState === "editTask" ?
                 <label>Edit Details:
-                    <div id="editDetails" className="editText" contentEditable="true">{this.props.taskToEdit.details}</div> 
+                    <textArea id="editDetails" className="editText" name="details" contentEditable="true" rows="5" onChange={(e) => this.input(e)}>{this.props.taskToEdit.details}</textArea> 
                 </label>
-            :   <label>
-                    <input id="newTaskDetails" className="form-control" name="details" value={this.state.details} type="text" placeholder="Enter Details" onChange={(e) => this.input(e)} ></input>
-                </label>
+                :   <label>
+                        <textArea id="newTaskDetails" className="form-control" name="details" value={this.state.details} type="text" placeholder="Enter Details" rows="5" onChange={(e) => this.input(e)} ></textArea>
+                    </label>
         
-        star = this.state.star ? "https://img.icons8.com/ios/24/000000/star--v1.png" : "https://img.icons8.com/ios-filled/24/000000/star.png";
-        
+        // starIcon = this.state.star ? 
+        //     "https://img.icons8.com/ios-filled/24/000000/star.png"  // filled-in star icon
+        //     : "https://img.icons8.com/ios/24/000000/star--v1.png";  // outline star icon
+
         return(
             <div> 
                 <form className="taskContainer form form-group" onSubmit={(e)=>this.submitDetails(e)}>
@@ -99,7 +136,7 @@ class Form extends Component{
                    {details} <br />
 
                     <button className="btn" name="star" onClick={this.toggleStar}>
-                        <img src={star}/>
+                        <img src={starIcon}/>
                     </button>
                     
                     <label>Due Date:

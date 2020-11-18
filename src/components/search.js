@@ -16,7 +16,7 @@ class Search extends Component{
         e.preventDefault();
         var filteredList = [];
         this.props.taskList.forEach( item => {
-            if(item.title.search(this.state.searchParams) != -1 || item.details.search(this.state.searchParams) != -1){
+            if(item.title.toLowerCase().search(this.state.searchParams.toLowerCase()) != -1 || item.details.toLowerCase().search(this.state.searchParams.toLowerCase()) != -1){
                 filteredList.push(item);
                 }   
         }
@@ -29,8 +29,17 @@ class Search extends Component{
         return(
             <div>
                 <form id="searchContainer" className="form-group inlineGroup" onSubmit={this.handleSearch}> 
-                    <input type="text" id="searchInput" className="form-control taskTitle" placeholder="Search for a word or phrase" onChange={(e)=>this.handleChange(e)} required></input>
-                    <button type="submit" id="searchSubmit" className="form-control taskTitle btn btn-primary"><img src="https://img.icons8.com/pastel-glyph/64/000000/search--v2.png"/></button    >
+                    <input 
+                        type="text" 
+                        id="searchInput" 
+                        className="form-control taskTitle" 
+                        onChange={(e)=>this.handleChange(e)} 
+                        required
+                    ></input>
+                    <button type="submit" id="searchSubmit" className="form-control taskTitle btn btn-secondary">
+                        <img className="searchIcon" src="https://img.icons8.com/pastel-glyph/64/000000/search--v2.png"/>
+                    </button>
+                    
                 </form>
                 
             </div>

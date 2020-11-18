@@ -7,28 +7,58 @@
   --clr-pri: #ff00d8;
   --clr-sec: #FF0058;
   --clr-ter:  #A700FF;
+  --clr-gray: #6c757d;
 
-  --fs-h1: 3rem;
-  --fs-h2: 2.25rem;
-  --fs-h3: 1.25rem;
-  --fs-body: 1rem;
+  --fs-h1: 2rem;
+  --fs-h2: 1.5rem;
+  --fs-h3: 1rem;
+  --fs-body: .75rem;
 
   --fw-reg: 300;
   --fw-bold: 900;
+
+  /* box-shadow */
+  --bs: 0 0 2px var(--clr-gray);
 }
 
 html{
   scroll-behavior: smooth;
 }
 
-/* header{
-  position: fixed;
-} */
+main{
+  min-height: 70vw;
+}
+h1{
+  font-size: var(--fs-h1);
+}
+
+h2{
+  font-size: var(--fs-h2);
+}
+
+
+/* Header */
+.newTaskBtn{
+  height: 2em;
+}
+
+/* box-shadow on most buttons */
+header .btn-group .btn{
+  box-shadow: var(--bs);
+}
+
+#searchContainer .btn{
+  box-shadow: var(--bs);
+}
 
 .btn {
   /* background: var(--clr-pri); */
   border: none;
   margin: 5px 5px;
+}
+
+input{
+  box-shadow: var(--bs);
 }
 
 /* elements in Search */
@@ -41,6 +71,11 @@ html{
 }
 #searchSubmit{
   width: 10%;
+}
+
+.searchIcon {
+  width: 2em;
+  height: auto;
 }
 
 /* These are for both task titles in Tasks and input and button in Search */
@@ -67,21 +102,94 @@ html{
   grid-template-columns: 1fr;
 }
 
-.taskContainer{
+/* .taskcontainer is in App component, surrounds each instance of Task component */
+.taskContainer{  
   /* background: var(--clr-sec); */
   width: 75%;
   margin: 10px auto;
-  padding: 10px;
-  border: .5px solid black;
-  border-radius: 1%;
+  padding: 5px;
+  border: .5px solid var(--clr-gray);
+  border-radius: .25rem;
   overflow-wrap: break-word;
+  box-shadow: var(--bs);
 }
 
-.taskIcon{
-  width: 3em;
+.taskSubcontainer{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+
+.title{
+  text-align: left;
+  padding-left: 2em;
+}
+
+.dateDue{
+  font-style: italic;
+}
+
+.taskBtnGrp{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  padding: 5px;
+}
+
+.taskBtn{
+  display: inline-flex !important;
+}
+
+.icon{
+  width: 2em;
   height: auto;
 }
 
+@media(max-width: 800px){
+  .icon{
+    width: 1.5em;
+    height: auto;
+  }
+}
+
+.detailsParagraph{
+  /* border: .5px solid var(--clr-gray); */
+  width: 75%;
+  margin: 0 auto;
+  text-align: justify;
+  padding: 1em;
+}
+
+.toolTipContainer{
+  position: relative;
+  display: inline-block;
+  text-align: right;
+  }
+
+.toolTip{
+  visibility: hidden;
+  width: auto;
+  background-color: #6c757d;
+  color: #fff;
+  font-size: var(--fs-body);
+  text-align: center;
+  padding: 5px 5px;
+  border-radius: .25rem;
+  white-space: nowrap;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -40px;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.toolTipContainer:hover .toolTip{
+  visibility: visible;
+  opacity: 1;
+}
+
+/* tasks overview (probably in its own pulldown or menu */
 .overView{
   border: .5px solid black;
   text-align: justify;
@@ -92,10 +200,14 @@ html{
 
 /* Form component: */
 
+#editTitle{
+  overflow: hidden;
+  }
+
 #newTaskDetails {
   text-align: justify;
-  vertical-align: top;
-  
+  vertical-align: top !important;
+  height: 10em;
 }
 
 .form{
@@ -110,7 +222,7 @@ html{
   color: black;
   opacity: 90%;
   background: white !important;
-  border-radius: 5% / 5%;
+  border-radius: .25rem;
   border-top: solid black 1px;
   border-left: solid black 1px;
   border-right: solid grey 1px;
@@ -124,10 +236,6 @@ html{
 
 .form-control {
   width: 400px;
-}
-
-#newTaskDetails{
-  height: 10em;
 }
 
 #editDetails{

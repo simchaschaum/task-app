@@ -25,7 +25,7 @@ state = {
   searchParams: "",
   showSearch: false, 
   taskDisp: "rows", // displays tasks in "rows" or "boxes" (3 or 4 per row)
-  star: false  // will be set when opening the form to edit task 
+  star: ""
 }
 
 componentDidMount(){
@@ -72,17 +72,22 @@ getTasks(){
 
   // opens and closes form for starting new task
   toggleForm = () => {
-    this.state.formDisp ? this.setState({formDisp: false, formState: "newTask"}): this.setState({formDisp: true, formState: "newTask", star: false});
+    this.state.formDisp ? this.setState({formDisp: false, formState: "newTask"}) : this.setState({formDisp: true, formState: "newTask", star: false});
   }
 
   // opens form to edit existing task:
   editTask = (task, num) => {
+    this.setEditForm(task.star);
     this.setState({
       formState: "editTask", 
       taskToEdit: task,
       id: num, 
       star: task.star,
     }, () => this.setState({formDisp: true}));
+  }
+
+  setEditForm = (star) => {
+    this.refs.form.setEditForm(star)
   }
   
   displaySearch = (filteredList, searchParams) => {
@@ -91,7 +96,8 @@ getTasks(){
   }
 
   finishSearch = () => {
-    this.setState({showSearch: false}, () => this.getTasks())  
+    this.setState({showSearch: false}, () => this.getTasks());
+    document.getElementById("searchInput").value = "";
     }
  
 render(){
@@ -110,31 +116,35 @@ render(){
         <Header 
           taskNumber={taskList.length}
           toggleDisplay={(e) => this.toggleDisplay(e)}
+          formDisp={this.state.formDisp}
+          toggleForm={this.toggleForm}
+          taskSort={this.taskSort}
+          order={this.state.order}
           />
 
-        <Search taskList={taskList} displaySearch={(e,p) => this.displaySearch(e,p)}/>
+        <Search 
+          taskList={taskList} 
+          displaySearch={(fl,sp) => this.displaySearch(fl,sp)}
+          />
 
 {/* The new task/edit task form */}
         <div className="formContainer container">
-          {this.state.formDisp ? null : <button className="btn btn-primary" onClick={this.toggleForm}>Add Task</button>}
+          
          <div style={{display: this.state.formDisp ? 'block' : 'none'}}> 
            <Form 
+              ref="form"
               formState={this.state.formState} 
               updateDisp={this.updateDisp} 
               closeForm={this.toggleForm} 
               taskList={this.state.tasks} 
               taskToEdit={this.state.taskToEdit} 
               taskID={this.state.id} 
-              taskStar={this.state.star}
+              taskStar={this.state.star}  // FIX THIS HERE!!!
             />
           </div>
         </div>
 {/* The buttons - should change to menu */}
-        <div className="buttonContainer"> Display: 
-          <button className="btn btn-primary" value="priority" onClick={this.taskSort}>By Priority ({this.state.order === "desc" ? "Descending" : "Ascending"})</button>
-          <button className="btn btn-primary" value="dateEntered" onClick={this.taskSort}>By Date Entered</button>
-          <button className="btn btn-primary" value="dateDue" onClick={this.taskSort}>By Date Due</button>
-        </div>
+       
 
       
 {/* The complete quick list - bring back as a dropdown */}
