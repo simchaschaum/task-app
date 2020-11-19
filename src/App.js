@@ -143,10 +143,7 @@ render(){
             />
           </div>
         </div>
-{/* The buttons - should change to menu */}
        
-
-      
 {/* The complete quick list - bring back as a dropdown */}
           {/* <div className="overView card">
             {taskList.length > 0 ? 

@@ -108,29 +108,47 @@ class Form extends Component{
 
     render(){
 
+        // Input for title - depending on whether you're adding a new task or editing an existing one:
         var title = this.props.formState === "editTask" ? 
-                <label>Edit Title:
-                    <textarea id="editTitle" className="editText" name="title" contentEditable="true" onChange={(e) => this.input(e)}>{this.props.taskToEdit.title}</textarea> 
-                </label>
+                <div className="form-group row">        
+                    <label className="col-sm-2 col-form-label">Edit Title:</label>
+                    <div className="col-sm-10">
+                        <textarea id="editTitle" className="editText form-control" 
+                            name="title" 
+                            contentEditable="true" 
+                            onChange={(e) => this.input(e)}>
+                                {this.props.taskToEdit.title}
+                        </textarea> 
+                    </div>
+                </div>
             :   <label>
                     <input id="newTaskTitle" className="form-control" name="title" value={this.state.title} type="text" placeholder="Enter Title" onChange={(e) => this.input(e)} required></input>
                 </label>
-
+        // Input for details - depending on whether you're adding a new task or editing an existing one:
         var details = this.props.formState === "editTask" ?
-                <label>Edit Details:
-                    <textArea id="editDetails" className="editText" name="details" contentEditable="true" rows="5" onChange={(e) => this.input(e)}>{this.props.taskToEdit.details}</textArea> 
-                </label>
-                :   <label>
-                        <textArea id="newTaskDetails" className="form-control" name="details" value={this.state.details} type="text" placeholder="Enter Details" rows="5" onChange={(e) => this.input(e)} ></textArea>
-                    </label>
-        
-        // starIcon = this.state.star ? 
-        //     "https://img.icons8.com/ios-filled/24/000000/star.png"  // filled-in star icon
-        //     : "https://img.icons8.com/ios/24/000000/star--v1.png";  // outline star icon
-
+                <div className="form-group row">
+                    <label className="col-sm-2 col-form-label">Edit Details: </label>
+                    <div className="col-sm-10">
+                        <textArea id="editDetails" className="editText form-control" name="details" 
+                            contentEditable="true" 
+                            rows="5" 
+                            onChange={(e) => this.input(e)}>{this.props.taskToEdit.details}
+                        </textArea> 
+                    </div>
+                </div>
+                    :   <label>
+                            <textArea id="newTaskDetails" className="form-control" 
+                                name="details" 
+                                value={this.state.details} 
+                                type="text" placeholder="Enter Details" 
+                                rows="5" 
+                                onChange={(e) => this.input(e)} >
+                            </textArea>
+                        </label>
+            
         return(
             <div> 
-                <form className="taskContainer form form-group" onSubmit={(e)=>this.submitDetails(e)}>
+                <form className="formInnerContainer form form-group" onSubmit={(e)=>this.submitDetails(e)}>
                    {title} <br />
                    
                    {details} <br />

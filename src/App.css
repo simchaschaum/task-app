@@ -69,13 +69,18 @@ input{
 #searchInput{
   width: 90%;
 }
+
 #searchSubmit{
   width: 10%;
+  padding: 6px 6px !important;
+  width: 61px !important;
+  transform: translateY(-2px);
 }
 
 .searchIcon {
   width: 2em;
   height: auto;
+  transform: translateY(-3px)
 }
 
 /* These are for both task titles in Tasks and input and button in Search */
@@ -103,7 +108,7 @@ input{
 }
 
 /* .taskcontainer is in App component, surrounds each instance of Task component */
-.taskContainer{  
+.taskContainer, .formInnerContainer{  
   /* background: var(--clr-sec); */
   width: 75%;
   margin: 10px auto;
@@ -112,6 +117,11 @@ input{
   border-radius: .25rem;
   overflow-wrap: break-word;
   box-shadow: var(--bs);
+  transition: background-color;
+  transition-duration: .25s;
+}
+.taskContainer:hover{
+  background-color: #b8bab9;
 }
 
 .taskSubcontainer{
@@ -122,6 +132,10 @@ input{
 .title{
   text-align: left;
   padding-left: 2em;
+}
+
+#star{
+  margin-left: 15px;
 }
 
 .dateDue{
@@ -177,7 +191,7 @@ input{
   white-space: nowrap;
   position: absolute;
   z-index: 1;
-  bottom: 125%;
+  bottom: 100%;
   left: 50%;
   margin-left: -40px;
   opacity: 0;
@@ -223,11 +237,10 @@ input{
   opacity: 90%;
   background: white !important;
   border-radius: .25rem;
-  border-top: solid black 1px;
+  /* border-top: solid black 1px;
   border-left: solid black 1px;
   border-right: solid grey 1px;
-  border-bottom: solid grey 1px;
-  height: 3em;
+  border-bottom: solid grey 1px; */
   width: 400px;
   text-align: justify;
   vertical-align: top;

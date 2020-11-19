@@ -42,11 +42,13 @@ class Tasks extends React.Component{
     };
     
     deleteTask = () => {
-        tasksCollection.doc(this.state.taskID)
-            .delete()
-            .then(()=>console.log(this.props.taskTitle + "  Deleted!"))
-            .catch(error => console.log(error));
-        this.props.updateDisp();
+        if(window.confirm("Are you sure you want to delete this task?")){
+            tasksCollection.doc(this.state.taskID)
+                .delete()
+                .then(()=>console.log(this.props.taskTitle + "  Deleted!"))
+                .catch(error => console.log(error));
+            this.props.updateDisp();
+        }
     }
 
     editTask = () => {
@@ -55,8 +57,13 @@ class Tasks extends React.Component{
 
     render(){
  
-
-       
+        const toolTips = {
+            done: "Mark as done",
+            undone: "Mark as not done",
+            show: "Show details",
+            hide: "Hide details",
+            editTask: "Edit Task"
+        }
 
         var expanded = this.state.expanded ? <img className="icon" src="https://img.icons8.com/windows/32/000000/hide.png"/> 
                 : <img className="icon" src="https://img.icons8.com/ios-glyphs/60/000000/show-property.png"/>;
@@ -66,18 +73,23 @@ class Tasks extends React.Component{
                     <button className="expandButton taskBtn btn btn-sm" onClick={this.expand}>
                         {expanded}
                     </button>
-                    <span className="toolTip">Show Details Below</span>
+                    <span className="toolTip">
+                        {this.state.expanded ? toolTips.hide : toolTips.show} 
+                    </span>
                 </div>
-
+        
         return(
            <div>
                     <div className="taskSubcontainer">
 
                         <div className="title">
-                            <h2 className="taskTitle"> {this.props.taskTitle} </h2>  
-                            <span className="taskPriority taskTitle"> 
-                                  {this.props.taskStar === true ? <img className="icon" src="https://img.icons8.com/emoji/48/000000/star-emoji.png"/> : null} 
-                            </span>
+                            <h2 className="taskTitle"> 
+                                {this.props.taskTitle} 
+                                <span className="taskPriority taskTitle"> 
+                                    {this.props.taskStar === true ? <img id="star" className="icon" src="https://img.icons8.com/emoji/48/000000/star-emoji.png"/> : null} 
+                                </span>
+                            </h2>  
+                          
                             <div className="dateDue">
                                 {this.props.dateDue == "" ? null : "Due on " + this.props.dateDue}
                             </div>
@@ -91,7 +103,7 @@ class Tasks extends React.Component{
                                 <button className="editButton taskBtn btn-sm btn" onClick={this.editTask}>
                                     <img className="icon"src="https://img.icons8.com/pastel-glyph/64/000000/edit--v1.png"/>
                                 </button>
-                                <span className="toolTip">Edit Task</span>
+                                <span className="toolTip">{toolTips.editTask}</span>
                             </div>
 
                             <div className="toolTipContainer">
@@ -108,7 +120,9 @@ class Tasks extends React.Component{
                                         <img className="icon" src="https://img.icons8.com/ios/100/000000/checked-2--v2.png"/> 
                                         : <img className="icon" src="https://img.icons8.com/ios/100/000000/checked-2--v3.png"/> }
                                 </button>
-                                <span className="toolTip">Mark Done</span>
+                                <span className="toolTip">
+                                    {this.state.done ? toolTips.undone : toolTips.done}
+                                </span>
                             </div>
                         </div>
                     </div>
