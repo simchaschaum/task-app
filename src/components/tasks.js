@@ -62,7 +62,8 @@ class Tasks extends React.Component{
             undone: "Mark as not done",
             show: "Show details",
             hide: "Hide details",
-            editTask: "Edit Task"
+            editTask: "Edit Task",
+            star: "This task is a priority"
         }
 
         var expanded = this.state.expanded ? <img className="icon" src="https://img.icons8.com/windows/32/000000/hide.png"/> 
@@ -73,21 +74,30 @@ class Tasks extends React.Component{
                     <button className="expandButton taskBtn btn btn-sm" onClick={this.expand}>
                         {expanded}
                     </button>
-                    <span className="toolTip">
+                    <span className="toolTip toolTipAbove">
                         {this.state.expanded ? toolTips.hide : toolTips.show} 
                     </span>
                 </div>
-        
+
+        // var taskBigContainer = this.props.taskCols === "taskCols" ? "taskBigContainerCols" : null;
+        var taskSubcontainer = this.props.taskCols === "taskCols" ? "taskSubcontainer" : "null";
+        var taskBtnGrp = this.props.taskCols === "taskCols" ? "taskBtnCols": null;
+        var taskTitleAndButtonsCols = this.props.taskCols === "taskCols" ? "taskTitleAndButtonsCols" : null;
+
         return(
-           <div>
-                    <div className="taskSubcontainer">
+           <div className={taskSubcontainer}>
+                    <div className="taskTitleAndButtons" id={taskTitleAndButtonsCols}>
 
                         <div className="title">
                             <h2 className="taskTitle"> 
                                 {this.props.taskTitle} 
-                                <span className="taskPriority taskTitle"> 
-                                    {this.props.taskStar === true ? <img id="star" className="icon" src="https://img.icons8.com/emoji/48/000000/star-emoji.png"/> : null} 
-                                </span>
+                                <div className="toolTipContainer">
+                                    <span className="taskPriority taskTitle"> 
+                                        {this.props.taskStar === true ? <img id="star" className="icon" src="https://img.icons8.com/emoji/48/000000/star-emoji.png"/> : null} 
+                                    </span>
+                                    <span className="toolTip toolTipAbove">{toolTips.star}</span>
+                                </div>
+                                
                             </h2>  
                           
                             <div className="dateDue">
@@ -95,32 +105,35 @@ class Tasks extends React.Component{
                             </div>
                         </div>
                         
-                        <div className="btn-group taskBtnGrp">
+                        <div className="btn-grp taskBtnGrp" id={taskBtnGrp}>
 
+                        {/* Show/Hide details, and details: */}
                             {expandedButton}
                           
+                        {/* Edit task button: */}
                             <div className="toolTipContainer">
                                 <button className="editButton taskBtn btn-sm btn" onClick={this.editTask}>
                                     <img className="icon"src="https://img.icons8.com/pastel-glyph/64/000000/edit--v1.png"/>
                                 </button>
-                                <span className="toolTip">{toolTips.editTask}</span>
+                                <span className="toolTip toolTipAbove">{toolTips.editTask}</span>
                             </div>
 
+                        {/* Delete button: */}
                             <div className="toolTipContainer">
                                 <button className="deleteButton taskBtn btn-sm btn" onClick={this.deleteTask}>
                                 <img className="icon" src="https://img.icons8.com/metro/52/000000/delete-sign.png"/>
                                 </button>
-                                <span className="toolTip">Delete This Task</span>
-                                {/* {this.state.done ? <h2  className="taskTitle">Done</h2> : null} */}
+                                <span className="toolTip toolTipAbove">Delete This Task</span>
                             </div>
-                             
+
+                        {/* Mark as done button: */}
                             <div className="toolTipContainer">
                                 <button className="doneButton taskBtn btn btn-sm" onClick={this.toggleDone}>
                                     {this.state.done ? 
                                         <img className="icon" src="https://img.icons8.com/ios/100/000000/checked-2--v2.png"/> 
                                         : <img className="icon" src="https://img.icons8.com/ios/100/000000/checked-2--v3.png"/> }
                                 </button>
-                                <span className="toolTip">
+                                <span className="toolTip toolTipAbove">
                                     {this.state.done ? toolTips.undone : toolTips.done}
                                 </span>
                             </div>

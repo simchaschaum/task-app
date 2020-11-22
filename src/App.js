@@ -108,13 +108,11 @@ render(){
       <button className="btn btn-primary" onClick={this.finishSearch}>Close Search</button>
     </div>  
   
-  // var cont = this.state.taskdisp === "boxes" ? "taskContainerCols" : "taskContainerRows";
   var cols = this.state.taskDisp === "boxes" ? "taskContainerCols" : "taskContainerRows";
 
   return (
       <div className="App">
         <Header 
-          taskNumber={taskList.length}
           toggleDisplay={(e) => this.toggleDisplay(e)}
           formDisp={this.state.formDisp}
           toggleForm={this.toggleForm}
@@ -128,7 +126,7 @@ render(){
           />
 
 {/* The new task/edit task form */}
-        <div className="formContainer container">
+        {/* <div className="formContainer container"> */}
           
          <div style={{display: this.state.formDisp ? 'block' : 'none'}}> 
            <Form 
@@ -139,10 +137,10 @@ render(){
               taskList={this.state.tasks} 
               taskToEdit={this.state.taskToEdit} 
               taskID={this.state.id} 
-              taskStar={this.state.star}  // FIX THIS HERE!!!
+              taskStar={this.state.star}  
             />
           </div>
-        </div>
+        {/* </div> */}
        
 {/* The complete quick list - bring back as a dropdown */}
           {/* <div className="overView card">
@@ -160,6 +158,7 @@ render(){
                 <div className="taskContainer">
                     <Tasks 
                       taskID={task.id} 
+                      taskCols={this.state.taskDisp === "boxes" ? "taskCols" : null}
                       taskTitle={task.title} 
                       taskDetails={task.details} 
                       taskStar={task.star} 

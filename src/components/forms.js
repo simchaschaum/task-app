@@ -121,34 +121,49 @@ class Form extends Component{
                         </textarea> 
                     </div>
                 </div>
-            :   <label>
-                    <input id="newTaskTitle" className="form-control" name="title" value={this.state.title} type="text" placeholder="Enter Title" onChange={(e) => this.input(e)} required></input>
-                </label>
-        // Input for details - depending on whether you're adding a new task or editing an existing one:
-        var details = this.props.formState === "editTask" ?
-                <div className="form-group row">
-                    <label className="col-sm-2 col-form-label">Edit Details: </label>
+            :   <div className="form-group row">
+                    <div className="col-sm-1">
+                    </div>
                     <div className="col-sm-10">
-                        <textArea id="editDetails" className="editText form-control" name="details" 
-                            contentEditable="true" 
-                            rows="5" 
-                            onChange={(e) => this.input(e)}>{this.props.taskToEdit.details}
-                        </textArea> 
+                        <input id="newTaskTitle" className="form-control" 
+                            name="title" 
+                            value={this.state.title} 
+                            type="text" placeholder="Enter Title" 
+                            onChange={(e) => this.input(e)} 
+                            required>
+                        </input>
                     </div>
                 </div>
-                    :   <label>
-                            <textArea id="newTaskDetails" className="form-control" 
-                                name="details" 
-                                value={this.state.details} 
-                                type="text" placeholder="Enter Details" 
+                // Input for details - depending on whether you're adding a new task or editing an existing one:
+                var details = this.props.formState === "editTask" ?
+                    <div className="form-group row">
+                        <label className="col-sm-2 col-form-label">Edit Details: </label>
+                        <div className="col-sm-10">
+                            <textArea id="editDetails form-control" className="editText" 
+                                name="details" contentEditable="true" 
                                 rows="5" 
-                                onChange={(e) => this.input(e)} >
+                                onChange={(e) => this.input(e)}
+                            >
+                            {this.props.taskToEdit.details}
+                            </textArea> 
+                        </div>
+                    </div>
+                :   
+                    <div className="form-group row">
+                        <div className="col-sm-1"></div>
+                        <div className="col-sm-10">
+                            <textArea id="newTaskDetails" className="form-control" 
+                            name="details" value={this.state.details} 
+                            type="text" placeholder="Enter Details" 
+                            rows="5" onChange={(e) => this.input(e)} >
                             </textArea>
-                        </label>
-            
+                        </div>  
+                    </div>
+        
+                                                            
         return(
-            <div> 
-                <form className="formInnerContainer form form-group" onSubmit={(e)=>this.submitDetails(e)}>
+            <div className="d-flex justify-content-center"> 
+                <form className="formContainer form form-group" onSubmit={(e)=>this.submitDetails(e)}>
                    {title} <br />
                    
                    {details} <br />

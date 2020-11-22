@@ -38,8 +38,35 @@ h2{
 
 
 /* Header */
+
+header{
+  /* margin: 0 auto; */
+  padding-top: 10px;
+  padding-bottom: 0px;
+  background: white;
+  /* position: fixed; */
+  z-index: 100;
+}
+
+.headerDiv{
+  max-width: 75%;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+}
+
+.logoIcon{
+  min-width: 4em;
+  padding-left: 0;
+}
+
 .newTaskBtn{
-  height: 2em;
+  min-width: 6em;
+  padding-right: 0;
+}
+
+hr{
+  margin: 5px
 }
 
 /* box-shadow on most buttons */
@@ -51,7 +78,7 @@ header .btn-group .btn{
   box-shadow: var(--bs);
 }
 
-.btn {
+btn {
   /* background: var(--clr-pri); */
   border: none;
   margin: 5px 5px;
@@ -62,19 +89,25 @@ input{
 }
 
 /* elements in Search */
-#searchContainer{
+#searchContainer {
   width: 75%;
   margin: 0 auto;
-}
+  display: flex;
+  /* flex-direction: row; */
+  justify-content: space-between;
+} 
+
 #searchInput{
-  width: 90%;
+  padding-bottom: 8px;
+  width: 88%;
 }
 
 #searchSubmit{
-  width: 10%;
-  padding: 6px 6px !important;
+  width: 8%;
+  padding: 8px 6px !important;
   width: 61px !important;
   transform: translateY(-2px);
+  margin: 0 0 !important;
 }
 
 .searchIcon {
@@ -87,18 +120,33 @@ input{
 .inlineGroup{
   white-space: nowrap;
 }
+
+/* .searchBar{
+  display: inline-block;
+} */
+
 .taskTitle{
   display: inline-block;
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
 
+/* Task display as boxes, using Grid System: */
 .taskContainerCols{
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
-}
-@media(max-width: 1000px){
-  .taskContainerCols{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    }
+
+@media (max-width: 1000px){
+  .taskContainerCols{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media(max-width: 600px){
+  .taskContainerCols{
+    display: grid;
+    grid-template-columns: 1fr;
   }
 }
 
@@ -107,11 +155,31 @@ input{
   grid-template-columns: 1fr;
 }
 
+/* task display as boxes - styling individual boxes: */
+
+.taskTitleAndButtons{
+  display: flex;
+  justify-content: space-between;
+}
+
+@media(min-width: 600px){
+  #taskTitleAndButtonsCols{
+    flex-direction: column;
+  }
+}
+
+/* button-group in boxes: */
+@media(min-width: 600px){
+  #taskBtnCols{
+    display: flex;
+    justify-content: flex-start;
+    padding-left: 24px;
+  }
+}
+
 /* .taskcontainer is in App component, surrounds each instance of Task component */
-.taskContainer, .formInnerContainer{  
+.taskContainer, .formContainer{  
   /* background: var(--clr-sec); */
-  width: 75%;
-  margin: 10px auto;
   padding: 5px;
   border: .5px solid var(--clr-gray);
   border-radius: .25rem;
@@ -120,22 +188,36 @@ input{
   transition: background-color;
   transition-duration: .25s;
 }
+
+.taskContainer{
+  margin: 10px auto;
+  width: 75%;
+}
 .taskContainer:hover{
   background-color: #b8bab9;
 }
 
-.taskSubcontainer{
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+@media(min-width:600px){
+  .taskSubcontainer{
+    min-height: 100px;
+  }
 }
 
 .title{
   text-align: left;
   padding-left: 2em;
+  display: flex;
+  align-items: center;
+}
+@media(max-width:600px){
+  .title{
+    padding-left: 0.5em;
+  }
 }
 
 #star{
   margin-left: 15px;
+  width: 35px;
 }
 
 .dateDue{
@@ -161,6 +243,12 @@ input{
 @media(max-width: 800px){
   .icon{
     width: 1.5em;
+    height: auto;
+  }
+}
+@media(max-width: 700px){
+  .icon{
+    width: 1.25em;
     height: auto;
   }
 }
@@ -191,7 +279,6 @@ input{
   white-space: nowrap;
   position: absolute;
   z-index: 1;
-  bottom: 100%;
   left: 50%;
   margin-left: -40px;
   opacity: 0;
@@ -201,6 +288,19 @@ input{
 .toolTipContainer:hover .toolTip{
   visibility: visible;
   opacity: 1;
+}
+
+.toolTipAbove{
+  transform: translateY(-30px);
+}
+
+.toolTipBelow{
+  transform: translateY(40px);
+  margin-left: -22px;
+}
+
+.detailsParagraph{
+  white-space: pre-wrap;
 }
 
 /* tasks overview (probably in its own pulldown or menu */
@@ -226,6 +326,8 @@ input{
 
 .form{
   position: fixed;
+  width: 65%;
+  padding: 15px;
   z-index: 1000;
   margin: 0 auto;
   /* background: var(--clr-ter); */
@@ -241,14 +343,10 @@ input{
   border-left: solid black 1px;
   border-right: solid grey 1px;
   border-bottom: solid grey 1px; */
-  width: 400px;
+  width: inherit;
   text-align: justify;
   vertical-align: top;
   padding: 1em;
-}
-
-.form-control {
-  width: 400px;
 }
 
 #editDetails{
@@ -259,9 +357,13 @@ footer{
   /* position: fixed; */
   bottom: 0;
   margin-top: 5em;
-  border-top: .5px black solid;
   width: 100%;
   background-color: white;
   font-size: .75em;
   z-index: 100;
+}
+
+.footerDiv{
+  width: 75%;
+  margin: 0 auto;
 }

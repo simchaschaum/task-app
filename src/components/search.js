@@ -28,18 +28,21 @@ class Search extends Component{
     render(){
         return(
             <div>
-                <form id="searchContainer" className="form-group inlineGroup" onSubmit={this.handleSearch}> 
+                <form id="searchContainer" className="form-group" onSubmit={this.handleSearch}> 
                     <input 
-                        type="text" 
-                        id="searchInput" 
-                        className="form-control taskTitle" 
-                        onChange={(e)=>this.handleChange(e)} 
-                        required
-                    ></input>
-                    <button type="submit" id="searchSubmit" className="form-control taskTitle btn btn-secondary">
-                        <img className="searchIcon" src="https://img.icons8.com/pastel-glyph/64/000000/search--v2.png"/>
-                    </button>
-                    
+                            type="text" 
+                            id="searchInput" 
+                            className="form-control searchBar" 
+                            placeholder="Search for a word or phrase"
+                            onChange={(e)=>this.handleChange(e)} 
+                            required
+                    >
+                    </input>
+                    <div>
+                        <button type="submit" id="searchSubmit" className="form-control taskTitle btn btn-secondary">
+                            <img className="searchIcon" src="https://img.icons8.com/pastel-glyph/64/000000/search--v2.png"/>
+                        </button>
+                    </div>
                 </form>
                 
             </div>
