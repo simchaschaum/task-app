@@ -8,6 +8,7 @@ import Tasks, { Notasks } from './components/tasks';
 import OverView from './components/overView';
 import Form from './components/forms';
 import Search from './components/search';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 var taskList = [];
 var property;
@@ -17,6 +18,7 @@ class App extends React.Component {
 state = {
   tasks: null,      // will be the array of tasks from Firebase 
   formDisp: false,  // whether to display the form to add or edit tasks
+  bgDim: false, // dims the background when form is displayed
   property: "addedAt", // the property by which to sort the tasks
   order: "desc",      // descending or ascending
   formState: "newTask", // determines whether the form will be editing or adding a task
@@ -46,9 +48,14 @@ getTasks(){
 }
 
   taskSort = (e) => {
-    switch(e.target.value){
+    switch(e.target.name){
       case "priority":
-        property = "priority";
+        var starTaskList = [];
+        var noStarTaskList = [];
+        taskList.map(item => {
+          item.star ? starTaskList.push(item) : noStarTaskList.push(item)
+        });
+        
         break;
       case "dateEntered":
         property = "addedAt";
@@ -57,8 +64,11 @@ getTasks(){
         property = "date";
         break;
     }
-    var order = this.state.order === "desc" ? "asc" : "desc";
-    this.setState({property: property, order: order}, () => this.getTasks(property, order))
+
+    console.log(starTaskList);
+    console.log(noStarTaskList);
+    // var order = this.state.order === "desc" ? "asc" : "desc";
+    // this.setState({property: property, order: "desc"}, () => this.getTasks(property, "desc"))
   }
 
   updateDisp = () => {
@@ -72,7 +82,10 @@ getTasks(){
 
   // opens and closes form for starting new task
   toggleForm = () => {
-    this.state.formDisp ? this.setState({formDisp: false, formState: "newTask"}) : this.setState({formDisp: true, formState: "newTask", star: false});
+    console.log(this.state.bgDim)
+    this.state.formDisp ? 
+      this.setState({formDisp: false, formState: "newTask", bgDim: false}) 
+      : this.setState({formDisp: true, formState: "newTask", star: false, bgDim: true});
   }
 
   // opens form to edit existing task:
@@ -83,6 +96,7 @@ getTasks(){
       taskToEdit: task,
       id: num, 
       star: task.star,
+      bgDim: true,
     }, () => this.setState({formDisp: true}));
   }
 
@@ -109,38 +123,43 @@ render(){
     </div>  
   
   var cols = this.state.taskDisp === "boxes" ? "taskContainerCols" : "taskContainerRows";
+  var bgDim = this.state.bgDim === true ? "bgDim" : null;
 
   return (
-      <div className="App">
-        <Header 
-          toggleDisplay={(e) => this.toggleDisplay(e)}
-          formDisp={this.state.formDisp}
-          toggleForm={this.toggleForm}
-          taskSort={this.taskSort}
-          order={this.state.order}
-          />
+    <>
+      {/* The form is outside 'app' - to avoid inheriting lower opacity when the form is displayed*/}
+      <div style={{display: this.state.formDisp ? 'block' : 'none'}}> 
+          <Form 
+             ref="form"
+             formState={this.state.formState} 
+             updateDisp={this.updateDisp} 
+             closeForm={this.toggleForm} 
+             taskList={this.state.tasks} 
+             taskToEdit={this.state.taskToEdit} 
+             taskID={this.state.id} 
+             taskStar={this.state.star}  
+           />
+      </div>
 
-        <Search 
-          taskList={taskList} 
-          displaySearch={(fl,sp) => this.displaySearch(fl,sp)}
-          />
-
-{/* The new task/edit task form */}
-        {/* <div className="formContainer container"> */}
-          
-         <div style={{display: this.state.formDisp ? 'block' : 'none'}}> 
-           <Form 
-              ref="form"
-              formState={this.state.formState} 
-              updateDisp={this.updateDisp} 
-              closeForm={this.toggleForm} 
-              taskList={this.state.tasks} 
-              taskToEdit={this.state.taskToEdit} 
-              taskID={this.state.id} 
-              taskStar={this.state.star}  
+      <div className="app" id={bgDim}>
+             
+        {/* along the left-side, non scrolling */}
+       <div className="left-side">
+          <Header 
+            toggleDisplay={(e) => this.toggleDisplay(e)}
+            formDisp={this.state.formDisp}
+            toggleForm={this.toggleForm}
+            taskSort={this.taskSort}
+            order={this.state.order}
+            // last 2 for Search component:
+            taskList={taskList}
+            displaySearch={(fl,sp) => this.displaySearch(fl,sp)}
             />
-          </div>
-        {/* </div> */}
+        </div>
+
+        {/* main body: */}
+        <div className="main-body">
+          {/* The new task/edit task form */}
        
 {/* The complete quick list - bring back as a dropdown */}
           {/* <div className="overView card">
@@ -149,6 +168,12 @@ render(){
             : "No tasks"
             }
           </div> */}
+
+                <Search 
+                  taskList={this.props.taskList} 
+                  displaySearch={(fl,sp) => this.props.displaySearch(fl,sp)}
+                  className="headerButton"
+                  />
 
         {this.state.showSearch === false ? null : searchDisp}
 
@@ -177,8 +202,10 @@ render(){
               : <Notasks />}
         </div>
         
-
+        </div>
+        
       </div>
+    </>
     )
   };
 }

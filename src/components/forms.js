@@ -111,8 +111,8 @@ class Form extends Component{
         // Input for title - depending on whether you're adding a new task or editing an existing one:
         var title = this.props.formState === "editTask" ? 
                 <div className="form-group row">        
-                    <label className="col-sm-2 col-form-label">Edit Title:</label>
-                    <div className="col-sm-10">
+                    {/* <label className="col-sm-2 col-form-label">Edit Title:</label> */}
+                    <div className="col-sm-12">
                         <textarea id="editTitle" className="editText form-control" 
                             name="title" 
                             contentEditable="true" 
@@ -122,9 +122,7 @@ class Form extends Component{
                     </div>
                 </div>
             :   <div className="form-group row">
-                    <div className="col-sm-1">
-                    </div>
-                    <div className="col-sm-10">
+                    <div className="col-sm-12">
                         <input id="newTaskTitle" className="form-control" 
                             name="title" 
                             value={this.state.title} 
@@ -134,32 +132,31 @@ class Form extends Component{
                         </input>
                     </div>
                 </div>
-                // Input for details - depending on whether you're adding a new task or editing an existing one:
-                var details = this.props.formState === "editTask" ?
-                    <div className="form-group row">
-                        <label className="col-sm-2 col-form-label">Edit Details: </label>
-                        <div className="col-sm-10">
-                            <textArea id="editDetails form-control" className="editText" 
-                                name="details" contentEditable="true" 
-                                rows="5" 
-                                onChange={(e) => this.input(e)}
-                            >
-                            {this.props.taskToEdit.details}
-                            </textArea> 
-                        </div>
-                    </div>
-                :   
-                    <div className="form-group row">
-                        <div className="col-sm-1"></div>
-                        <div className="col-sm-10">
-                            <textArea id="newTaskDetails" className="form-control" 
-                            name="details" value={this.state.details} 
-                            type="text" placeholder="Enter Details" 
-                            rows="5" onChange={(e) => this.input(e)} >
-                            </textArea>
-                        </div>  
-                    </div>
-        
+               // Input for details - depending on whether you're adding a new task or editing an existing one:
+               var details = this.props.formState === "editTask" ?
+               <div className="form-group row">
+                   <div className="col-sm-12">
+                       <textArea id="editDetails form-control" className="editText" 
+                           name="details" contentEditable="true" 
+                           rows="5" 
+                           onChange={(e) => this.input(e)}
+                       >
+                       {this.props.taskToEdit.details}
+                       </textArea> 
+                   </div>
+               </div>
+           :   
+               <div className="form-group row">
+                   <div className="col-sm-1"></div>
+                   <div className="col-sm-10">
+                       <textArea id="newTaskDetails" className="form-control" 
+                       name="details" value={this.state.details} 
+                       type="text" placeholder="Enter Details" 
+                       rows="5" onChange={(e) => this.input(e)} >
+                       </textArea>
+                   </div>  
+               </div>
+   
                                                             
         return(
             <div className="d-flex justify-content-center"> 

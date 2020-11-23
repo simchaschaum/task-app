@@ -1,7 +1,3 @@
-.App {
-  text-align: center;
-}
-
 /*Settings for whole app: */
 :root {
   --clr-pri: #ff00d8;
@@ -28,6 +24,16 @@ html{
 main{
   min-height: 70vw;
 }
+
+.app {
+  text-align: center;
+}
+
+/* Whole background gets dimmed when form is showing in foreground */
+#bgDim{   
+  opacity: 25%;
+}
+
 h1{
   font-size: var(--fs-h1);
 }
@@ -35,38 +41,40 @@ h1{
 h2{
   font-size: var(--fs-h2);
 }
-
+/* Main formatting: */
+.app{
+  display: grid;
+  grid-template-columns: 20% auto;
+}
+/* at 600px or less, side 'header' goes on top */
+@media(max-width:600px){
+  .app{
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr auto;
+  }
+}
+.top{
+  grid-column: 1/3;
+}
 
 /* Header */
 
-header{
-  /* margin: 0 auto; */
-  padding-top: 10px;
-  padding-bottom: 0px;
-  background: white;
-  /* position: fixed; */
-  z-index: 100;
-}
-
 .headerDiv{
-  max-width: 75%;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-rows: 1.25fr 1fr 1fr 1fr 1fr;
+  margin-left: 10px;
 }
-
-.logoIcon{
-  min-width: 4em;
-  padding-left: 0;
+@media(max-width:600px){
+  .headerDiv{
+    display: grid;
+    grid-template-rows: 1fr;
+    grid-template-columns: 1.25fr 1fr 1fr 1fr;
+  }
 }
 
 .newTaskBtn{
   min-width: 6em;
   padding-right: 0;
-}
-
-hr{
-  margin: 5px
 }
 
 /* box-shadow on most buttons */
@@ -88,18 +96,50 @@ input{
   box-shadow: var(--bs);
 }
 
+#dropdown-basic-button, .headerButton{
+  width: 85%;
+  height: 60%;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  background: var(--clr-gray);
+  border: var(--clr-gray);
+  justify-self: center;
+}
+@media(max-width: 850px){
+  #dropdown-basic-button, .headerButton{
+   font-size: 15px;
+   align-self: center;
+   height: 70%;
+     }
+  /* Text that disapears when viewport narrows */
+  .btnDisText{
+    display: none;
+  }
+}
+/* hover effects for side buttons: */
+#dropdown-basic-button:hover, .headerButton:hover{
+  box-shadow: 0 0 1em #b8bab9;
+}
+
 /* elements in Search */
+.logoIcon{
+  height: 100px;
+  /* margin: 10px 50px; */
+}
+
+.searchDiv{
+  margin: 10px;
+}
+
 #searchContainer {
-  width: 75%;
-  margin: 0 auto;
-  display: flex;
+   display: flex;
   /* flex-direction: row; */
   justify-content: space-between;
 } 
 
 #searchInput{
   padding-bottom: 8px;
-  width: 88%;
+  max-width: 80%;
 }
 
 #searchSubmit{
@@ -113,7 +153,7 @@ input{
 .searchIcon {
   width: 2em;
   height: auto;
-  transform: translateY(-3px)
+  transform: translateY(-3px);
 }
 
 /* These are for both task titles in Tasks and input and button in Search */
@@ -191,10 +231,10 @@ input{
 
 .taskContainer{
   margin: 10px auto;
-  width: 75%;
+  width: 90%
 }
 .taskContainer:hover{
-  background-color: #b8bab9;
+  box-shadow: 0 0 1em #b8bab9;
 }
 
 @media(min-width:600px){
@@ -209,7 +249,7 @@ input{
   display: flex;
   align-items: center;
 }
-@media(max-width:600px){
+@media(max-width:850px){
   .title{
     padding-left: 0.5em;
   }
@@ -329,9 +369,10 @@ input{
   width: 65%;
   padding: 15px;
   z-index: 1000;
-  margin: 0 auto;
+  margin: 10vw auto;
   /* background: var(--clr-ter); */
   background: gray;
+  opacity: 100%;
 }
 
 .editText{
