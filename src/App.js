@@ -170,8 +170,8 @@ render(){
           </div> */}
 
                 <Search 
-                  taskList={this.props.taskList} 
-                  displaySearch={(fl,sp) => this.props.displaySearch(fl,sp)}
+                  taskList={taskList} 
+                  displaySearch={(fl,sp) => this.displaySearch(fl,sp)}
                   className="headerButton"
                   />
 

@@ -147,8 +147,7 @@ class Form extends Component{
                </div>
            :   
                <div className="form-group row">
-                   <div className="col-sm-1"></div>
-                   <div className="col-sm-10">
+                   <div className="col-sm-12">
                        <textArea id="newTaskDetails" className="form-control" 
                        name="details" value={this.state.details} 
                        type="text" placeholder="Enter Details" 
@@ -170,11 +169,16 @@ class Form extends Component{
                     </button>
                     
                     <label>Due Date:
-                        <input id="newTaskDate" className="form-control-sm" type="date" name="date" value={this.state.date} onChange={(e)=>this.input(e)}></input>
+                        <input id="newTaskDate" className="form-control-sm" 
+                        type="date" 
+                        name="date" 
+                        value={this.state.date} 
+                        onChange={(e)=>this.input(e)}
+                        ></input>
                     </label>
                     
-                    <input className="btn btn-primary" type="submit"></input> 
-                    <button className="btn btn-primary" onClick={this.closeForm}>Cancel</button>
+                    <input className="btn btn-sm btn-secondary formBtn" type="submit"></input> 
+                    <button className="btn btn-sm btn-secondary formBtn" onClick={this.closeForm}>Cancel</button>
 
                </form>
             </div>

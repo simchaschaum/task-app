@@ -129,17 +129,12 @@ input{
 
 .searchDiv{
   margin: 10px;
-}
-
-#searchContainer {
-   display: flex;
-  /* flex-direction: row; */
-  justify-content: space-between;
-} 
+  }
 
 #searchInput{
   padding-bottom: 8px;
-  max-width: 80%;
+  margin: 10px auto;
+  width: 93%;
 }
 
 #searchSubmit{
@@ -160,10 +155,6 @@ input{
 .inlineGroup{
   white-space: nowrap;
 }
-
-/* .searchBar{
-  display: inline-block;
-} */
 
 .taskTitle{
   display: inline-block;
@@ -388,6 +379,10 @@ input{
   text-align: justify;
   vertical-align: top;
   padding: 1em;
+}
+
+.formBtn{
+  margin-left: 5px;
 }
 
 #editDetails{
