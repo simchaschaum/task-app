@@ -47,28 +47,25 @@ getTasks(){
     ).catch( error => console.log(error));
 }
 
-  taskSort = (e) => {
-    switch(e.target.name){
-      case "priority":
-        var starTaskList = [];
-        var noStarTaskList = [];
-        taskList.map(item => {
-          item.star ? starTaskList.push(item) : noStarTaskList.push(item)
-        });
-        
-        break;
-      case "dateEntered":
-        property = "addedAt";
-        break;
-      default:
-        property = "date";
-        break;
-    }
+  showNotDone = () => {
+    tasksCollection
+      .where("done","==",false)
+      .get()
+      .then( snapshot => {
+        taskList = firebaseArrMaker(snapshot);
+        this.setState({
+          tasks: taskList
+      }, ()=> console.log(this.state.tasks));
+      }
+    ).catch( error => console.log(error));
+  }
 
-    console.log(starTaskList);
-    console.log(noStarTaskList);
-    // var order = this.state.order === "desc" ? "asc" : "desc";
-    // this.setState({property: property, order: "desc"}, () => this.getTasks(property, "desc"))
+  taskSort = (e) => {
+    if(e.target.name === "notDone"){
+      this.showNotDone();
+    } else {
+      this.setState({property: e.target.name},() => this.getTasks(this.state.property, this.state.order) );
+    }
   }
 
   updateDisp = () => {
@@ -151,10 +148,7 @@ render(){
             toggleForm={this.toggleForm}
             taskSort={this.taskSort}
             order={this.state.order}
-            // last 2 for Search component:
-            taskList={taskList}
-            displaySearch={(fl,sp) => this.displaySearch(fl,sp)}
-            />
+          />
         </div>
 
         {/* main body: */}

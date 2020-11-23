@@ -37,9 +37,10 @@ class Header extends React.Component {
                         </DropdownButton>
                         
                         <DropdownButton id="dropdown-basic-button"  title="Order">
-                                <Dropdown.Item name="priority"  onClick={this.props.taskSort}>Starred First</Dropdown.Item>
-                                <Dropdown.Item name="dateEntered"  onClick={this.props.taskSort}>Date Entered ({this.props.order === "desc" ? "Descending" : "Ascending"})</Dropdown.Item>
-                                <Dropdown.Item name="dateDue"  onClick={this.props.taskSort}>Due Date ({this.props.order === "desc" ? "Descending" : "Ascending"})</Dropdown.Item>
+                                <Dropdown.Item name="star"  onClick={this.props.taskSort}>Starred First</Dropdown.Item>
+                                <Dropdown.Item name="addedAt"  onClick={this.props.taskSort}>Date Entered</Dropdown.Item>
+                                <Dropdown.Item name="date"  onClick={this.props.taskSort}>Due Date</Dropdown.Item>
+                                <Dropdown.Item name="notDone"  onClick={this.props.taskSort}>Show Not Done</Dropdown.Item>
                         </DropdownButton>
                         
                     </div>
