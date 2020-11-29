@@ -8,6 +8,7 @@ import Tasks, { Notasks } from './components/tasks';
 import OverView from './components/overView';
 import Form from './components/forms';
 import Search from './components/search';
+import Login from './components/users/login';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 var taskList = [];
@@ -16,8 +17,10 @@ var property;
 class App extends React.Component {
 
 state = {
+  loggedIn: false,  // if a user is logged in
   tasks: null,      // will be the array of tasks from Firebase 
   formDisp: false,  // whether to display the form to add or edit tasks
+  signInDisp: false, // whether to display sign in/ register form 
   bgDim: false, // dims the background when form is displayed
   property: "addedAt", // the property by which to sort the tasks
   order: "desc",      // descending or ascending
@@ -27,7 +30,9 @@ state = {
   searchParams: "",
   showSearch: false, 
   taskDisp: "rows", // displays tasks in "rows" or "boxes" (3 or 4 per row)
-  star: ""
+  star: "",
+  showDeets: false,  // on change, turns on/off detail view for all tasks 
+  showDone: true  // determines whether it shows tasks that are done 
 }
 
 componentDidMount(){
@@ -54,17 +59,17 @@ getTasks(){
       .then( snapshot => {
         taskList = firebaseArrMaker(snapshot);
         this.setState({
-          tasks: taskList
+          tasks: taskList, showDone: false
       }, ()=> console.log(this.state.tasks));
       }
     ).catch( error => console.log(error));
   }
 
   taskSort = (e) => {
-    if(e.target.name === "notDone"){
-      this.showNotDone();
+    if(e.target.name === "done" && this.state.showDone){
+      this.setState({showDone: false}, ()=>this.showNotDone());
     } else {
-      this.setState({property: e.target.name},() => this.getTasks(this.state.property, this.state.order) );
+      this.setState({property: e.target.name, showDone: true},() => this.getTasks() );
     }
   }
 
@@ -97,6 +102,13 @@ getTasks(){
     }, () => this.setState({formDisp: true}));
   }
 
+  toggleSignIn = () => {
+    alert("works");
+    this.state.signInDisp ? 
+      this.setState({bgDim: false}, ()=> this.setState({signInDisp: false}))
+      : this.setState({bgDim: true}, ()=> this.setState({signInDisp: true}));
+  }
+
   setEditForm = (star) => {
     this.refs.form.setEditForm(star)
   }
@@ -111,8 +123,14 @@ getTasks(){
     document.getElementById("searchInput").value = "";
     }
  
+  toggleDeets = () => {
+    this.setState({showDeets: this.state.showDeets ? false : true})
+  }
+
 render(){
 
+  var loggedIn = this.state.loggedIn ? "Logged In" : "Logged Out";
+  
   var searchDisp = 
     <div>
       <p>Showing results for "{this.state.searchParams}"</p>
@@ -124,6 +142,9 @@ render(){
 
   return (
     <>
+        <div>
+          {loggedIn}
+        </div>
       {/* The form is outside 'app' - to avoid inheriting lower opacity when the form is displayed*/}
       <div style={{display: this.state.formDisp ? 'block' : 'none'}}> 
           <Form 
@@ -137,18 +158,26 @@ render(){
              taskStar={this.state.star}  
            />
       </div>
+      <div style={{display: this.state.signInDisp ? 'block' : 'none'}}>
+         <Login 
+         toggleSignIn={this.toggleSignIn}/>
+      </div>
 
       <div className="app" id={bgDim}>
-             
-        {/* along the left-side, non scrolling */}
+
+      {/* along the left-side, non scrolling */}
        <div className="left-side">
           <Header 
             toggleDisplay={(e) => this.toggleDisplay(e)}
+            toggleSignIn={()=>this.toggleSignIn()}
             formDisp={this.state.formDisp}
             toggleForm={this.toggleForm}
             taskSort={this.taskSort}
             order={this.state.order}
-          />
+            showDone={this.state.showDone}
+            showDeets={this.state.showDeets}
+            toggleDeets={this.toggleDeets}
+            />
         </div>
 
         {/* main body: */}
@@ -190,12 +219,13 @@ render(){
                       toggleDone={() => {
                         task.done = (task.done === true ? false : true)
                       }} 
-                    />
+                      
+                      />
                   </div>
               ))           
               : <Notasks />}
         </div>
-        
+
         </div>
         
       </div>
@@ -207,4 +237,13 @@ render(){
 
 
 export default App;
+
+firebase.auth().onAuthStateChanged( user => {
+  if (user) {
+    console.log("user signed in: " + user.email);
+    console.log("user signed in: " + user.uid);
+  } else {
+    console.log("no user");
+  }
+})
 

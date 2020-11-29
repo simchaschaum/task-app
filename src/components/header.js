@@ -7,14 +7,28 @@ import Search from './search';
 class Header extends React.Component {
     
     toggleDisplay = (e) => {
-        this.props.toggleDisplay(e.target.name)
+        this.props.toggleDisplay(e.target.name);
     }
 
     toggleForm = () => { 
-        this.props.toggleForm()
+        this.props.toggleForm();
     }
     
+    toggleDeets = () => {
+       this.props.toggleDeets()
+    }
+
+    deleteDone = () => {
+        alert("delete done!")
+    }
+
+    toggleSignIn = () => {
+        this.props.toggleSignIn();
+    }
+
     render(){
+        var showDeets = this.props.showDeets ?  "Hide All Details" : "Show All Details";
+        var showDone = this.props.showDone ? "Show Not Done" : "Show All Tasks";
         return (
             <>
                 <header>
@@ -24,6 +38,12 @@ class Header extends React.Component {
                             <img alt="Check-mark logo" className="logoIcon" src="https://img.icons8.com/ios/100/000000/checked-2--v2.png"/>
                         </div>
 
+                        <div>
+                            <Button id="dropdown-basic-button" className="headerButton" onClick={this.toggleSignIn}>
+                                <span className="btnDisText"> Sign In </span>
+                            </Button>
+                        </div>
+                        
                         <div className="dropdown">
                             <Button id="dropdown-basic-button" className="headerButton" onClick={this.toggleForm}>
                                 <span className="btnDisText"> New Task </span>
@@ -31,6 +51,16 @@ class Header extends React.Component {
                             </Button>
                         </div>
                         
+                        {/* Come back to these later...  */}
+                        {/* <div className="headerButtonsDiv">
+                            <Button id="dropdown-basic-button" className="headerButton" onClick={this.toggleDeets}>
+                                {showDeets}
+                            </Button>
+                            <Button id="dropdown-basic-button" className="headerButton" onClick={this.deleteDone}>
+                                Delete Done Tasks
+                            </Button>
+                        </div> */}
+
                         <DropdownButton id="dropdown-basic-button" title="View">
                                 <Dropdown.Item name="boxes" onClick={(e)=>this.toggleDisplay(e)}>Boxes</Dropdown.Item>
                                 <Dropdown.Item name="rows" onClick={(e)=>this.toggleDisplay(e)}>Rows</Dropdown.Item>
@@ -40,7 +70,7 @@ class Header extends React.Component {
                                 <Dropdown.Item name="star"  onClick={this.props.taskSort}>Starred First</Dropdown.Item>
                                 <Dropdown.Item name="addedAt"  onClick={this.props.taskSort}>Date Entered</Dropdown.Item>
                                 <Dropdown.Item name="date"  onClick={this.props.taskSort}>Due Date</Dropdown.Item>
-                                <Dropdown.Item name="notDone"  onClick={this.props.taskSort}>Show Not Done</Dropdown.Item>
+                                <Dropdown.Item name="done" onClick={this.props.taskSort}>{showDone}</Dropdown.Item>
                         </DropdownButton>
                         
                     </div>

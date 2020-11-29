@@ -96,6 +96,12 @@ input{
   box-shadow: var(--bs);
 }
 
+.headerButtonsDiv{
+  display: grid;
+  grid-template-columns: 45% 45%;
+  justify-content: center;
+}
+
 #dropdown-basic-button, .headerButton{
   width: 85%;
   height: 60%;

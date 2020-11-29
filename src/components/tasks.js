@@ -14,8 +14,7 @@ class Tasks extends React.Component{
             };
         this.expand = this.expand.bind(this);
         this.deleteTask = this.deleteTask.bind(this);
-};
-    
+};  
     expand = () => {
         if(this.state.expanded===false){
             this.setState({expanded:true});
