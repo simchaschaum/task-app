@@ -52,6 +52,9 @@ class LoginForm extends Component{
                 password: ""
             }
         }))
+
+        this.props.toggleSignIn();
+        this.props.getTasks();
     }
 
     logout = () => {
@@ -103,9 +106,9 @@ class LoginForm extends Component{
             .catch (error => console.log(error))
     }
 
-    // toggleSignIn = () => {
-    //     this.props.toggleSignIn();
-    // }
+    toggleSignIn = () => {
+        this.props.toggleSignIn();
+    }
 
     render(){
         var text = this.state.register ? "Register" : "Sign in"
@@ -126,12 +129,14 @@ class LoginForm extends Component{
                    Welcome! Please {text}
                 </h2>
                 {altText}
-                
+                <hr/>
                 <div className="form-group">
                     <button className="form-control btn btn-secondary" onClick={()=>this.handleGoogleSignIn()}>
                         {text} with your Google account
                     </button>
                 </div>
+                <hr/>
+                <p id="or">-  or  -</p>
                 <div className="form-group">
                     <input className="form-control" 
                         name="username" 
@@ -158,13 +163,12 @@ class LoginForm extends Component{
                         Submit 
                     </button>
                 </div>
-                {/* <button onClick={this.toggleSignIn}>
+                {/* Eventually get rid of the cancel button */}
+                <button onClick={this.toggleSignIn}>
                 Cancel
-            </button> */}
+            </button>
 
-            </form>
-             
-            
+                  
             <hr/>
             <button onClick={()=>this.logout()}>
                 Log Out
@@ -176,7 +180,10 @@ class LoginForm extends Component{
             <button onClick={()=>this.updateUserInfo()}>
                 Update User Info
             </button>
-            <hr/>
+
+            </form>
+             
+      
 
                   
            </div>

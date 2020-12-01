@@ -3,6 +3,8 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import DropdownButton from 'react-bootstrap/DropdownButton';
 import Button from 'react-bootstrap/Button';
 import Search from './search';
+import firebase, {tasksCollection, users} from '../utils/firebase';
+
 
 class Header extends React.Component {
     
@@ -26,6 +28,15 @@ class Header extends React.Component {
         this.props.toggleSignIn();
     }
 
+    signOut = () => {
+        firebase
+            .auth()
+            .signOut()
+            .then(() => console.log("signed out"))
+            .catch(error => console.log(error))
+        this.props.toggleSignIn();
+    }
+
     render(){
         var showDeets = this.props.showDeets ?  "Hide All Details" : "Show All Details";
         var showDone = this.props.showDone ? "Show Not Done" : "Show All Tasks";
@@ -39,8 +50,8 @@ class Header extends React.Component {
                         </div>
 
                         <div>
-                            <Button id="dropdown-basic-button" className="headerButton" onClick={this.toggleSignIn}>
-                                <span className="btnDisText"> Sign In </span>
+                            <Button id="dropdown-basic-button" className="headerButton" onClick={this.signOut}>
+                                <span > Log out </span>
                             </Button>
                         </div>
                         

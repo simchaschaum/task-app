@@ -14,16 +14,16 @@ import LoginForm from './components/users/loginform';
 
 var taskList = [];
 var property;
+var loggedIn;
+var userEmail;
 
 class App extends React.Component {
 
 state = {
-  loggedIn: false,  // if a user is logged in
   tasks: null,      // will be the array of tasks from Firebase 
   formDisp: false,  // whether to display the form to add or edit tasks
   signInDisp: false, // whether to display sign in/ register form 
-  bgDim: false, // dims the background when form is displayed
-  bgWhite: false,  // completely whitens background when signin/register form is displayed
+  background: null,  // controls cover over background when form/signin is up
   property: "addedAt", // the property by which to sort the tasks
   order: "desc",      // descending or ascending
   formState: "newTask", // determines whether the form will be editing or adding a task
@@ -39,6 +39,11 @@ state = {
 
 componentDidMount(){
   this.getTasks();
+  setTimeout(() => {
+    if(!loggedIn){
+      this.toggleSignIn()
+    } 
+  }, 1000);
 };
 
 getTasks(){
@@ -86,10 +91,9 @@ getTasks(){
 
   // opens and closes form for starting new task
   toggleForm = () => {
-    console.log(this.state.bgDim)
     this.state.formDisp ? 
-      this.setState({formDisp: false, formState: "newTask", bgDim: false}) 
-      : this.setState({formDisp: true, formState: "newTask", star: false, bgDim: true});
+      this.setState({formDisp: false, formState: "newTask", background: null}) 
+      : this.setState({formDisp: true, formState: "newTask", star: false, background: "dim"});
   }
 
   // opens form to edit existing task:
@@ -100,15 +104,15 @@ getTasks(){
       taskToEdit: task,
       id: num, 
       star: task.star,
-      bgDim: true,
+      background: "dim",
     }, () => this.setState({formDisp: true}));
   }
 
   // opens and closes signin/register form
   toggleSignIn = () => {
     this.state.signInDisp ? 
-      this.setState({bgWhite: false}, ()=> this.setState({signInDisp: false}))
-      : this.setState({bgWhite: true}, ()=> this.setState({signInDisp: true}));
+      this.setState({background: null}, ()=> this.setState({signInDisp: false}))
+      : this.setState({background: "white"}, ()=> this.setState({signInDisp: true}));
   }
 
   setEditForm = (star) => {
@@ -130,23 +134,33 @@ getTasks(){
   }
 
 render(){
-
-  var loggedIn = this.state.loggedIn ? "Logged In" : "Logged Out";
   
   var searchDisp = 
     <div>
       <p>Showing results for "{this.state.searchParams}"</p>
-      <button className="btn btn-primary" onClick={this.finishSearch}>Close Search</button>
+      <button className="btn btn-secondary" onClick={this.finishSearch}>Close Search</button>
     </div>  
   
   var cols = this.state.taskDisp === "boxes" ? "taskContainerCols" : "taskContainerRows";
-  // var background = this.state.bgDim === true ? "bgDim" : null;
-  var background = "bgWhite";
+
+  switch(this.state.background){
+    case "dim":
+      var background = "bgDim";
+      break;
+    case "white":
+      var background = "bgWhite";
+      break;
+    default:
+      var background = null;
+      break;
+  }
+
+  var loginMessage = loggedIn? "Hello, " + userEmail + "!" : "";
 
   return (
     <>
         <div>
-          {loggedIn}
+          {loginMessage}
         </div>
       {/* The form is outside 'app' - to avoid inheriting lower opacity when the form is displayed*/}
       <div style={{display: this.state.formDisp ? 'block' : 'none'}}> 
@@ -163,10 +177,12 @@ render(){
       </div>
       <div style={{display: this.state.signInDisp ? 'block' : 'none'}}>
          <LoginForm
-         toggleSignIn={()=>this.toggleSignIn()}/>
+         toggleSignIn={()=>this.toggleSignIn()}
+         getTasks={()=>this.getTasks()}
+         />
       </div>
-
-      <div className="app" id={background}>
+      <div className="app">
+      <div className="cover" id={background}></div>
 
       {/* along the left-side, non scrolling */}
        <div className="left-side">
@@ -180,6 +196,7 @@ render(){
             showDone={this.state.showDone}
             showDeets={this.state.showDeets}
             toggleDeets={this.toggleDeets}
+            loggedIn={loggedIn}
             />
         </div>
 
@@ -230,7 +247,6 @@ render(){
         </div>
 
         </div>
-        
       </div>
     </>
     )
@@ -245,8 +261,11 @@ firebase.auth().onAuthStateChanged( user => {
   if (user) {
     console.log("user signed in: " + user.email);
     console.log("user signed in: " + user.uid);
+    userEmail = user.email;
+    loggedIn = true;
   } else {
     console.log("no user");
+    loggedIn = false;
   }
 })
 
