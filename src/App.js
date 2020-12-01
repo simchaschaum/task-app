@@ -10,6 +10,7 @@ import Form from './components/forms';
 import Search from './components/search';
 import Login from './components/users/login';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import LoginForm from './components/users/loginform';
 
 var taskList = [];
 var property;
@@ -22,6 +23,7 @@ state = {
   formDisp: false,  // whether to display the form to add or edit tasks
   signInDisp: false, // whether to display sign in/ register form 
   bgDim: false, // dims the background when form is displayed
+  bgWhite: false,  // completely whitens background when signin/register form is displayed
   property: "addedAt", // the property by which to sort the tasks
   order: "desc",      // descending or ascending
   formState: "newTask", // determines whether the form will be editing or adding a task
@@ -102,11 +104,11 @@ getTasks(){
     }, () => this.setState({formDisp: true}));
   }
 
+  // opens and closes signin/register form
   toggleSignIn = () => {
-    alert("works");
     this.state.signInDisp ? 
-      this.setState({bgDim: false}, ()=> this.setState({signInDisp: false}))
-      : this.setState({bgDim: true}, ()=> this.setState({signInDisp: true}));
+      this.setState({bgWhite: false}, ()=> this.setState({signInDisp: false}))
+      : this.setState({bgWhite: true}, ()=> this.setState({signInDisp: true}));
   }
 
   setEditForm = (star) => {
@@ -138,7 +140,8 @@ render(){
     </div>  
   
   var cols = this.state.taskDisp === "boxes" ? "taskContainerCols" : "taskContainerRows";
-  var bgDim = this.state.bgDim === true ? "bgDim" : null;
+  // var background = this.state.bgDim === true ? "bgDim" : null;
+  var background = "bgWhite";
 
   return (
     <>
@@ -159,11 +162,11 @@ render(){
            />
       </div>
       <div style={{display: this.state.signInDisp ? 'block' : 'none'}}>
-         <Login 
-         toggleSignIn={this.toggleSignIn}/>
+         <LoginForm
+         toggleSignIn={()=>this.toggleSignIn()}/>
       </div>
 
-      <div className="app" id={bgDim}>
+      <div className="app" id={background}>
 
       {/* along the left-side, non scrolling */}
        <div className="left-side">

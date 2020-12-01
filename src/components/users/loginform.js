@@ -103,39 +103,67 @@ class LoginForm extends Component{
             .catch (error => console.log(error))
     }
 
-    render(){
+    // toggleSignIn = () => {
+    //     this.props.toggleSignIn();
+    // }
 
+    render(){
+        var text = this.state.register ? "Register" : "Sign in"
+        var altText = this.state.register ?
+            <p>
+                Already have an account?
+                <a className="link" onClick={()=>this.setState({register:false})}> Click here to sign in</a> 
+            </p>
+                :   <p>
+                        New User? Please 
+                        <a className="link" onClick={()=>this.setState({register:true})}> Click here to Register</a> 
+                    </p>
+           
         return(
-            <>
-            <form className="form-container" onSubmit={(e) => this.handleSubmit(e)}>
-                <div className="form-group row">
-                    <input id="newTaskTitle" className="form-control" 
+           <div className="d-flex justify-content-center">  
+            <form className="form signInForm" onSubmit={(e) => this.handleSubmit(e)}>
+                <h2>
+                   Welcome! Please {text}
+                </h2>
+                {altText}
+                
+                <div className="form-group">
+                    <button className="form-control btn btn-secondary" onClick={()=>this.handleGoogleSignIn()}>
+                        {text} with your Google account
+                    </button>
+                </div>
+                <div className="form-group">
+                    <input className="form-control" 
                         name="username" 
                         value={this.state.user.username} 
-                        type="text" 
-                        placeholder="Enter Username" 
+                        type="email" 
+                        placeholder="Enter Email" 
                         onChange={(e) => this.handleChange(e)} 
                         required>
                     </input>
                 </div>
-                <div className="form-group row">
-                    <input id="newTaskTitle" className="form-control" 
+                <div className="form-group">
+                    <input className="form-control" 
                         name="password" 
                         value={this.state.user.password} 
                         type="password" 
-                        placeholder="Enter Username" 
+                        placeholder="Enter Password" 
                         onChange={(e) => this.handleChange(e)} 
                         required>
                     </input>
                 </div>
                 <div className="form-group row">
-                    <input id="submit" className="form-control" 
-                        type="submit" 
-                        >
-                    </input>
+                    <div className="col col-sm-8 col-lg-10"></div>
+                    <button id="submit" className="form-control btn btn-secondary col col-sm-4 col-lg-2" type="submit"> 
+                        Submit 
+                    </button>
                 </div>
+                {/* <button onClick={this.toggleSignIn}>
+                Cancel
+            </button> */}
 
             </form>
+             
             
             <hr/>
             <button onClick={()=>this.logout()}>
@@ -149,14 +177,9 @@ class LoginForm extends Component{
                 Update User Info
             </button>
             <hr/>
-            <button onClick={()=>this.handleGoogleSignIn()}>
-                Sign in with Google
-            </button>
-            <button onClick={this.props.toggleSignIn}>
-                Cancel
-            </button>
 
-             </>
+                  
+           </div>
         )
     }
 }
