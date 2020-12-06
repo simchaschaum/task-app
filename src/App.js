@@ -53,8 +53,7 @@ getUser = () => {
       this.setState({
         background: null, 
         signInDisp: false
-      });
-      this.getTasks();
+      }, ()=>this.getTasks());
     } )
   } else {
     this.setState({loggedIn: false}, ()=>{

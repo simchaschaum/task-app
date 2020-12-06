@@ -47,18 +47,20 @@ class LoginForm extends Component{
                 console.log(response);  // response.user.uid from here? 
                 this.props.getUser();
             } )
-            .catch(error => console.log("error = " + error))
+            .catch(error => this.loginFailed())
         }
-        
         this.setState( () => ({
             user:{
                 username: "",
                 password: ""
             }
         }))
-
         // this.props.toggleSignIn();
         this.props.getTasks();
+    }
+
+    loginFailed = () => {
+        alert("Sorry! Username or password is incorrect  Please try again.")
     }
 
     logout = () => {

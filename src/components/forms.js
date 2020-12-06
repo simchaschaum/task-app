@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import firebase, {db, tasksCollection, firebaseTimestamp} from '../utils/firebase';
 import { firebaseArrMaker } from '../utils/tools';
 
-var starIcon;
+var starIcon = "https://img.icons8.com/ios/24/000000/star--v1.png";
 
 class Form extends Component{
     state = {
@@ -58,7 +58,8 @@ class Form extends Component{
                 done: false,
                 addedAt: firebaseTimestamp(),
                 userID: this.props.userID
-            });
+            })
+            .then(this.props.updateDisp());
         } else {
             var title = this.state.titleEdited === false ? this.props.taskToEdit.title : this.state.title;
             var details = this.state.detailsEdited === false ? this.props.taskToEdit.details : this.state.details;
@@ -71,25 +72,26 @@ class Form extends Component{
                     star: star,
                     date: date
                 })
+                .then(this.props.updateDisp())
         };
-        this.props.updateDisp();
         this.props.closeForm();
         this.clearState();
       }
 
     toggleStar = (e) => {
         e.preventDefault();
-        if(this.props.taskStar === true){
+        if(this.state.star === true){
             starIcon = "https://img.icons8.com/ios/24/000000/star--v1.png";
             var cs = false;
             }  else {
             starIcon =  "https://img.icons8.com/ios-filled/24/000000/star.png";
             var cs = true;
-        } 
+        };
         this.setState({star: cs, starEdited: true});
  } 
 
     closeForm = (e) => {
+        starIcon = "https://img.icons8.com/ios/24/000000/star--v1.png";
         e.preventDefault();
         this.props.closeForm();
         this.clearState();
@@ -106,7 +108,7 @@ class Form extends Component{
             detailsEdited: false, 
             dateEdited: false, 
             starEdited: false
-        }, ()=>console.log("star = " + this.state.star));
+        });
     }
 
     render(){

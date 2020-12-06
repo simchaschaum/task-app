@@ -120,7 +120,7 @@ class Tasks extends React.Component{
 
                         {/* Delete button: */}
                             <div className="toolTipContainer">
-                                <button className="deleteButton taskBtn btn-sm btn" onClick={this.deleteTask}>
+                                <button className="deleteButton taskBtn btn-sm btn" onClick={()=>this.deleteTask()}>
                                 <img className="icon" src="https://img.icons8.com/metro/52/000000/delete-sign.png"/>
                                 </button>
                                 <span className="toolTip toolTipAbove">Delete This Task</span>
