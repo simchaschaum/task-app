@@ -13,13 +13,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import LoginForm from './components/users/loginform';
 
 var taskList = [];
-var property;
-var loggedIn;
-var userEmail;
+var property, currentUser, loggedIn, userEmail, userID;
 
 class App extends React.Component {
 
 state = {
+  loggedIn: false,  
+  userID: "",   // the user ID of whoever's logged in
+  userEmail: "",   // their email
   tasks: null,      // will be the array of tasks from Firebase 
   formDisp: false,  // whether to display the form to add or edit tasks
   signInDisp: false, // whether to display sign in/ register form 
@@ -29,6 +30,7 @@ state = {
   formState: "newTask", // determines whether the form will be editing or adding a task
   id: "",
   taskToEdit: "", 
+  taskDetailsToEdit: "",
   searchParams: "",
   showSearch: false, 
   taskDisp: "rows", // displays tasks in "rows" or "boxes" (3 or 4 per row)
@@ -38,16 +40,37 @@ state = {
 }
 
 componentDidMount(){
-  this.getTasks();
-  setTimeout(() => {
-    if(!loggedIn){
-      this.toggleSignIn()
-    } 
-  }, 1000);
+  this.getUser();
 };
+
+// getUser checks the current user AND toggles the sign in form!
+getUser = () => {
+  currentUser = firebase.auth().currentUser;
+  if(currentUser){
+    userID = currentUser.uid;
+    this.setState({loggedIn: true, userEmail: currentUser.email, userID: userID}, ()=>{
+      console.log(this.state.userEmail);
+      this.setState({
+        background: null, 
+        signInDisp: false
+      });
+      this.getTasks();
+    } )
+  } else {
+    this.setState({loggedIn: false}, ()=>{
+      console.log("no user at all :(");
+      this.setState({
+        background: "white",
+        signInDisp: true
+      });
+      taskList.length = 0;
+    } )
+  }
+}
 
 getTasks(){
   tasksCollection
+    .where("userID","==",this.state.userID)
     .orderBy(this.state.property, this.state.order)
     .get()
     .then( snapshot => {
@@ -62,6 +85,7 @@ getTasks(){
   showNotDone = () => {
     tasksCollection
       .where("done","==",false)
+      .where("userID","==",this.state.userID)
       .get()
       .then( snapshot => {
         taskList = firebaseArrMaker(snapshot);
@@ -80,10 +104,6 @@ getTasks(){
     }
   }
 
-  updateDisp = () => {
-    this.getTasks(this.state.property, this.state.order);
-  }
-
   // toggles the display between boxes and rows
   toggleDisplay = (e) => {
     this.setState({taskDisp: e})
@@ -92,8 +112,12 @@ getTasks(){
   // opens and closes form for starting new task
   toggleForm = () => {
     this.state.formDisp ? 
-      this.setState({formDisp: false, formState: "newTask", background: null}) 
-      : this.setState({formDisp: true, formState: "newTask", star: false, background: "dim"});
+      this.setState({formState: "newTask", background: null},()=>this.setState({formDisp: false})) 
+      : this.setState({formState: "newTask", star: false, background: "dim"}, ()=>this.setState({formDisp: true}));
+  }
+
+  closeForm = () => {
+    alert("closing!")
   }
 
   // opens form to edit existing task:
@@ -102,17 +126,11 @@ getTasks(){
     this.setState({
       formState: "editTask", 
       taskToEdit: task,
+      taskDetailsToEdit: task.details,
       id: num, 
       star: task.star,
       background: "dim",
     }, () => this.setState({formDisp: true}));
-  }
-
-  // opens and closes signin/register form
-  toggleSignIn = () => {
-    this.state.signInDisp ? 
-      this.setState({background: null}, ()=> this.setState({signInDisp: false}))
-      : this.setState({background: "white"}, ()=> this.setState({signInDisp: true}));
   }
 
   setEditForm = (star) => {
@@ -155,7 +173,7 @@ render(){
       break;
   }
 
-  var loginMessage = loggedIn? "Hello, " + userEmail + "!" : "";
+  var loginMessage = this.state.loggedIn? "Hello, " + this.state.userEmail + "!" : null;
 
   return (
     <>
@@ -167,18 +185,20 @@ render(){
           <Form 
              ref="form"
              formState={this.state.formState} 
-             updateDisp={this.updateDisp} 
+             updateDisp={this.getUser} 
              closeForm={this.toggleForm} 
              taskList={this.state.tasks} 
              taskToEdit={this.state.taskToEdit} 
              taskID={this.state.id} 
              taskStar={this.state.star}  
+             userID={this.state.userID}
            />
       </div>
       <div style={{display: this.state.signInDisp ? 'block' : 'none'}}>
          <LoginForm
-         toggleSignIn={()=>this.toggleSignIn()}
-         getTasks={()=>this.getTasks()}
+            toggleSignIn={()=>this.toggleSignIn()}
+            getUser={()=>this.getUser()}
+            getTasks={()=>this.getTasks()}
          />
       </div>
       <div className="app">
@@ -189,6 +209,7 @@ render(){
           <Header 
             toggleDisplay={(e) => this.toggleDisplay(e)}
             toggleSignIn={()=>this.toggleSignIn()}
+            getUser={()=>this.getUser()}
             formDisp={this.state.formDisp}
             toggleForm={this.toggleForm}
             taskSort={this.taskSort}
@@ -231,7 +252,7 @@ render(){
                       taskDetails={task.details} 
                       taskStar={task.star} 
                       taskDone={task.done} 
-                      updateDisp={this.updateDisp} 
+                      updateDisp={this.getUser} 
                       dateDue={task.date} 
                       editTask={() => 
                         this.editTask(task,task.id)
@@ -257,15 +278,17 @@ render(){
 
 export default App;
 
-firebase.auth().onAuthStateChanged( user => {
-  if (user) {
-    console.log("user signed in: " + user.email);
-    console.log("user signed in: " + user.uid);
-    userEmail = user.email;
-    loggedIn = true;
-  } else {
-    console.log("no user");
-    loggedIn = false;
-  }
-})
+
+// listener for changes 
+// firebase.auth().onAuthStateChanged( user => {
+//   if (user) {
+//     console.log("user signed in: " + user.email);
+//     console.log("user signed in: " + user.uid);
+//     userEmail = user.email;
+//     loggedIn = true;
+//   } else {
+//     console.log("no user");
+//     loggedIn = false;
+//   }
+// })
 

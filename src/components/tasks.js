@@ -9,8 +9,6 @@ class Tasks extends React.Component{
         super(props);
         this.state={
             expanded: false,
-            taskID: this.props.taskID,
-            done: this.props.taskDone,
             };
         this.expand = this.expand.bind(this);
         this.deleteTask = this.deleteTask.bind(this);
@@ -24,10 +22,10 @@ class Tasks extends React.Component{
     };
 
     toggleDone = () => {
-        if(this.state.done === true){
-            this.setState({done: false}, this.updateDone(false));
+        if(this.props.taskDone === true){
+            this.updateDone(false);
         } else {
-            this.setState({done: true}, this.updateDone(true));
+            this.updateDone(true);
         }; 
     }
     
@@ -38,20 +36,23 @@ class Tasks extends React.Component{
             })
             .then(()=>console.log(this.props.taskTitle + "  " + this.state.done))
             .catch(error => console.log(error));   
+        this.props.updateDisp();
     };
     
     deleteTask = () => {
         if(window.confirm("Are you sure you want to delete this task?")){
-            tasksCollection.doc(this.state.taskID)
+            tasksCollection.doc(this.props.taskID)
                 .delete()
-                .then(()=>console.log(this.props.taskTitle + "  Deleted!"))
+                .then(()=>{
+                    console.log(this.props.taskTitle + "  Deleted!");
+                    this.props.updateDisp();
+                })
                 .catch(error => console.log(error));
-            this.props.updateDisp();
         }
     }
 
     editTask = () => {
-        this.props.editTask(this.props.taskID);
+        this.props.editTask();
     }
 
     render(){

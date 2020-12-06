@@ -32,9 +32,11 @@ class Header extends React.Component {
         firebase
             .auth()
             .signOut()
-            .then(() => console.log("signed out"))
+            .then(() => {
+                console.log("signed out");
+                this.props.getUser();
+            } )
             .catch(error => console.log(error))
-        this.props.toggleSignIn();
     }
 
     render(){

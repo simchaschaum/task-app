@@ -35,6 +35,7 @@ class LoginForm extends Component{
             .then(response => {
                 console.log("uid: " + response.user.uid)
                 this.handleStoreUser(response);
+                this.props.getUser();
                 // response.user.sendEmailVerification(()=> console.log("Verification Email Sent"))
             } )
             .catch(error => console.log("error = " + error))
@@ -42,7 +43,10 @@ class LoginForm extends Component{
             firebase
             .auth()
             .signInWithEmailAndPassword(username,password)
-            .then(response => console.log(response))
+            .then(response => {
+                console.log(response);  // response.user.uid from here? 
+                this.props.getUser();
+            } )
             .catch(error => console.log("error = " + error))
         }
         
@@ -53,7 +57,7 @@ class LoginForm extends Component{
             }
         }))
 
-        this.props.toggleSignIn();
+        // this.props.toggleSignIn();
         this.props.getTasks();
     }
 
@@ -62,7 +66,8 @@ class LoginForm extends Component{
             .auth()
             .signOut()
             .then(() => console.log("signed out"))
-            .catch(error => console.log(error))
+            .catch(error => console.log(error));
+        this.props.getUser();
     }
 
     getUserInfo = () => {
@@ -106,7 +111,8 @@ class LoginForm extends Component{
             .catch (error => console.log(error))
     }
 
-    toggleSignIn = () => {
+    toggleSignIn = (e) => {
+        e.preventDefault();
         this.props.toggleSignIn();
     }
 
@@ -115,18 +121,18 @@ class LoginForm extends Component{
         var altText = this.state.register ?
             <p>
                 Already have an account?
-                <a className="link" onClick={()=>this.setState({register:false})}> Click here to sign in</a> 
+                <a className="link" onClick={()=>this.setState({register:false})}> Sign in.</a> 
             </p>
                 :   <p>
                         New User? Please 
-                        <a className="link" onClick={()=>this.setState({register:true})}> Click here to Register</a> 
+                        <a className="link" onClick={()=>this.setState({register:true})}>  Register.</a> 
                     </p>
            
         return(
            <div className="d-flex justify-content-center">  
             <form className="form signInForm" onSubmit={(e) => this.handleSubmit(e)}>
                 <h2>
-                   Welcome! Please {text}
+                   Welcome! <br/> Please {text}.
                 </h2>
                 {altText}
                 <hr/>

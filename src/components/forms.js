@@ -11,6 +11,7 @@ class Form extends Component{
         details: "", 
         star: "",
         date: "",
+        userID: "",
         titleEdited: false,   // checking if these were edited
         detailsEdited: false,
         starEdited: false,
@@ -55,7 +56,8 @@ class Form extends Component{
                 date: this.state.date,
                 star: this.state.star,
                 done: false,
-                addedAt: firebaseTimestamp()
+                addedAt: firebaseTimestamp(),
+                userID: this.props.userID
             });
         } else {
             var title = this.state.titleEdited === false ? this.props.taskToEdit.title : this.state.title;
@@ -87,7 +89,8 @@ class Form extends Component{
         this.setState({star: cs, starEdited: true});
  } 
 
-    closeForm = () => {
+    closeForm = (e) => {
+        e.preventDefault();
         this.props.closeForm();
         this.clearState();
     }
@@ -115,8 +118,9 @@ class Form extends Component{
                     <div className="col-sm-12">
                         <textarea id="editTitle" className="editText form-control" 
                             name="title" 
-                            contentEditable="true" 
-                            onChange={(e) => this.input(e)}>
+                            contentEditable="true" suppressContentEditableWarning={true}
+                            onChange={(e) => this.input(e)}
+                            >
                                 {this.props.taskToEdit.title}
                         </textarea> 
                     </div>
@@ -132,17 +136,17 @@ class Form extends Component{
                         </input>
                     </div>
                 </div>
-               // Input for details - depending on whether you're adding a new task or editing an existing one:
-               var details = this.props.formState === "editTask" ?
+        // Input for details - depending on whether you're adding a new task or editing an existing one:
+        var details = this.props.formState === "editTask" ?
                <div className="form-group row">
                    <div className="col-sm-12">
-                       <textArea id="editDetails form-control" className="editText" 
-                           name="details" contentEditable="true" 
-                           rows="5" 
-                           onChange={(e) => this.input(e)}
-                       >
-                       {this.props.taskToEdit.details}
-                       </textArea> 
+                        <textarea id="editDetails" className="editText form-control" 
+                            name="details" 
+                            contentEditable="true" suppressContentEditableWarning={true}
+                            onChange={(e) => this.input(e)}
+                            >
+                                {this.props.taskToEdit.details}
+                        </textarea>    
                    </div>
                </div>
            :   
@@ -159,7 +163,7 @@ class Form extends Component{
                                                             
         return(
             <div className="d-flex justify-content-center"> 
-                <form className="formContainer form form-group" onSubmit={(e)=>this.submitDetails(e)}>
+                <form noValidate className="formContainer form form-group" onSubmit={(e)=>this.submitDetails(e)}>
                    {title} <br />
                    
                    {details} <br />

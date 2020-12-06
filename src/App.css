@@ -425,6 +425,7 @@ input{
 .signInForm{
   width: 45%;
   background: white;
+  margin-top: 10vh;
 }
 @media(max-width: 700px){
   .signInForm{
@@ -442,7 +443,6 @@ input{
 
 .link{
   color: blue;
-  text-decoration: underline;
   cursor: pointer;
 }
 
