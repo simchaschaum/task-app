@@ -36,7 +36,8 @@ state = {
   taskDisp: "rows", // displays tasks in "rows" or "boxes" (3 or 4 per row)
   star: "",
   showDeets: false,  // on change, turns on/off detail view for all tasks 
-  showDone: true  // determines whether it shows tasks that are done 
+  showDone: true,  // determines whether it shows tasks that are done 
+  noTasks: "loading"  // determines what the NoTasks component says when there are no tasks (search/loading/no tasks)
 }
 
 componentDidMount(){
@@ -75,7 +76,8 @@ getTasks(){
     .then( snapshot => {
       taskList = firebaseArrMaker(snapshot);
       this.setState({
-        tasks: taskList
+        tasks: taskList,
+        noTasks: taskList.length > 0 ? "loading" : "noTasks"
     }, ()=> console.log(this.state.tasks));
     }
     ).catch( error => console.log(error));
@@ -137,12 +139,11 @@ getTasks(){
   }
   
   displaySearch = (filteredList, searchParams) => {
-    this.setState({tasks: filteredList, searchParams: searchParams, showSearch: true});
-    taskList = filteredList;
+    this.setState({tasks: filteredList, searchParams: searchParams, showSearch: true, noTasks: "search"}, ()=>taskList = filteredList);
   }
 
   finishSearch = () => {
-    this.setState({showSearch: false}, () => this.getTasks());
+    this.setState({showSearch: false, noTasks: "loading"}, () => this.getTasks());
     document.getElementById("searchInput").value = "";
     }
  
@@ -263,7 +264,10 @@ render(){
                       />
                   </div>
               ))           
-              : <Notasks />}
+              : 
+              <Notasks 
+                      noTasks={this.state.noTasks}
+                />}
         </div>
 
         </div>

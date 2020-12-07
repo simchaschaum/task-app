@@ -30,7 +30,7 @@ class Tasks extends React.Component{
     }
     
     updateDone = (done) => {
-        tasksCollection.doc(this.state.taskID)
+        tasksCollection.doc(this.props.taskID)
             .update({
                 done: done
             })
@@ -129,12 +129,12 @@ class Tasks extends React.Component{
                         {/* Mark as done button: */}
                             <div className="toolTipContainer">
                                 <button className="doneButton taskBtn btn btn-sm" onClick={this.toggleDone}>
-                                    {this.state.done ? 
+                                    {this.props.taskDone ? 
                                         <img className="icon" src="https://img.icons8.com/ios/100/000000/checked-2--v2.png"/> 
                                         : <img className="icon" src="https://img.icons8.com/ios/100/000000/checked-2--v3.png"/> }
                                 </button>
                                 <span className="toolTip toolTipAbove">
-                                    {this.state.done ? toolTips.undone : toolTips.done}
+                                    {this.props.taskDone ? toolTips.undone : toolTips.done}
                                 </span>
                             </div>
                         </div>
@@ -154,9 +154,22 @@ class Tasks extends React.Component{
 
 export class Notasks extends Component{
     render(){
+        var noTasks;
+            switch(this.props.noTasks){
+                case "search":
+                    noTasks = "Your search found no tasks.";
+                    break;
+                case "noTasks":
+                    noTasks = "There are no tasks to do.  *Whew!*";
+                    break;
+                default:
+                    noTasks = "Tasks Loading... "
+                    break;
+            }
+        
         return(
             <div id="noTasksDiv" className="taskContainer">
-                You have no tasks! *Whew!* 
+                {noTasks}
             </div>
         )
     }

@@ -154,11 +154,11 @@ class Form extends Component{
            :   
                <div className="form-group row">
                    <div className="col-sm-12">
-                       <textArea id="newTaskDetails" className="form-control" 
+                       <textarea id="newTaskDetails" className="form-control" 
                        name="details" value={this.state.details} 
                        type="text" placeholder="Enter Details" 
                        rows="5" onChange={(e) => this.input(e)} >
-                       </textArea>
+                       </textarea>
                    </div>  
                </div>
    

@@ -287,6 +287,7 @@ input{
 
 .dateDue{
   font-style: italic;
+  padding-left: 10px;
 }
 
 .taskBtnGrp{
@@ -431,6 +432,10 @@ input{
   .signInForm{
     width: 90%;
   }
+}
+
+#loginFailedText{
+  color: red;
 }
 
 #submit{
