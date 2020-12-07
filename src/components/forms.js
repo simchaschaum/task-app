@@ -142,13 +142,13 @@ class Form extends Component{
         var details = this.props.formState === "editTask" ?
                <div className="form-group row">
                    <div className="col-sm-12">
-                        <textarea id="editDetails" className="editText form-control" 
+                        <textArea id="editDetails" className="editText form-control" 
                             name="details" 
                             contentEditable="true" suppressContentEditableWarning={true}
                             onChange={(e) => this.input(e)}
                             >
                                 {this.props.taskToEdit.details}
-                        </textarea>    
+                        </textArea>    
                    </div>
                </div>
            :   
