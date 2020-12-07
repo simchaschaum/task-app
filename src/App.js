@@ -13,6 +13,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import LoginForm from './components/users/loginform';
 
 var taskList = [];
+var categories = [];
 var property, currentUser, loggedIn, userEmail, userID;
 
 class App extends React.Component {
@@ -37,7 +38,8 @@ state = {
   star: "",
   showDeets: false,  // on change, turns on/off detail view for all tasks 
   showDone: true,  // determines whether it shows tasks that are done 
-  noTasks: "loading"  // determines what the NoTasks component says when there are no tasks (search/loading/no tasks)
+  noTasks: "loading", // determines what the NoTasks component says when there are no tasks (search/loading/no tasks)
+  categories: []
 }
 
 componentDidMount(){
@@ -46,6 +48,7 @@ componentDidMount(){
 
 // getUser checks the current user AND toggles the sign in form!
 getUser = () => {
+  categories.length = 0;
   currentUser = firebase.auth().currentUser;
   if(currentUser){
     userID = currentUser.uid;
@@ -78,10 +81,22 @@ getTasks(){
       this.setState({
         tasks: taskList,
         noTasks: taskList.length > 0 ? "loading" : "noTasks"
-    }, ()=> console.log(this.state.tasks));
-    }
+      }, ()=> this.getCategories(taskList));
+    } 
+  
     ).catch( error => console.log(error));
 }
+
+  getCategories = (taskList) => {
+    console.log(taskList);
+    var catRawArray = taskList.map(item => item.category).forEach(item=> {
+        if(!categories.includes(item)){
+          categories.push(item)
+        }
+      }
+    )
+    this.setState({categories: categories})
+  }
 
   showNotDone = () => {
     tasksCollection
@@ -192,6 +207,7 @@ render(){
              taskID={this.state.id} 
              taskStar={this.state.star}  
              userID={this.state.userID}
+            categories={this.state.categories}
            />
       </div>
       <div style={{display: this.state.signInDisp ? 'block' : 'none'}}>
@@ -252,6 +268,7 @@ render(){
                       taskDetails={task.details} 
                       taskStar={task.star} 
                       taskDone={task.done} 
+                      taskCategory={task.category}
                       updateDisp={this.getUser} 
                       dateDue={task.date} 
                       editTask={() => 
@@ -260,7 +277,6 @@ render(){
                       toggleDone={() => {
                         task.done = (task.done === true ? false : true)
                       }} 
-                      
                       />
                   </div>
               ))           

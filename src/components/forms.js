@@ -1,9 +1,11 @@
 import { render } from '@testing-library/react';
 import React, { Component } from 'react'; 
+import Dropdown from 'react-bootstrap/Dropdown';
 import firebase, {db, tasksCollection, firebaseTimestamp} from '../utils/firebase';
 import { firebaseArrMaker } from '../utils/tools';
 
 var starIcon = "https://img.icons8.com/ios/24/000000/star--v1.png";
+var cat;
 
 class Form extends Component{
     state = {
@@ -12,10 +14,12 @@ class Form extends Component{
         star: "",
         date: "",
         userID: "",
+        category: "Category",
         titleEdited: false,   // checking if these were edited
         detailsEdited: false,
         starEdited: false,
-        dateEdited: false        
+        dateEdited: false,
+        categoryEdited: false
     };
 
     setEditForm = (star) => {
@@ -56,6 +60,7 @@ class Form extends Component{
                 date: this.state.date,
                 star: this.state.star,
                 done: false,
+                category: this.state.category,
                 addedAt: firebaseTimestamp(),
                 userID: this.props.userID
             })
@@ -65,12 +70,14 @@ class Form extends Component{
             var details = this.state.detailsEdited === false ? this.props.taskToEdit.details : this.state.details;
             var star = this.state.starEdited === false ? this.props.taskToEdit.star : this.state.star;
             var date = this.state.dateEdited === false ? this.props.taskToEdit.date : this.state.date;
+            var catToEnter = this.state.categoryEdited === false ? this.props.taskToEdit.category : this.state.category;
             tasksCollection.doc(this.props.taskID)
                 .update({
                     title: title,
                     details: details,
                     star: star,
-                    date: date
+                    date: date,
+                    category: catToEnter
                 })
                 .then(this.props.updateDisp())
         };
@@ -90,6 +97,24 @@ class Form extends Component{
         this.setState({star: cs, starEdited: true});
  } 
 
+    categoryInput = (e) => {
+        cat = e.target.value;
+    }
+
+    addCategory = (e) => {
+        e.preventDefault();
+        this.setState({category: cat, categoryEdited: true}, ()=>console.log(this.state.category));
+        cat = "";
+        document.getElementById("categoryInput").value = "";
+    }
+
+    categoryInputButton = (e) => {
+        e.preventDefault();
+        this.setState({category:e.target.outerText, categoryEdited: true}, ()=>console.log(this.state.category))
+        document.getElementById("categoryInput").value = "";
+    }
+
+
     closeForm = (e) => {
         starIcon = "https://img.icons8.com/ios/24/000000/star--v1.png";
         e.preventDefault();
@@ -103,11 +128,13 @@ class Form extends Component{
             details: "", 
             priority: "", 
             date: "", 
+            category: "Category",
             star: this.props.taskStar,
             titleEdited: false, 
             detailsEdited: false, 
             dateEdited: false, 
-            starEdited: false
+            starEdited: false,
+            categoryEdited: false
         });
     }
 
@@ -182,6 +209,19 @@ class Form extends Component{
                         onChange={(e)=>this.input(e)}
                         ></input>
                     </label>
+
+                    <Dropdown>
+                        <Dropdown.Toggle variant="secondary" size="sm" id="dropdown-basic">
+                            {this.state.category}
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                            <input id="categoryInput" onChange={(e)=>this.categoryInput(e)}></input>
+                            <button onClick={(e)=>this.addCategory(e)}>Press</button>
+                            {this.props.categories.map(category => (
+                                <Dropdown.Item onClick={(e)=>this.categoryInputButton(e)}>{category}</Dropdown.Item>
+                            ))}
+                        </Dropdown.Menu>
+                    </Dropdown>
                     
                     <input className="btn btn-sm btn-secondary formBtn" type="submit"></input> 
                     <button className="btn btn-sm btn-secondary formBtn" onClick={this.closeForm}>Cancel</button>

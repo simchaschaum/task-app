@@ -105,6 +105,9 @@ class Tasks extends React.Component{
                             <div className="dateDue">
                                 {this.props.dateDue == "" ? null : "Due on " + this.props.dateDue}
                             </div>
+                            <div className="category">
+                                {this.props.taskCategory}
+                            </div>
                         </div>
                         
                         <div className="btn-grp taskBtnGrp" id={taskBtnGrp}>
