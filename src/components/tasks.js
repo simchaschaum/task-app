@@ -34,9 +34,11 @@ class Tasks extends React.Component{
             .update({
                 done: done
             })
-            .then(()=>console.log(this.props.taskTitle + "  " + this.state.done))
+            .then(()=>{
+                console.log(this.props.taskTitle + "  " + done);
+                this.props.updateDisp();
+            } )
             .catch(error => console.log(error));   
-        this.props.updateDisp();
     };
     
     deleteTask = () => {
