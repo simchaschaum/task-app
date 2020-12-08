@@ -81,73 +81,77 @@ class Tasks extends React.Component{
                     </span>
                 </div>
 
-        // var taskBigContainer = this.props.taskCols === "taskCols" ? "taskBigContainerCols" : null;
-        var taskSubcontainer = this.props.taskCols === "taskCols" ? "taskSubcontainer" : "null";
-        var taskBtnGrp = this.props.taskCols === "taskCols" ? "taskBtnCols": null;
+        var taskSubcontainer = this.props.taskCols === "taskCols" ? "taskSubcontainer taskTitleAndButtons" : "taskTitleAndButtons";
+        var taskBtnGrpCols = this.props.taskCols === "taskCols" ? "taskBtnCols": null;
         var taskTitleAndButtonsCols = this.props.taskCols === "taskCols" ? "taskTitleAndButtonsCols" : null;
+        var titleCols = this.props.taskCols === "taskCols" ? "titleCols" : null;
 
         return(
-           <div className={taskSubcontainer}>
-                    <div className="taskTitleAndButtons" id={taskTitleAndButtonsCols}>
+           <div className={taskSubcontainer} id={taskTitleAndButtonsCols}>
+                       
+                        <div className="title" id={titleCols}>
 
-                        <div className="title">
                             <h2 className="taskTitle"> 
                                 {this.props.taskTitle} 
-                                <div className="toolTipContainer">
-                                    <span className="taskPriority taskTitle"> 
-                                        {this.props.taskStar === true ? <img id="star" className="icon" src="https://img.icons8.com/emoji/48/000000/star-emoji.png"/> : null} 
-                                    </span>
-                                    <span className="toolTip toolTipAbove">{toolTips.star}</span>
-                                </div>
-                                
                             </h2>  
-                          
-                            <div className="dateDue">
-                                {this.props.dateDue == "" ? null : "Due on " + this.props.dateDue}
-                            </div>
-                            <div className="category">
-                                {this.props.taskCategory != "No Category" ? this.props.taskCategory : null}
-                            </div>
-                        </div>
-                        
-                        <div className="btn-grp taskBtnGrp" id={taskBtnGrp}>
-
-                        {/* Show/Hide details, and details: */}
-                            {expandedButton}
-                          
-                        {/* Edit task button: */}
                             <div className="toolTipContainer">
-                                <button className="editButton taskBtn btn-sm btn" onClick={this.editTask}>
-                                    <img className="icon"src="https://img.icons8.com/pastel-glyph/64/000000/edit--v1.png"/>
-                                </button>
-                                <span className="toolTip toolTipAbove">{toolTips.editTask}</span>
-                            </div>
-
-                        {/* Delete button: */}
-                            <div className="toolTipContainer">
-                                <button className="deleteButton taskBtn btn-sm btn" onClick={()=>this.deleteTask()}>
-                                <img className="icon" src="https://img.icons8.com/metro/52/000000/delete-sign.png"/>
-                                </button>
-                                <span className="toolTip toolTipAbove">Delete This Task</span>
-                            </div>
-
-                        {/* Mark as done button: */}
-                            <div className="toolTipContainer">
-                                <button className="doneButton taskBtn btn btn-sm" onClick={this.toggleDone}>
-                                    {this.props.taskDone ? 
-                                        <img className="icon" src="https://img.icons8.com/ios/100/000000/checked-2--v2.png"/> 
-                                        : <img className="icon" src="https://img.icons8.com/ios/100/000000/checked-2--v3.png"/> }
-                                </button>
-                                <span className="toolTip toolTipAbove">
-                                    {this.props.taskDone ? toolTips.undone : toolTips.done}
+                                <span className="taskPriority taskTitle"> 
+                                    {this.props.taskStar === true ? <img id="star" className="icon" src="https://img.icons8.com/emoji/48/000000/star-emoji.png"/> : null} 
                                 </span>
+                                <span className="toolTip toolTipAbove">{toolTips.star}</span>
                             </div>
-                        </div>
-                    </div>
+                                                          
 
-                        <div className="detailsParagraph" style={{display: this.state.expanded ? 'block' : 'none'}}>
-                            {this.props.taskDetails}
+                            {this.props.taskCategory != "No Category" ?
+                                <div className="catShowDiv">
+                                        <p className="catShowText">{this.props.taskCategory}</p> 
+                                    </div>
+                                    : null }
+
                         </div>
+                        <div className="dateDue">
+                            {this.props.dateDue == "" ? null : "Due: " + this.props.dateDue}
+                        </div>
+                        {/* {this.props.taskDisp != "rows" ? <hr></hr> : null} */}
+                       
+                        <div className="btn-grp taskBtnGrp" id={taskBtnGrpCols}>
+
+                            {/* Show/Hide details, and details: */}
+                                {expandedButton}
+
+                            {/* Edit task button: */}
+                                <div className="toolTipContainer">
+                                    <button className="editButton taskBtn btn-sm btn" onClick={this.editTask}>
+                                        <img className="icon"src="https://img.icons8.com/pastel-glyph/64/000000/edit--v1.png"/>
+                                    </button>
+                                    <span className="toolTip toolTipAbove">{toolTips.editTask}</span>
+                                </div>
+
+                            {/* Delete button: */}
+                                <div className="toolTipContainer">
+                                    <button className="deleteButton taskBtn btn-sm btn" onClick={()=>this.deleteTask()}>
+                                    <img className="icon" src="https://img.icons8.com/metro/52/000000/delete-sign.png"/>
+                                    </button>
+                                    <span className="toolTip toolTipAbove">Delete This Task</span>
+                                </div>
+
+                            {/* Mark as done button: */}
+                                <div className="toolTipContainer">
+                                    <button className="doneButton taskBtn btn btn-sm" onClick={this.toggleDone}>
+                                        {this.props.taskDone ? 
+                                            <img className="icon" src="https://img.icons8.com/ios/100/000000/checked-2--v2.png"/> 
+                                            : <img className="icon" src="https://img.icons8.com/ios/100/000000/checked-2--v3.png"/> }
+                                    </button>
+                                    <span className="toolTip toolTipAbove">
+                                        {this.props.taskDone ? toolTips.undone : toolTips.done}
+                                    </span>
+                                </div>
+                        </div>
+                
+
+                    <div className="detailsParagraph" style={{display: this.state.expanded ? 'block' : 'none'}}>
+                        {this.props.taskDetails}
+                    </div>
                        
                       
             </div>

@@ -84,7 +84,7 @@ class Header extends React.Component {
                                 <Dropdown.Item name="rows" onClick={(e)=>this.toggleDisplay(e)}>Rows</Dropdown.Item>
                         </DropdownButton>
                         
-                        <DropdownButton id="dropdown-basic-button"  title="Order">
+                        <DropdownButton id="dropdown-basic-button"  title="Show">
                                 <Dropdown.Item name="star"  onClick={this.props.taskSort}>Starred First</Dropdown.Item>
                                 <Dropdown.Item name="addedAt"  onClick={this.props.taskSort}>Date Entered</Dropdown.Item>
                                 <Dropdown.Item name="date"  onClick={this.props.taskSort}>Due Date</Dropdown.Item>

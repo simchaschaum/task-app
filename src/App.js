@@ -207,7 +207,7 @@ render(){
 
   return (
     <>
-        <div>
+        <div className="loginMessage">
           {loginMessage}
         </div>
       {/* The form is outside 'app' - to avoid inheriting lower opacity when the form is displayed*/}
@@ -280,6 +280,7 @@ render(){
               taskList.map((task)=> ( 
                 <div className="taskContainer">
                     <Tasks 
+                      taskDisp={this.state.taskDisp}
                       taskID={task.id} 
                       taskCols={this.state.taskDisp === "boxes" ? "taskCols" : null}
                       taskTitle={task.title} 

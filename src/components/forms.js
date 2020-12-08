@@ -213,12 +213,19 @@ class Form extends Component{
                         <Dropdown.Toggle variant="secondary" size="sm" id="dropdown-basic">
                             {this.state.category}
                         </Dropdown.Toggle>
-                        <Dropdown.Menu>
-                            <input id="categoryInput" placeholder="Add a Category" onChange={(e)=>this.categoryInput(e)}></input>
-                            <button onClick={(e)=>this.addCategory(e)}>Press</button>
+                        <Dropdown.Menu> 
+                            <div className="row catInputDiv">
+                                <div className="col-sm-9">
+                                    <input id="categoryInput" className="form-control" placeholder="Add a Category" onChange={(e)=>this.categoryInput(e)}></input>
+                                </div>
+                                <div className="col-sm-3">
+                                    <button className="btn btn-secondary" onClick={(e)=>this.addCategory(e)}>Press</button>
+                                </div>
+                            </div>
                             {this.props.categories.map(category => (
                                 <Dropdown.Item onClick={(e)=>this.categoryInputButton(e)}>{category}</Dropdown.Item>
                             ))}
+                            <Dropdown.Divider />
                             <Dropdown.Item onClick={(e)=>this.categoryInputButton(e)}>No Category</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
