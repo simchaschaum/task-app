@@ -90,7 +90,7 @@ getTasks(){
   getCategories = (taskList) => {
     console.log(taskList);
     var catRawArray = taskList.map(item => item.category).forEach(item=> {
-        if(!categories.includes(item)){
+        if(!categories.includes(item)&&item!="No Category"){
           categories.push(item)
         }
       }
@@ -120,6 +120,21 @@ getTasks(){
     }
   }
 
+  showCategory = (cat) => {
+    tasksCollection
+    .where("category","==",cat)
+    .where("userID","==",this.state.userID)
+    .get()
+    .then( snapshot => {
+      taskList = firebaseArrMaker(snapshot);
+      this.setState({
+        tasks: taskList,
+        showDone: false,
+    }, ()=> console.log(this.state.tasks));
+    }
+  ).catch( error => console.log(error));
+  }
+
   // toggles the display between boxes and rows
   toggleDisplay = (e) => {
     this.setState({taskDisp: e})
@@ -138,7 +153,7 @@ getTasks(){
 
   // opens form to edit existing task:
   editTask = (task, num) => {
-    this.setEditForm(task.star);
+    this.setEditForm(task.star, task.category);
     this.setState({
       formState: "editTask", 
       taskToEdit: task,
@@ -149,8 +164,8 @@ getTasks(){
     }, () => this.setState({formDisp: true}));
   }
 
-  setEditForm = (star) => {
-    this.refs.form.setEditForm(star)
+  setEditForm = (star, category) => {
+    this.refs.form.setEditForm(star, category)
   }
   
   displaySearch = (filteredList, searchParams) => {
@@ -234,6 +249,9 @@ render(){
             showDeets={this.state.showDeets}
             toggleDeets={this.toggleDeets}
             loggedIn={loggedIn}
+            categories={this.state.categories}
+            showCategory={this.showCategory}
+            getUser={this.getUser}
             />
         </div>
 

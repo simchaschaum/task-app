@@ -22,8 +22,8 @@ class Form extends Component{
         categoryEdited: false
     };
 
-    setEditForm = (star) => {
-        this.setState({star:star});
+    setEditForm = (star, cat) => {
+        this.setState({star:star, category: cat === "No Category" ? "Category" : cat});
         star ? 
             starIcon = "https://img.icons8.com/ios-filled/24/000000/star.png"
             : starIcon =  "https://img.icons8.com/ios/24/000000/star--v1.png";
@@ -188,8 +188,7 @@ class Form extends Component{
                        </textarea>
                    </div>  
                </div>
-   
-                                                            
+                                                                    
         return(
             <div className="d-flex justify-content-center"> 
                 <form noValidate className="formContainer form form-group" onSubmit={(e)=>this.submitDetails(e)}>
@@ -215,11 +214,12 @@ class Form extends Component{
                             {this.state.category}
                         </Dropdown.Toggle>
                         <Dropdown.Menu>
-                            <input id="categoryInput" onChange={(e)=>this.categoryInput(e)}></input>
+                            <input id="categoryInput" placeholder="Add a Category" onChange={(e)=>this.categoryInput(e)}></input>
                             <button onClick={(e)=>this.addCategory(e)}>Press</button>
                             {this.props.categories.map(category => (
                                 <Dropdown.Item onClick={(e)=>this.categoryInputButton(e)}>{category}</Dropdown.Item>
                             ))}
+                            <Dropdown.Item onClick={(e)=>this.categoryInputButton(e)}>No Category</Dropdown.Item>
                         </Dropdown.Menu>
                     </Dropdown>
                     

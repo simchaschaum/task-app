@@ -106,7 +106,7 @@ class Tasks extends React.Component{
                                 {this.props.dateDue == "" ? null : "Due on " + this.props.dateDue}
                             </div>
                             <div className="category">
-                                {this.props.taskCategory}
+                                {this.props.taskCategory != "No Category" ? this.props.taskCategory : null}
                             </div>
                         </div>
                         

@@ -12,6 +12,11 @@ class Header extends React.Component {
         this.props.toggleDisplay(e.target.name);
     }
 
+    showCategory = (e) => {
+        var cat = e.target.name;
+        cat === "all" ? this.props.getUser() : this.props.showCategory(cat);
+    }
+
     toggleForm = () => { 
         this.props.toggleForm();
     }
@@ -84,7 +89,17 @@ class Header extends React.Component {
                                 <Dropdown.Item name="addedAt"  onClick={this.props.taskSort}>Date Entered</Dropdown.Item>
                                 <Dropdown.Item name="date"  onClick={this.props.taskSort}>Due Date</Dropdown.Item>
                                 <Dropdown.Item name="done" onClick={this.props.taskSort}>{showDone}</Dropdown.Item>
+
                         </DropdownButton>
+                        <DropdownButton id="dropdown-basic-button"  title="Category">
+                            {this.props.categories.map(cat => (
+                                <Dropdown.Item name={cat}  onClick={(e)=>this.showCategory(e)}>{cat}</Dropdown.Item>
+                            )
+                            )}
+                            <Dropdown.Item name="all" onClick={(e)=>this.showCategory(e)}>Show All</Dropdown.Item>
+                               
+                        </DropdownButton>
+
                         
                     </div>
                 </header>
