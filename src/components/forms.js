@@ -223,7 +223,7 @@ class Form extends Component{
                                 </div>
                             </div>
                             {this.props.categories.map(category => (
-                                <Dropdown.Item onClick={(e)=>this.categoryInputButton(e)}>{category}</Dropdown.Item>
+                                <Dropdown.Item key={category} onClick={(e)=>this.categoryInputButton(e)}>{category}</Dropdown.Item>
                             ))}
                             <Dropdown.Divider />
                             <Dropdown.Item onClick={(e)=>this.categoryInputButton(e)}>No Category</Dropdown.Item>

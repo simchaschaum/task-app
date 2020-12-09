@@ -192,7 +192,7 @@ class LoginForm extends Component{
                 </div>
                 <div className="row">
                     <div className="col col-sm-8 col-lg-10"></div>
-                    <button id="submit" className="form-control btn btn-secondary col col-sm-4 col-lg-2" type="submit"> 
+                    <button className="form-control btn btn-secondary col col-sm-4 col-lg-2 submit" type="submit"> 
                     Send Email
                 </button>
                 </div>
@@ -238,7 +238,7 @@ class LoginForm extends Component{
                 </div>
                 <div className="form-group row">
                     <div className="col col-sm-8 col-lg-10"></div>
-                    <button id="submit" className="form-control btn btn-secondary col col-sm-4 col-lg-2" type="submit"> 
+                    <button className="form-control btn btn-secondary col col-sm-4 col-lg-2 submit" type="submit"> 
                         Submit 
                     </button>
                 </div>

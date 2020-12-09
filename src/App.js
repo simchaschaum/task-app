@@ -60,14 +60,13 @@ getUser = () => {
       }, ()=>this.getTasks());
     } )
   } else {
-    this.setState({loggedIn: false}, ()=>{
-      console.log("no user at all :(");
-      this.setState({
-        background: "white",
-        signInDisp: true
-      });
-      taskList.length = 0;
-    } )
+    this.setState({
+      loggedIn: false,
+      signInDisp: true,
+      background: "white"}, ()=>{
+        console.log("no user at all :( " + this.state.signInDisp);
+        taskList.length = 0;}
+    );
   }
 }
 
@@ -225,13 +224,18 @@ render(){
             categories={this.state.categories}
            />
       </div>
-      <div style={{display: this.state.signInDisp ? 'block' : 'none'}}>
-         <LoginForm
-            toggleSignIn={()=>this.toggleSignIn()}
-            getUser={()=>this.getUser()}
-            getTasks={()=>this.getTasks()}
-         />
-      </div>
+
+      {this.state.signInDisp ? 
+           <div style={{display:'block'}}>
+           <LoginForm
+              toggleSignIn={()=>this.toggleSignIn()}
+              getUser={()=>this.getUser()}
+              getTasks={()=>this.getTasks()}
+           />
+        </div>
+        : null
+    }
+   
       <div className="app">
       <div className="cover" id={background}></div>
 
@@ -278,7 +282,7 @@ render(){
         <div className={cols}>
             {taskList.length > 0 ? 
               taskList.map((task)=> ( 
-                <div className="taskContainer">
+                <div key={task.id} className="taskContainer">
                     <Tasks 
                       taskDisp={this.state.taskDisp}
                       taskID={task.id} 

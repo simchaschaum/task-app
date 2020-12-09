@@ -43,7 +43,7 @@ main{
   margin: 0;
   z-index: 10;
   background: gray;
-  opacity: 60%;
+  opacity: 0.6;
 }
 #bgWhite{
   width: 100%;
@@ -54,7 +54,8 @@ main{
   padding: 0;
   margin: 0;
   z-index: 10;
-  background: white;opacity: 100%;
+  background: white;
+  opacity: 1.0;
 }
 
 h1{
@@ -271,6 +272,7 @@ input{
 .formContainer{  
   width: 65%;
   background: gray;
+  z-index: 100000;
 }
 
 .taskContainer{
@@ -378,7 +380,7 @@ input{
 
 .toolTipContainer:hover .toolTip{
   visibility: visible;
-  opacity: 1;
+  opacity: 1.0;
 }
 
 .toolTipAbove{
@@ -420,7 +422,7 @@ input{
   z-index: 10000;
   margin: 10vw auto;
   /* background: var(--clr-ter); */
-  opacity: 100%;
+  opacity: 1.0;
   padding: 15px;
   border: .5px solid var(--clr-gray);
   border-radius: .25rem;
@@ -430,7 +432,7 @@ input{
 
 .editText{
   color: black;
-  opacity: 90%;
+  opacity: 0.9;
   background: white !important;
   border-radius: .25rem;
   /* border-top: solid black 1px;
@@ -467,7 +469,7 @@ input{
   color: red;
 }
 
-#submit{
+.submit{
   transform: translateX(-15px);
 }
 
