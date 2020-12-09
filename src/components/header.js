@@ -33,16 +33,16 @@ class Header extends React.Component {
         this.props.toggleSignIn();
     }
 
-    signOut = () => {
-        firebase
-            .auth()
-            .signOut()
-            .then(() => {
-                console.log("signed out");
-                this.props.getUser();
-            } )
-            .catch(error => console.log(error))
-    }
+    // signOut = () => {
+    //     firebase
+    //         .auth()
+    //         .signOut()
+    //         .then(() => {
+    //             console.log("signed out");
+    //             this.props.getUser();
+    //         } )
+    //         .catch(error => console.log(error))
+    // }
 
     render(){
         var showDeets = this.props.showDeets ?  "Hide All Details" : "Show All Details";
@@ -55,13 +55,7 @@ class Header extends React.Component {
                         <div className="headerTop">
                             <img alt="Check-mark logo" className="logoIcon" src="https://img.icons8.com/ios/100/000000/checked-2--v2.png"/>
                         </div>
-
-                        <div>
-                            <Button id="dropdown-basic-button" className="headerButton" onClick={this.signOut}>
-                                <span > Log out </span>
-                            </Button>
-                        </div>
-                        
+                   
                         <div className="dropdown">
                             <Button id="dropdown-basic-button" className="headerButton" onClick={this.toggleForm}>
                                 <span className="btnDisText"> New Task </span>

@@ -180,6 +180,17 @@ getTasks(){
     this.setState({showDeets: this.state.showDeets ? false : true})
   }
 
+  signOut = () => {
+    firebase
+        .auth()
+        .signOut()
+        .then(() => {
+            console.log("signed out");
+            this.getUser();
+        } )
+        .catch(error => console.log(error))
+  }
+
 render(){
   
   var searchDisp = 
@@ -208,6 +219,7 @@ render(){
     <>
         <div className="loginMessage">
           {loginMessage}
+          <button className="logOut btn btn-sm btn-secondary" onClick={this.signOut}>Log out</button>
         </div>
       {/* The form is outside 'app' - to avoid inheriting lower opacity when the form is displayed*/}
       <div style={{display: this.state.formDisp ? 'block' : 'none'}}> 

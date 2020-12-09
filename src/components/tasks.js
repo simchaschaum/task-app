@@ -65,7 +65,7 @@ class Tasks extends React.Component{
             show: "Show details",
             hide: "Hide details",
             editTask: "Edit Task",
-            star: "This task is a priority"
+            star: "This task is important"
         }
 
         var expanded = this.state.expanded ? <img className="icon" src="https://img.icons8.com/windows/32/000000/hide.png"/> 
@@ -87,6 +87,7 @@ class Tasks extends React.Component{
         var titleCols = this.props.taskCols === "taskCols" ? "titleCols" : null;
 
         return(
+            <>
            <div className={taskSubcontainer} id={taskTitleAndButtonsCols}>
                        
                         <div className="title" id={titleCols}>
@@ -148,14 +149,14 @@ class Tasks extends React.Component{
                                 </div>
                         </div>
                 
-
-                    <div className="detailsParagraph" style={{display: this.state.expanded ? 'block' : 'none'}}>
-                        {this.props.taskDetails}
-                    </div>
+            </div>
+            <div className="detailsParagraph" style={{display: this.state.expanded ? 'block' : 'none'}}>
+                {this.props.taskDetails}
+            </div>
                        
                       
-            </div>
-           
+
+        </>
         )
     }
 }

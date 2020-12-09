@@ -82,7 +82,13 @@ h2{
 }
 /* Login Message */
 .loginMessage{
-  margin-left: 20px
+  margin-left: 20px;
+}
+.logOut{
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+  font-size: 12px !important;
+  margin-left: 5px;
 }
 
 /* Header */
@@ -132,7 +138,7 @@ input{
 
 #dropdown-basic-button, .headerButton{
   width: 85%;
-  height: 60%;
+  height: 60px;
   margin-top: 5px;
   margin-bottom: 5px;
   background: var(--clr-gray);
@@ -140,10 +146,11 @@ input{
   justify-self: center;
 }
 @media(max-width: 850px){
-  #dropdown-basic-button, .headerButton{
+  .dropdown-basic-button, .headerButton{
    font-size: 15px;
    align-self: center;
-   height: 70%;
+   height: 70px;
+   width: auto;
      }
   /* Text that disapears when viewport narrows */
   .btnDisText{
@@ -417,6 +424,14 @@ input{
   height: 10em;
 }
 
+#newTaskDate {
+  margin-left: 5px !important;
+  border: 1px solid #ced4da !important;
+  border-radius: .25rem !important;
+  padding: .375rem .75rem !important;
+  transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out !important;
+}
+
 .form{
   position: fixed;
   z-index: 10000;
@@ -450,6 +465,30 @@ input{
 }
 
 .catInputDiv{
+  margin: 0 auto !important;
+}
+
+.form-label{
+  color: white;
+  font-size: .875rem;
+  margin-right: 3px;
+  margin-top: 4px;
+  margin-bottom: 4px;
+  display: flex;
+  align-content: center;
+
+}
+
+.form-middle-row{
+  display: flex;
+  justify-content: space-around;
+  width: 90%;
+  margin: 0 auto !important;
+}
+.form-bottom-row{
+  display: flex;
+  justify-content: flex-end;
+  width: 90%;
   margin: 0 auto !important;
 }
 

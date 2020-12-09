@@ -196,42 +196,49 @@ class Form extends Component{
                    
                    {details} <br />
 
-                    <button className="btn" name="star" onClick={this.toggleStar}>
-                        <img src={starIcon}/>
-                    </button>
-                    
-                    <label>Due Date:
-                        <input id="newTaskDate" className="form-control-sm" 
-                        type="date" 
-                        name="date" 
-                        value={this.state.date} 
-                        onChange={(e)=>this.input(e)}
-                        ></input>
-                    </label>
+                    <div className="form-middle-row">
+ 
+                        <label className="form-label">Important?
+                            <button className="btn" name="star" onClick={this.toggleStar}>
+                                <img src={starIcon}/>
+                            </button>                        
+                        </label>
 
-                    <Dropdown>
-                        <Dropdown.Toggle variant="secondary" size="sm" id="dropdown-basic">
-                            {this.state.category}
-                        </Dropdown.Toggle>
-                        <Dropdown.Menu> 
-                            <div className="row catInputDiv">
-                                <div className="col-sm-9">
-                                    <input id="categoryInput" className="form-control" placeholder="Add a Category" onChange={(e)=>this.categoryInput(e)}></input>
+                        <label className="form-label">Due Date:
+                            <input id="newTaskDate" className="form-control-sm" 
+                            type="date" 
+                            name="date" 
+                            value={this.state.date} 
+                            onChange={(e)=>this.input(e)}
+                            ></input>
+                        </label>
+  
+                        <Dropdown>
+                            <Dropdown.Toggle variant="secondary" size="sm" id="dropdown-basic">
+                                {this.state.category}
+                            </Dropdown.Toggle>
+                            <Dropdown.Menu> 
+                                <div className="row catInputDiv">
+                                    <div className="col-sm-9">
+                                        <input id="categoryInput" className="form-control" placeholder="Add a Category" onChange={(e)=>this.categoryInput(e)}></input>
+                                    </div>
+                                    <div className="col-sm-3">
+                                        <button className="btn btn-secondary" onClick={(e)=>this.addCategory(e)}>Press</button>
+                                    </div>
                                 </div>
-                                <div className="col-sm-3">
-                                    <button className="btn btn-secondary" onClick={(e)=>this.addCategory(e)}>Press</button>
-                                </div>
-                            </div>
-                            {this.props.categories.map(category => (
-                                <Dropdown.Item key={category} onClick={(e)=>this.categoryInputButton(e)}>{category}</Dropdown.Item>
-                            ))}
-                            <Dropdown.Divider />
-                            <Dropdown.Item onClick={(e)=>this.categoryInputButton(e)}>No Category</Dropdown.Item>
-                        </Dropdown.Menu>
-                    </Dropdown>
-                    
-                    <input className="btn btn-sm btn-secondary formBtn" type="submit"></input> 
-                    <button className="btn btn-sm btn-secondary formBtn" onClick={this.closeForm}>Cancel</button>
+                                {this.props.categories.map(category => (
+                                    <Dropdown.Item key={category} onClick={(e)=>this.categoryInputButton(e)}>{category}</Dropdown.Item>
+                                ))}
+                                <Dropdown.Divider />
+                                <Dropdown.Item onClick={(e)=>this.categoryInputButton(e)}>No Category</Dropdown.Item>
+                            </Dropdown.Menu>
+                        </Dropdown>
+                    </div>
+                    <div className="row form-bottom-row">
+                        <input className="btn btn-sm btn-secondary formBtn" type="submit"></input> 
+                        <button className="btn btn-sm btn-secondary formBtn" onClick={this.closeForm}>Cancel</button>
+
+                    </div>
 
                </form>
             </div>
