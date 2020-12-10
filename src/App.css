@@ -9,6 +9,7 @@
   --fs-h2: 1.5rem;
   --fs-h3: 1rem;
   --fs-body: .75rem;
+  --fs-small: .6rem;
 
   --fw-reg: 300;
   --fw-bold: 900;
@@ -23,10 +24,6 @@ html{
 
 main{
   min-height: 70vw;
-}
-
-.app {
-  text-align: center;
 }
 
 /* Whole background gets dimmed/whited out when form is showing in foreground */
@@ -87,7 +84,7 @@ h2{
 .logOut{
   padding-top: 0 !important;
   padding-bottom: 0 !important;
-  font-size: 12px !important;
+  font-size: var(--fs-body) !important;
   margin-left: 5px;
 }
 
@@ -100,11 +97,25 @@ h2{
 }
 @media(max-width:600px){
   .headerDiv{
+    width: 94%;
+    margin: 0 auto;
     display: grid;
     grid-template-rows: 1fr;
     grid-template-columns: 1.25fr 1fr 1fr 1fr 1fr;
+    grid-column-gap: 5px !important;
+  }
+  .headerItem{
+    width: 100%;
+    display: flex !important;
+    flex-direction: column;
+    align-items: stretch !important;
+    margin: 0 auto;
+  }
+  .headerButton{
+    margin: 0 auto;
   }
 }
+
 
 .newTaskBtn{
   min-width: 6em;
@@ -147,7 +158,7 @@ input{
 }
 @media(max-width: 850px){
   .dropdown-basic-button, .headerButton{
-   font-size: 15px;
+   font-size: var(--fs-body);
    align-self: center;
    height: 70px;
    width: auto;
@@ -258,7 +269,7 @@ input{
   padding: 2px;
 }
 .catShowText{
-  font-size: .6em;
+  font-size: var(--fs-small);
   color: white;
   margin: auto auto;
 }
@@ -276,11 +287,6 @@ input{
 }
 
 /* .taskcontainer is in App component, surrounds each instance of Task component */
-.formContainer{  
-  width: 65%;
-  background: gray;
-  z-index: 100000;
-}
 
 .taskContainer{
   margin: 10px auto;
@@ -289,6 +295,11 @@ input{
   transition-duration: .25s;
   border: .5px solid var(--clr-gray);
   border-radius: .25rem;
+}
+@media(max-width:700px){
+  .taskContainer{
+    border: 2px solid var(--clr-gray);
+  }
 }
 .taskContainer:hover{
   box-shadow: 0 0 1em #b8bab9;
@@ -321,7 +332,7 @@ input{
   font-style: italic;
   padding-left: 16px;
   text-align: justify;
-  font-size: .75rem;
+  font-size: var(--fs-small);
 }
 
 .taskBtnGrp{
@@ -329,6 +340,12 @@ input{
   flex-wrap: wrap;
   justify-content: space-evenly;
   padding: 5px;
+}
+@media(max-width:800px){
+  .taskBtnGrp{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .taskBtn{
@@ -425,11 +442,38 @@ input{
 }
 
 #newTaskDate {
-  margin-left: 5px !important;
+  font-size: var(--fs-body);
+  /* max-width: 60%; */
+  margin-left: 15px !important;
   border: 1px solid #ced4da !important;
   border-radius: .25rem !important;
-  padding: .375rem .75rem !important;
+  padding: 6px 6px !important;
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out !important;
+}
+
+#starIcon{
+  transform: translateY(-10px) !important;
+}
+
+.formContainer{  
+  width: 65vw;
+  background: gray;
+  z-index: 100000;
+  margin: 0 auto; 
+}
+@media(min-width:1000px){
+  .formContainer{
+    width: 50vw;
+  }
+}
+
+@media(max-width:700px){
+  .formContainer{
+    width: 100vw;
+    height: 100vh;
+    margin-top: 0 !important;
+    margin-left: auto;
+  }
 }
 
 .form{
@@ -463,14 +507,20 @@ input{
 .formBtn{
   margin-left: 5px;
 }
+@media(max-width:700px){
+  .formBtn{
+    margin-left: 0;
+  }
+}
 
 .catInputDiv{
   margin: 0 auto !important;
+  width: 300px;
 }
 
 .form-label{
   color: white;
-  font-size: .875rem;
+  font-size: var(--fs-body);
   margin-right: 3px;
   margin-top: 4px;
   margin-bottom: 4px;
@@ -478,18 +528,53 @@ input{
   align-content: center;
 
 }
+@media(max-width:700px){
+  .form-label{
+    font-size: 1rem;
+  }
+}
 
 .form-middle-row{
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   width: 90%;
   margin: 0 auto !important;
 }
+
+@media(max-width:800px){
+  .form-middle-row{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-column-gap: 5px;
+    grid-row-gap: 10px;
+  }
+}
+@media(max-width:700px){
+  .form-middle-row{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-column-gap: 5px;
+    grid-row-gap: 10px;
+    margin-bottom: 15px;
+  }
+}
+
 .form-bottom-row{
   display: flex;
   justify-content: flex-end;
   width: 90%;
-  margin: 0 auto !important;
+  margin: 0 auto;
+}
+@media(max-width:700px){
+  .form-bottom-row{
+    margin-top: 10px;
+    display: grid !important;
+    grid-template-rows: 1fr 1fr !important;
+    grid-row-gap: 10px;
+    justify-content: flex-start;
+    margin-left: 0;
+  }
 }
 
 /* sign-in form */
@@ -528,7 +613,7 @@ input{
 footer{
   /* position: fixed; */
   bottom: 0;
-  margin-top: 5em;
+  margin-top: 95%;
   width: 100%;
   background-color: white;
   font-size: .75em;

@@ -198,13 +198,13 @@ class Form extends Component{
 
                     <div className="form-middle-row">
  
-                        <label className="form-label">Important?
+                        <label className="form-label">
                             <button className="btn" name="star" onClick={this.toggleStar}>
-                                <img src={starIcon}/>
+                                <img id="starIcon" src={starIcon}/>
                             </button>                        
                         </label>
 
-                        <label className="form-label">Due Date:
+                        <label className="form-label">Due:
                             <input id="newTaskDate" className="form-control-sm" 
                             type="date" 
                             name="date" 
@@ -217,14 +217,15 @@ class Form extends Component{
                             <Dropdown.Toggle variant="secondary" size="sm" id="dropdown-basic">
                                 {this.state.category}
                             </Dropdown.Toggle>
-                            <Dropdown.Menu> 
+                            <Dropdown.Menu id="catDropdown"> 
                                 <div className="row catInputDiv">
-                                    <div className="col-sm-9">
+                                    <div className="col-sm-8">
                                         <input id="categoryInput" className="form-control" placeholder="Add a Category" onChange={(e)=>this.categoryInput(e)}></input>
                                     </div>
-                                    <div className="col-sm-3">
+                                    <div className="col-sm-2">
                                         <button className="btn btn-secondary" onClick={(e)=>this.addCategory(e)}>Press</button>
                                     </div>
+                                    <div className="col-sm-2"></div>
                                 </div>
                                 {this.props.categories.map(category => (
                                     <Dropdown.Item key={category} onClick={(e)=>this.categoryInputButton(e)}>{category}</Dropdown.Item>
@@ -233,13 +234,13 @@ class Form extends Component{
                                 <Dropdown.Item onClick={(e)=>this.categoryInputButton(e)}>No Category</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
-                    </div>
+                   
                     <div className="row form-bottom-row">
                         <input className="btn btn-sm btn-secondary formBtn" type="submit"></input> 
                         <button className="btn btn-sm btn-secondary formBtn" onClick={this.closeForm}>Cancel</button>
 
                     </div>
-
+                    </div>
                </form>
             </div>
         )

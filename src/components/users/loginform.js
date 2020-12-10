@@ -28,7 +28,6 @@ class LoginForm extends Component{
         e.preventDefault();
         const {username} = this.state.user;
         const {password} = this.state.user;
-        console.log("username = " + username);
         if(this.state.register){
             firebase
             .auth()
@@ -52,16 +51,19 @@ class LoginForm extends Component{
             } )
             .catch(() => this.loginFailed())
         }
+        this.clearForm();
+        // this.props.toggleSignIn();
+        this.props.getTasks();
+    }
+
+    clearForm = () => {
         this.setState( () => ({
             user:{
                 username: "",
                 password: ""
             }
         }))
-        // this.props.toggleSignIn();
-        this.props.getTasks();
     }
-
     loginFailed = () => {
         // this.setState({loginFailed: true})
         alert("Sorry! No username and password.  Please try again or reset your password.")
@@ -99,6 +101,7 @@ class LoginForm extends Component{
     handleGoogleSignIn = (e)=>{
         e.preventDefault();
         console.log("initiating google sign in");
+
         var provider = new firebase.auth.GoogleAuthProvider();
         firebase
             .auth()
@@ -110,12 +113,7 @@ class LoginForm extends Component{
                 this.props.getTasks();
             } )
             .catch(error => console.log(error));
-        this.setState( () => ({
-            user:{
-                username: "",
-                password: ""
-            }
-        }));
+        this.clearForm();
     }
 
     // handleStoreUser = (data) => {
@@ -170,7 +168,7 @@ class LoginForm extends Component{
         var altFormDisp = this.state.resetFormDisp ? 'block' : 'none';
         
         return(
-           <div className="d-flex justify-content-center">  
+           <div className="d-flex justify-content-center formContainer">  
            {/* Form to reset password: */}
             <form style={{display: altFormDisp}} className="form signInForm" onSubmit={(e)=>this.handleResetSubmit(e)}>
                 <h4>
@@ -178,7 +176,7 @@ class LoginForm extends Component{
                 </h4>
                 <hr></hr>
                 <p>
-                    Enter your email address.  A link to reset your password will be mailed to you.
+                    Enter your email address.  If your address is registered, a link to reset your password will be mailed to you.
                 </p>
                 <div className="form-group">
                     <input className="form-control" 
