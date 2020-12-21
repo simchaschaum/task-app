@@ -40,6 +40,7 @@ main{
   margin: 0;
   z-index: 10;
   background: gray;
+  /* background: white; */
   opacity: 0.6;
 }
 #bgWhite{
@@ -195,7 +196,6 @@ input{
   box-shadow: 0 0 1em #b8bab9;
 }
 
-
 #searchSubmit{
   width: 8%;
   padding: 8px 6px !important;
@@ -207,8 +207,17 @@ input{
 .searchIcon {
   width: 2em;
   height: auto;
-  transform: translateY(-3px);
+  transform: transla
+  teY(-3px);
 }
+
+#searchDispDiv{
+  text-align: center;
+}
+#searchParamsDisp{
+  font-style: italic;
+  }
+
 /* Tasks: */
 /* These are for both task titles in Tasks and input and button in Search */
 .inlineGroup{
@@ -263,12 +272,15 @@ input{
 
 .catShowDiv{
   /* transform: rotate(-90deg); */
-  background-color: #6c757d;
   margin: 5px;
   border-radius: .25rem;
   padding: 2px;
+  background-color: #6c757d;
+  width: fit-content;
 }
+
 .catShowText{
+  background-color: #6c757d;
   font-size: var(--fs-small);
   color: white;
   margin: auto auto;
@@ -312,15 +324,20 @@ input{
 }
 
 .title{
-  text-align: left;
-  padding-left: 1em;
-  display: flex;
-  align-items: center;
+  padding-left: 1rem;
+  max-width: 60%;
+  display: grid;
+  grid-template-rows: 
+      auto 1fr;
 }
 @media(max-width:850px){
   .title{
     padding-left: 0.5em;
   }
+}
+.titleTop{
+  display: grid;
+  grid-template-columns:75% 1fr 1fr;
 }
 
 #star{
@@ -330,9 +347,16 @@ input{
 
 .dateDue{
   font-style: italic;
-  padding-left: 16px;
-  text-align: justify;
   font-size: var(--fs-small);
+  margin-top: .5rem;
+  margin-bottom: .25rem;
+  padding-left: 1rem;
+  text-align: justify;
+}
+@media(max-width:850px){
+  .dateDue{
+    padding-left: 0.5em;
+  }
 }
 
 .taskBtnGrp{
@@ -340,6 +364,7 @@ input{
   flex-wrap: wrap;
   justify-content: space-evenly;
   padding: 5px;
+  width: 40%
 }
 @media(max-width:800px){
   .taskBtnGrp{
@@ -443,25 +468,31 @@ input{
 
 #newTaskDate {
   font-size: var(--fs-body);
-  /* max-width: 60%; */
-  margin-left: 15px !important;
+  width: 100% !important;
+  height: 100% !important;
   border: 1px solid #ced4da !important;
   border-radius: .25rem !important;
-  padding: 6px 6px !important;
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out !important;
 }
 
 #starIcon{
-  transform: translateY(-10px) !important;
+  transform: translateY(-3px) !important;
+}
+@media(max-width:700px){
+  #starIcon{
+    height: 50px;
+    margin-top: 15px;
+  }
 }
 
 .formContainer{  
   width: 65vw;
   background: gray;
+  opacity: 1.0;
   z-index: 100000;
   margin: 0 auto; 
 }
-@media(min-width:1000px){
+@media(min-width:900px){
   .formContainer{
     width: 50vw;
   }
@@ -470,16 +501,15 @@ input{
 @media(max-width:700px){
   .formContainer{
     width: 100vw;
-    height: 100vh;
     margin-top: 0 !important;
     margin-left: auto;
   }
 }
 
 .form{
-  position: fixed;
+  position: absolute;
   z-index: 10000;
-  margin: 10vw auto;
+  /* margin: 10vw auto; */
   /* background: var(--clr-ter); */
   opacity: 1.0;
   padding: 15px;
@@ -504,12 +534,22 @@ input{
   padding: 1em;
 }
 
-.formBtn{
-  margin-left: 5px;
+.formMidRowBtn{
+  /* background-color: green !important; */
+  height: 100% !important;
+  width: 100% !important;
+  padding: 0;
+  margin: 0;
+  font-size: 1.25rem !important;
 }
+
 @media(max-width:700px){
   .formBtn{
     margin-left: 0;
+  }
+  .formMidRowBtn{
+    height: 100px !important;
+    font-size: 2rem !important;
   }
 }
 
@@ -518,7 +558,7 @@ input{
   width: 300px;
 }
 
-.form-label{
+/* .form-label{
   color: white;
   font-size: var(--fs-body);
   margin-right: 3px;
@@ -527,29 +567,36 @@ input{
   display: flex;
   align-content: center;
 
-}
+} */
 @media(max-width:700px){
   .form-label{
     font-size: 1rem;
   }
 }
 
-.form-middle-row{
+.form-bottom-row{
   display: flex;
   justify-content: space-between;
   width: 90%;
   margin: 0 auto !important;
 }
 
-@media(max-width:800px){
-  .form-middle-row{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-column-gap: 5px;
-    grid-row-gap: 10px;
-  }
+.form-middle-row{
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  grid-column-gap: 5px;
+  grid-row-gap: 10px;
+  /* justify-items: center; */
+  /* align-items: center; */
 }
 @media(max-width:700px){
+  .form-middle-row{
+    grid-template-columns: 1fr;
+  }
+}
+
+/* @media(max-width:800px){
   .form-middle-row{
     display: grid;
     grid-template-columns: 1fr;
@@ -558,7 +605,7 @@ input{
     grid-row-gap: 10px;
     margin-bottom: 15px;
   }
-}
+} */
 
 .form-bottom-row{
   display: flex;

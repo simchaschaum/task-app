@@ -9,20 +9,22 @@ class Search extends Component{
     }
 
     handleChange = (params) => {
-        this.setState({searchParams: params.target.value})
+        this.setState({searchParams: params.target.value},()=>console.log(this.state.searchParams));
     }
 
     handleSearch = (e) => {
         e.preventDefault();
         var filteredList = [];
         this.props.taskList.forEach( item => {
-            if(item.title.toLowerCase().search(this.state.searchParams.toLowerCase()) != -1 || item.details.toLowerCase().search(this.state.searchParams.toLowerCase()) != -1){
+            if(item.title.toLowerCase().includes(this.state.searchParams.toLowerCase())
+                    || item.details.toLowerCase().includes(this.state.searchParams.toLowerCase())){
                 filteredList.push(item);
                 }   
         }
         );
         console.log(filteredList);
         this.props.displaySearch(filteredList, this.state.searchParams);
+        this.setState({searchParams: ""});
     }
 
     render(){
@@ -34,6 +36,7 @@ class Search extends Component{
                                 type="text" 
                                 id="searchInput" 
                                 className="form-control searchBar" 
+                                value={this.state.searchParams}
                                 placeholder="Search for a word or phrase"
                                 onChange={(e)=>this.handleChange(e)} 
                                 required

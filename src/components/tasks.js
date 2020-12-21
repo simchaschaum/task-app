@@ -86,33 +86,86 @@ class Tasks extends React.Component{
         var taskTitleAndButtonsCols = this.props.taskCols === "taskCols" ? "taskTitleAndButtonsCols" : null;
         var titleCols = this.props.taskCols === "taskCols" ? "titleCols" : null;
 
+        // due date formatting:
+        var year = this.props.dateDue.match(/\d{4}/);
+        var monthNum = this.props.dateDue.match(/\-\d{2}\-/);
+        switch(monthNum){
+            case "-01-":
+                var month = "Jan";
+                break;
+            case "-02-":
+                var month = "Jan";
+                break;
+            case "-03-":
+                var month = "Jan";
+                break;
+            case "-04-":
+                var month = "Jan";
+                break;
+            case "-05-":
+                break;
+                var month = "Jan";
+            case "-06-":
+                var month = "Jan";
+                break;
+            case "-07-":
+                var month = "Jan";
+                break;
+            case "-08-":
+                var month = "Jan";
+                break;
+            case "-09-":
+                var month = "Jan";
+                break;
+            case "-10-":
+                var month = "Oct";
+                break;
+            case "-11-":
+                var month = "Nov"
+                break;
+            default:
+                var month = "Dec";
+                break;
+        }
+        const fullDay = this.props.dateDue.match(/\d{2}$/);
+        const day = String(fullDay).match(/^\d/) == "0" ? String(fullDay).match(/\d$/) : String(fullDay).match(/^\d/);
+        const date = day ? month + " " + day + ", " + year : null;
+        
+
         return(
             <>
            <div className={taskSubcontainer} id={taskTitleAndButtonsCols}>
                        
                         <div className="title" id={titleCols}>
+                            <div className="titleTop">
+                                <div>
+                                    <h2 className="taskTitle"> 
+                                        {this.props.taskTitle} 
+                                    </h2>  
+                                </div>
 
-                            <h2 className="taskTitle"> 
-                                {this.props.taskTitle} 
-                            </h2>  
-                            <div className="toolTipContainer">
-                                <span className="taskPriority taskTitle"> 
-                                    {this.props.taskStar === true ? <img id="star" className="icon" src="https://img.icons8.com/emoji/48/000000/star-emoji.png"/> : null} 
-                                </span>
-                                <span className="toolTip toolTipAbove">{toolTips.star}</span>
-                            </div>
-                                                          
+                               <div>
+                                    {this.props.taskCategory != "No Category" ?
+                                        <div className="catShowDiv">
+                                            <p className="catShowText">{this.props.taskCategory}</p> 
+                                        </div>
+                                            : null }
+                                </div> 
+                                
+                                <div className="toolTipContainer">
+                                    <span className="taskPriority taskTitle"> 
+                                        {this.props.taskStar === true ? <img id="star" className="icon" src="https://img.icons8.com/emoji/48/000000/star-emoji.png"/> : null} 
+                                    </span>
+                                    <span className="toolTip toolTipAbove">{toolTips.star}</span>
+                                </div>
 
-                            {this.props.taskCategory != "No Category" ?
-                                <div className="catShowDiv">
-                                        <p className="catShowText">{this.props.taskCategory}</p> 
-                                    </div>
-                                    : null }
+                            </div>   
+                                <div className="dateDue">
+                                    {date}
+                                </div>
 
                         </div>
-                        <div className="dateDue">
-                            {this.props.dateDue == "" ? null : "Due: " + this.props.dateDue}
-                        </div>
+                    
                         {/* {this.props.taskDisp != "rows" ? <hr></hr> : null} */}
                        
                         <div className="btn-grp taskBtnGrp" id={taskBtnGrpCols}>

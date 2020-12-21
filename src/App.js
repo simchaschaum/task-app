@@ -22,12 +22,12 @@ state = {
   loggedIn: false,  
   userID: "",   // the user ID of whoever's logged in
   userEmail: "",   // their email
-  tasks: null,      // will be the array of tasks from Firebase 
+  tasks: [],      // will be the array of tasks from Firebase 
   formDisp: false,  // whether to display the form to add or edit tasks
   signInDisp: false, // whether to display sign in/ register form 
   background: null,  // controls cover over background when form/signin is up
   property: "addedAt", // the property by which to sort the tasks
-  order: "desc",      // descending or ascending
+  order: "asc",      // descending or ascending
   formState: "newTask", // determines whether the form will be editing or adding a task
   id: "",
   taskToEdit: "", 
@@ -52,6 +52,9 @@ getUser = () => {
   currentUser = firebase.auth().currentUser;
   if(currentUser){
     userID = currentUser.uid;
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+      .catch(error => console.log(error))
+      .then(()=>console.log("persistence"))
     this.setState({loggedIn: true, userEmail: currentUser.email, userID: userID}, ()=>{
       console.log(this.state.userEmail);
       this.setState({
@@ -63,10 +66,10 @@ getUser = () => {
     this.setState({
       loggedIn: false,
       signInDisp: true,
-      background: "white"}, ()=>{
-        console.log("no user at all :( " + this.state.signInDisp);
-        taskList.length = 0;}
-    );
+      tasks: [],
+      background: "white"}, ()=>
+        console.log("no user at all :( " + this.state.signInDisp)
+        );
   }
 }
 
@@ -80,15 +83,15 @@ getTasks(){
       this.setState({
         tasks: taskList,
         noTasks: taskList.length > 0 ? "loading" : "noTasks"
-      }, ()=> this.getCategories(taskList));
+      }, ()=> this.getCategories(this.state.tasks));
     } 
   
     ).catch( error => console.log(error));
 }
 
-  getCategories = (taskList) => {
-    console.log(taskList);
-    var catRawArray = taskList.map(item => item.category).forEach(item=> {
+  getCategories = (tasks) => {
+    console.log(tasks);
+    var catRawArray = this.state.tasks.map(item => item.category).forEach(item=> {
         if(!categories.includes(item)&&item!="No Category"){
           categories.push(item)
         }
@@ -168,8 +171,9 @@ getTasks(){
   }
   
   displaySearch = (filteredList, searchParams) => {
-    this.setState({tasks: filteredList, searchParams: searchParams, showSearch: true, noTasks: "search"}, ()=>taskList = filteredList);
-  }
+      this.setState({searchParams: searchParams}, ()=>this.setState({tasks: filteredList, searchParams: searchParams}, ()=>this.setState({showSearch: true, noTasks: "search"}, ()=>
+      console.log(this.state.searchParams))) )  
+    }
 
   finishSearch = () => {
     this.setState({showSearch: false, noTasks: "loading"}, () => this.getTasks());
@@ -194,8 +198,8 @@ getTasks(){
 render(){
   
   var searchDisp = 
-    <div>
-      <p>Showing results for "{this.state.searchParams}"</p>
+    <div id="searchDispDiv">
+      <p id="searchParamsDisp">Showing results for "{this.state.searchParams}"</p>
       <button className="btn btn-secondary" onClick={this.finishSearch}>Close Search</button>
     </div>  
   
@@ -220,7 +224,7 @@ render(){
         <div className="loginMessage">
           {loginMessage}
           <button className="logOut btn btn-sm btn-secondary" onClick={this.signOut}>Log out</button>
-        </div>
+          (Beta Version)</div>
       {/* The form is outside 'app' - to avoid inheriting lower opacity when the form is displayed*/}
       <div style={{display: this.state.formDisp ? 'block' : 'none'}}> 
           <Form 
@@ -292,8 +296,8 @@ render(){
         {this.state.showSearch === false ? null : searchDisp}
 
         <div className={cols}>
-            {taskList.length > 0 ? 
-              taskList.map((task)=> ( 
+            {this.state.tasks.length > 0 ? 
+              this.state.tasks.map((task)=> ( 
                 <div key={task.id} className="taskContainer">
                     <Tasks 
                       taskDisp={this.state.taskDisp}
@@ -346,3 +350,6 @@ export default App;
 //   }
 // })
 
+firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+  .then(()=>console.log("persistence"))
+  .catch(error => console.log(error));

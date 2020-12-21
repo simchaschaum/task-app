@@ -11,10 +11,10 @@ class Form extends Component{
     state = {
         title: "",
         details: "", 
-        star: "",
+        star: false,
         date: "",
         userID: "",
-        category: "Category",
+        category: "No Category",
         titleEdited: false,   // checking if these were edited
         detailsEdited: false,
         starEdited: false,
@@ -54,17 +54,22 @@ class Form extends Component{
     submitDetails = (event) => {
         event.preventDefault();
         if(this.props.formState === "newTask"){
-            tasksCollection.add({
-                title: this.state.title,
-                details: this.state.details,
-                date: this.state.date,
-                star: this.state.star,
-                done: false,
-                category: this.state.category,
-                addedAt: firebaseTimestamp(),
-                userID: this.props.userID
-            })
-            .then(this.props.updateDisp());
+            if(this.state.title != ""){
+                tasksCollection.add({
+                    title: this.state.title,
+                    details: this.state.details,
+                    date: this.state.date,
+                    star: this.state.star,
+                    done: false,
+                    category: this.state.category,
+                    addedAt: firebaseTimestamp(),
+                    userID: this.props.userID
+                })
+                .then(this.props.updateDisp());
+            } else {
+                alert("This task is blank; no task saved.")
+            }
+            
         } else {
             var title = this.state.titleEdited === false ? this.props.taskToEdit.title : this.state.title;
             var details = this.state.detailsEdited === false ? this.props.taskToEdit.details : this.state.details;
@@ -108,10 +113,11 @@ class Form extends Component{
         document.getElementById("categoryInput").value = "";
     }
 
-    categoryInputButton = (e) => {
+    handleCategoryChoose = (e) => {
         e.preventDefault();
         this.setState({category:e.target.outerText, categoryEdited: true}, ()=>console.log(this.state.category))
         document.getElementById("categoryInput").value = "";
+        cat = "";
     }
 
 
@@ -128,7 +134,7 @@ class Form extends Component{
             details: "", 
             priority: "", 
             date: "", 
-            category: "Category",
+            category: "No Category",
             star: this.props.taskStar,
             titleEdited: false, 
             detailsEdited: false, 
@@ -188,6 +194,10 @@ class Form extends Component{
                        </textarea>
                    </div>  
                </div>
+        
+        const category = this.state.categoryEdited ? this.state.category 
+            : this.props.taskToEdit.category === "No Category" || this.props.formState === "newTask" ? "Category"
+                : this.props.taskToEdit.category;
                                                                     
         return(
             <div className="d-flex justify-content-center"> 
@@ -198,24 +208,27 @@ class Form extends Component{
 
                     <div className="form-middle-row">
  
-                        <label className="form-label">
-                            <button className="btn" name="star" onClick={this.toggleStar}>
-                                <img id="starIcon" src={starIcon}/>
-                            </button>                        
-                        </label>
-
-                        <label className="form-label">Due:
-                            <input id="newTaskDate" className="form-control-sm" 
+                {/* Due date: */}
+                <label className="form-label">
+                            <input id="newTaskDate" className="form-control-lg" 
                             type="date" 
                             name="date" 
                             value={this.state.date} 
                             onChange={(e)=>this.input(e)}
                             ></input>
                         </label>
-  
+
+                {/* Mark as priority: */}
+                        <label className="form-label">
+                            <div className="btn btn-lg btn-secondary formMidRowBtn" name="star" onClick={this.toggleStar}>
+                                <img id="starIcon" src={starIcon}/>
+                            </div>                        
+                        </label>
+ 
+                {/* Category: */}
                         <Dropdown>
-                            <Dropdown.Toggle variant="secondary" size="sm" id="dropdown-basic">
-                                {this.state.category}
+                            <Dropdown.Toggle variant="secondary"  id="dropdown-basic" className="formMidRowBtn">
+                                { category }
                             </Dropdown.Toggle>
                             <Dropdown.Menu id="catDropdown"> 
                                 <div className="row catInputDiv">
@@ -228,18 +241,19 @@ class Form extends Component{
                                     <div className="col-sm-2"></div>
                                 </div>
                                 {this.props.categories.map(category => (
-                                    <Dropdown.Item key={category} onClick={(e)=>this.categoryInputButton(e)}>{category}</Dropdown.Item>
+                                    <Dropdown.Item key={category} onClick={(e)=>this.handleCategoryChoose(e)}>{category}</Dropdown.Item>
                                 ))}
                                 <Dropdown.Divider />
-                                <Dropdown.Item onClick={(e)=>this.categoryInputButton(e)}>No Category</Dropdown.Item>
+                                <Dropdown.Item onClick={(e)=>this.handleCategoryChoose(e)}>No Category</Dropdown.Item>
                             </Dropdown.Menu>
                         </Dropdown>
                    
-                    <div className="row form-bottom-row">
-                        <input className="btn btn-sm btn-secondary formBtn" type="submit"></input> 
-                        <button className="btn btn-sm btn-secondary formBtn" onClick={this.closeForm}>Cancel</button>
+                    {/* <div className="form-bottom-row"> */}
+                            <button className="btn btn-lg btn-secondary formMidRowBtn" onClick={this.closeForm}>Cancel</button>
+                            <div></div>
+                            <button className="btn btn-lg btn-secondary formMidRowBtn" type="submit">Save</button> 
 
-                    </div>
+                        {/* </div> */}
                     </div>
                </form>
             </div>
