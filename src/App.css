@@ -270,6 +270,10 @@ input{
 
 }
 
+#catShowDiv{
+  min-width: 30px;
+}
+
 .catShowDiv{
   /* transform: rotate(-90deg); */
   margin: 5px;

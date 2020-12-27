@@ -33,8 +33,8 @@ class LoginForm extends Component{
             .auth()
             .createUserWithEmailAndPassword(username,password)
             .then(response => {
-                console.log("uid: " + response.user.uid)
-                // response.user.sendEmailVerification(()=>console.log('verification mail sent'))
+                console.log("uid: " + response.user.uid);
+                response.user.sendEmailVerification(()=>console.log('mail sent'))
                 // this.handleStoreUser(response);
                 this.props.getUser();
                 // response.user.sendEmailVerification(()=> console.log("Verification Email Sent"))

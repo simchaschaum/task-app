@@ -43,15 +43,30 @@ state = {
 }
 
 componentDidMount(){
-  this.getUser();
+  firebase.auth().onAuthStateChanged( user => {
+    if (user) {
+      console.log("Just checked - you're logged in!")
+      console.log(user)
+      userEmail = user.email;
+      // loggedIn = true;
+      // this.checkUser();
+    }
+  //   } else {
+  //     console.log("Just checked - you're logged out!");
+  //     loggedIn = false;
+  //   }
+  // })
+  this.checkUser();
+})
 };
 
-// getUser checks the current user AND toggles the sign in form!
-getUser = () => {
+// checkUser checks the current user AND toggles the sign in form!
+checkUser = () => {
   categories.length = 0;
   currentUser = firebase.auth().currentUser;
   if(currentUser){
     userID = currentUser.uid;
+    console.log("I'm signed in!!")
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
       .catch(error => console.log(error))
       .then(()=>console.log("persistence"))
@@ -63,6 +78,7 @@ getUser = () => {
       }, ()=>this.getTasks());
     } )
   } else {
+    console.log("I'm signed out!!")
     this.setState({
       loggedIn: false,
       signInDisp: true,
@@ -190,7 +206,7 @@ getTasks(){
         .signOut()
         .then(() => {
             console.log("signed out");
-            this.getUser();
+            this.checkUser();
         } )
         .catch(error => console.log(error))
   }
@@ -224,13 +240,13 @@ render(){
         <div className="loginMessage">
           {loginMessage}
           <button className="logOut btn btn-sm btn-secondary" onClick={this.signOut}>Log out</button>
-          (Beta Version)</div>
+          (Still a work in progress; stay tuned for updates!)</div>
       {/* The form is outside 'app' - to avoid inheriting lower opacity when the form is displayed*/}
       <div style={{display: this.state.formDisp ? 'block' : 'none'}}> 
           <Form 
              ref="form"
              formState={this.state.formState} 
-             updateDisp={this.getUser} 
+             updateDisp={this.checkUser} 
              closeForm={this.toggleForm} 
              taskList={this.state.tasks} 
              taskToEdit={this.state.taskToEdit} 
@@ -245,7 +261,7 @@ render(){
            <div style={{display:'block'}}>
            <LoginForm
               toggleSignIn={()=>this.toggleSignIn()}
-              getUser={()=>this.getUser()}
+              getUser={()=>this.checkUser()}
               getTasks={()=>this.getTasks()}
            />
         </div>
@@ -260,7 +276,7 @@ render(){
           <Header 
             toggleDisplay={(e) => this.toggleDisplay(e)}
             toggleSignIn={()=>this.toggleSignIn()}
-            getUser={()=>this.getUser()}
+            getUser={()=>this.checkUser()}
             formDisp={this.state.formDisp}
             toggleForm={this.toggleForm}
             taskSort={this.taskSort}
@@ -271,7 +287,6 @@ render(){
             loggedIn={loggedIn}
             categories={this.state.categories}
             showCategory={this.showCategory}
-            getUser={this.getUser}
             />
         </div>
 
@@ -308,7 +323,7 @@ render(){
                       taskStar={task.star} 
                       taskDone={task.done} 
                       taskCategory={task.category}
-                      updateDisp={this.getUser} 
+                      updateDisp={this.checkUser} 
                       dateDue={task.date} 
                       editTask={() => 
                         this.editTask(task,task.id)
@@ -338,10 +353,12 @@ export default App;
 
 
 // listener for changes 
+
 // firebase.auth().onAuthStateChanged( user => {
 //   if (user) {
 //     console.log("user signed in: " + user.email);
 //     console.log("user signed in: " + user.uid);
+//     console.log(user)
 //     userEmail = user.email;
 //     loggedIn = true;
 //   } else {
@@ -350,6 +367,6 @@ export default App;
 //   }
 // })
 
-firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-  .then(()=>console.log("persistence"))
-  .catch(error => console.log(error));
+// firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+//   .then(()=>console.log("persistence"))
+//   .catch(error => console.log(error));

@@ -89,42 +89,43 @@ class Tasks extends React.Component{
         // due date formatting:
         var year = this.props.dateDue.match(/\d{4}/);
         var monthNum = this.props.dateDue.match(/\-\d{2}\-/);
+        var month;
         switch(monthNum){
             case "-01-":
-                var month = "Jan";
+                month = "Jan";
                 break;
             case "-02-":
-                var month = "Jan";
+                month = "Jan";
                 break;
             case "-03-":
-                var month = "Jan";
+                month = "Jan";
                 break;
             case "-04-":
-                var month = "Jan";
+                month = "Jan";
                 break;
             case "-05-":
                 break;
-                var month = "Jan";
+                month = "Jan";
             case "-06-":
-                var month = "Jan";
+                month = "Jan";
                 break;
             case "-07-":
-                var month = "Jan";
+                month = "Jan";
                 break;
             case "-08-":
-                var month = "Jan";
+                month = "Jan";
                 break;
             case "-09-":
-                var month = "Jan";
+                month = "Jan";
                 break;
             case "-10-":
-                var month = "Oct";
+                month = "Oct";
                 break;
             case "-11-":
-                var month = "Nov"
+                month = "Nov"
                 break;
             default:
-                var month = "Dec";
+                month = "Dec";
                 break;
         }
         const fullDay = this.props.dateDue.match(/\d{2}$/);
@@ -144,7 +145,7 @@ class Tasks extends React.Component{
                                     </h2>  
                                 </div>
 
-                               <div>
+                               <div id="catShowDiv">
                                     {this.props.taskCategory != "No Category" ?
                                         <div className="catShowDiv">
                                             <p className="catShowText">{this.props.taskCategory}</p> 
