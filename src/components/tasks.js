@@ -129,7 +129,8 @@ class Tasks extends React.Component{
                 break;
         }
         const fullDay = this.props.dateDue.match(/\d{2}$/);
-        const day = String(fullDay).match(/^\d/) == "0" ? String(fullDay).match(/\d$/) : String(fullDay).match(/^\d/);
+        console.log("full day = " + fullDay);
+        const day = String(fullDay).match(/^\d/) == "0" ? String(fullDay).match(/\d$/) : String(fullDay).match(/^\d{2}/);
         const date = day ? month + " " + day + ", " + year : null;
         
 

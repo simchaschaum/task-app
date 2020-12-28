@@ -27,7 +27,7 @@ state = {
   signInDisp: false, // whether to display sign in/ register form 
   background: null,  // controls cover over background when form/signin is up
   property: "addedAt", // the property by which to sort the tasks
-  order: "asc",      // descending or ascending
+  order: "desc",      // descending or ascending
   formState: "newTask", // determines whether the form will be editing or adding a task
   id: "",
   taskToEdit: "", 
@@ -96,6 +96,9 @@ getTasks(){
     .get()
     .then( snapshot => {
       taskList = firebaseArrMaker(snapshot);
+      if(this.state.property === "date"){
+        this.dateFirst(taskList);
+      }
       this.setState({
         tasks: taskList,
         noTasks: taskList.length > 0 ? "loading" : "noTasks"
@@ -104,6 +107,13 @@ getTasks(){
   
     ).catch( error => console.log(error));
 }
+
+dateFirst = () => {
+  var datedTasks = taskList.filter(item => item.date !== "");
+  var allTasks = [... datedTasks];
+  taskList.map(item => item.date === "" && allTasks.push(item));
+  taskList = allTasks;
+  }
 
   getCategories = (tasks) => {
     console.log(tasks);
@@ -134,7 +144,7 @@ getTasks(){
     if(e.target.name === "done" && this.state.showDone){
       this.setState({showDone: false}, ()=>this.showNotDone());
     } else {
-      this.setState({property: e.target.name, showDone: true},() => this.getTasks() );
+      this.setState({property: e.target.name, showDone: true, order: e.target.name === "date" ? "asc" : "desc"},() => this.getTasks() );
     }
   }
 
