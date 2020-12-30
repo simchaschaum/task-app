@@ -190,17 +190,8 @@ class Form extends Component{
                </div>
         
         const today = new Date().toISOString().split('T')[0];
-        const dueDate =  this.props.formState === "newTask" ? 
-            <label className="form-label">
-                <input id="newTaskDate" className="form-control-lg" 
-                type="date" 
-                name="date" 
-                min={today}
-                value={this.state.date} 
-                onChange={(e)=>this.input(e)}
-                ></input>
-            </label>
-            : <Dropdown>
+        const dueDate =  this.props.formState === "editTask" && this.props.taskToEdit.date != "" ? 
+            <Dropdown>
                 <Dropdown.Toggle variant="secondary"  id="dropdown-basic" className="formMidRowBtn">
                     {dateFormatter(this.props.taskToEdit.date)}
                 </Dropdown.Toggle>
@@ -216,6 +207,16 @@ class Form extends Component{
                     </label>
                 </Dropdown.Menu>
             </Dropdown>
+            : 
+            <label className="form-label">
+                <input id="newTaskDate" className="form-control-lg" 
+                    type="date" 
+                    name="date" 
+                    min={today}
+                    value={this.state.date} 
+                    onChange={(e)=>this.input(e)}
+                ></input>
+            </label>
         
         const category = this.state.categoryEdited ? this.state.category 
             : this.props.taskToEdit.category === "No Category" || this.props.formState === "newTask" ? "Category"
