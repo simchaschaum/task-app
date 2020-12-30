@@ -73,6 +73,7 @@ checkUser = () => {
         signInDisp: false
       }, ()=>{
         this.loadUserSettings();
+        // this.getTasks();
       } );
     } )
   } else {
@@ -90,15 +91,13 @@ checkUser = () => {
 loadUserSettings = () => {
   users.get()
     .then(response => {
-      var sc = firebaseArrMaker(response)[0].settings.showCategory;
-      var cc = firebaseArrMaker(response)[0].settings.currentCategory;
-      var sd = firebaseArrMaker(response)[0].settings.showDone;
-      var pr = firebaseArrMaker(response)[0].settings.property;
-      var or = firebaseArrMaker(response)[0].settings.order;
+      var sc = firebaseArrMaker(response)[0].settings.showCategory ? firebaseArrMaker(response)[0].settings.showCategory : this.state.showCategory;
+      var cc = firebaseArrMaker(response)[0].settings.currentCategory ? firebaseArrMaker(response)[0].settings.currentCategory : this.state.currentCategory;
+      var pr = firebaseArrMaker(response)[0].settings.property ? firebaseArrMaker(response)[0].settings.property : this.state.property;
+      var or = firebaseArrMaker(response)[0].settings.order ? firebaseArrMaker(response)[0].settings.order : this.state.order;
       this.setState({
         showCategory: sc,
         currentCategory: cc,
-        showDone: sd,
         property: pr,
         order: or
       }, ()=>{
