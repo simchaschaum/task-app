@@ -70,7 +70,7 @@ class Header extends React.Component {
                                 <Dropdown.Item name="star"  onClick={this.props.taskSort}>Starred First</Dropdown.Item>
                                 <Dropdown.Item name="addedAt"  onClick={this.props.taskSort}>Most Recent</Dropdown.Item>
                                 <Dropdown.Item name="date"  onClick={this.props.taskSort}>Due Sooner</Dropdown.Item>
-                                <Dropdown.Item name="done" onClick={this.props.taskSort}>{showDone}</Dropdown.Item>
+                                {/* <Dropdown.Item name="done" onClick={this.props.taskSort}>{showDone}</Dropdown.Item> */}
 
                         </DropdownButton>
                         <DropdownButton id="dropdown-basic-button"  title="Category" className="headerItem">

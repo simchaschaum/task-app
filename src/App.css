@@ -241,6 +241,12 @@ input{
   margin-bottom: 0;
 }
 
+.taskTitleDone{
+  font-style: italic;
+  text-decoration: line-through;
+  opacity: 50%;
+}
+
 /* Task display as boxes, using Grid System: */
 .taskContainerCols{
     display: grid;
@@ -367,6 +373,11 @@ input{
   margin-bottom: .25rem;
   padding-left: 1rem;
   text-align: justify;
+}
+
+.dateDueDone{
+  font-style: italic;
+  opacity: 50%;
 }
 @media(max-width:850px){
   .dateDue{

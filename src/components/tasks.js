@@ -96,7 +96,7 @@ class Tasks extends React.Component{
                         <div className="title" id={titleCols}>
                             <div className="titleTop">
                                 <div>
-                                    <h3 className="taskTitle"> 
+                                    <h3 className={this.props.taskDone ? "taskTitle taskTitleDone" : "taskTitle"}> 
                                         {this.props.taskTitle} 
                                     </h3>  
                                 </div>
@@ -117,7 +117,7 @@ class Tasks extends React.Component{
                                 </div>
 
                             </div>   
-                                <div className="dateDue">
+                                <div className={this.props.taskDone ? "dateDue dateDueDone" : "dateDue"} >
                                     {date}
                                 </div>
 

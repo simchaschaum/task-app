@@ -283,8 +283,11 @@ render(){
 
   var loginMessage = this.state.loggedIn? "Hello, " + this.state.userEmail + "!" : null;
 
-  var tasksToShow = !this.state.showCategory ? this.state.tasks
+  var tasksOfCategory = !this.state.showCategory ? this.state.tasks
       : this.state.tasks.filter(item => item.category === this.state.currentCategory);
+
+  var tasksDone = tasksOfCategory.filter(task => task.done === true);
+  var tasksNotDone = tasksOfCategory.filter(task => task.done === false);
 
   return (
     <>
@@ -359,8 +362,8 @@ render(){
         {this.state.showSearch === false ? null : searchDisp}
 
         <div className={cols}>
-            {tasksToShow.length > 0 ? 
-              tasksToShow.map((task)=> ( 
+            {tasksNotDone.length > 0 ? 
+              tasksNotDone.map((task)=> ( 
                 <div key={task.id} className="taskContainer">
                     <Tasks 
                       taskDisp={this.state.taskDisp}
@@ -386,6 +389,30 @@ render(){
               <Notasks 
                       noTasks={this.state.noTasks}
                 />}
+                <hr />  {/*format this!*/}
+              {tasksDone.map((task)=> ( 
+                  <div key={task.id} className="taskContainer">
+                    <Tasks 
+                      taskDisp={this.state.taskDisp}
+                      taskID={task.id} 
+                      taskCols={this.state.taskDisp === "boxes" ? "taskCols" : null}
+                      taskTitle={task.title} 
+                      taskDetails={task.details} 
+                      taskStar={task.star} 
+                      taskDone={task.done} 
+                      taskCategory={task.category}
+                      updateDisp={this.checkUser} 
+                      dateDue={task.date} 
+                      editTask={() => 
+                        this.editTask(task,task.id)
+                      } 
+                      toggleDone={() => {
+                        task.done = (task.done === true ? false : true)
+                      }} 
+                      />
+                  </div>
+              ))
+              }
         </div>
 
         </div>
