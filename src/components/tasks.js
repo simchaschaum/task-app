@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import firebase, {db, tasksCollection, firebaseTimestamp} from '../utils/firebase';
 import { firebaseArrMaker } from '../utils/tools';
+import { dateFormatter } from './dateFormat';
 
 var expanded = "Show Details"
 
@@ -86,51 +87,7 @@ class Tasks extends React.Component{
         var taskTitleAndButtonsCols = this.props.taskCols === "taskCols" ? "taskTitleAndButtonsCols" : null;
         var titleCols = this.props.taskCols === "taskCols" ? "titleCols" : null;
 
-        // due date formatting:
-        var year = this.props.dateDue.match(/\d{4}/);
-        var monthNum = this.props.dateDue.match(/\-\d{2}\-/);
-        var month;
-        switch(monthNum){
-            case "-01-":
-                month = "Jan";
-                break;
-            case "-02-":
-                month = "Jan";
-                break;
-            case "-03-":
-                month = "Jan";
-                break;
-            case "-04-":
-                month = "Jan";
-                break;
-            case "-05-":
-                break;
-                month = "Jan";
-            case "-06-":
-                month = "Jan";
-                break;
-            case "-07-":
-                month = "Jan";
-                break;
-            case "-08-":
-                month = "Jan";
-                break;
-            case "-09-":
-                month = "Jan";
-                break;
-            case "-10-":
-                month = "Oct";
-                break;
-            case "-11-":
-                month = "Nov"
-                break;
-            default:
-                month = "Dec";
-                break;
-        }
-        const fullDay = this.props.dateDue.match(/\d{2}$/);
-        const day = String(fullDay).match(/^\d/) == "0" ? String(fullDay).match(/\d$/) : String(fullDay).match(/^\d{2}/);
-        const date = day ? month + " " + day + ", " + year : null;
+        const date = this.props.dateDue != "" ? dateFormatter(this.props.dateDue) : null;
 
         return(
             <>

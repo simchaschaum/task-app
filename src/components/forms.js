@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import firebase, {db, tasksCollection, firebaseTimestamp} from '../utils/firebase';
 import { firebaseArrMaker } from '../utils/tools';
+import { dateFormatter} from './dateFormat';
 
 var cat;
 
@@ -140,7 +141,7 @@ class Form extends Component{
     render(){
 
         // Input for title - depending on whether you're adding a new task or editing an existing one:
-        var title = this.props.formState === "editTask" ? 
+        const title = this.props.formState === "editTask" ? 
                 <div className="form-group row">        
                     {/* <label className="col-sm-2 col-form-label">Edit Title:</label> */}
                     <div className="col-sm-12">
@@ -165,7 +166,7 @@ class Form extends Component{
                     </div>
                 </div>
         // Input for details - depending on whether you're adding a new task or editing an existing one:
-        var details = this.props.formState === "editTask" ?
+        const details = this.props.formState === "editTask" ?
                <div className="form-group row">
                    <div className="col-sm-12">
                         <textArea id="editDetails" className="editText form-control" 
@@ -188,14 +189,40 @@ class Form extends Component{
                    </div>  
                </div>
         
+        const today = new Date().toISOString().split('T')[0];
+        const dueDate =  this.props.formState === "newTask" ? 
+            <label className="form-label">
+                <input id="newTaskDate" className="form-control-lg" 
+                type="date" 
+                name="date" 
+                min={today}
+                value={this.state.date} 
+                onChange={(e)=>this.input(e)}
+                ></input>
+            </label>
+            : <Dropdown>
+                <Dropdown.Toggle variant="secondary"  id="dropdown-basic" className="formMidRowBtn">
+                    {dateFormatter(this.props.taskToEdit.date)}
+                </Dropdown.Toggle>
+                <Dropdown.Menu id="catDropdown">
+                    <label className="form-label">
+                        <input id="newTaskDate" className="form-control-lg" 
+                            type="date" 
+                            name="date" 
+                            min={today}
+                            value={this.state.date} 
+                            onChange={(e)=>this.input(e)}
+                        ></input>
+                    </label>
+                </Dropdown.Menu>
+            </Dropdown>
+        
         const category = this.state.categoryEdited ? this.state.category 
             : this.props.taskToEdit.category === "No Category" || this.props.formState === "newTask" ? "Category"
                 : this.props.taskToEdit.category;
         
         const starIcon = this.state.star? "https://img.icons8.com/ios-filled/24/000000/star.png" : "https://img.icons8.com/ios/24/000000/star--v1.png";
-
-        const today = new Date().toISOString().split('T')[0];
-                                                                    
+                                                                 
         return(
             <div className="d-flex justify-content-center"> 
                 <form noValidate className="formContainer form form-group" onSubmit={(e)=>this.submitDetails(e)}>
@@ -206,15 +233,7 @@ class Form extends Component{
                     <div className="form-middle-row">
  
                 {/* Due date: */}
-                <label className="form-label">
-                            <input id="newTaskDate" className="form-control-lg" 
-                            type="date" 
-                            name="date" 
-                            min={today}
-                            value={this.state.date} 
-                            onChange={(e)=>this.input(e)}
-                            ></input>
-                        </label>
+                    {dueDate}
 
                 {/* Mark as priority: */}
                         <label className="form-label">

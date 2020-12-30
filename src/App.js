@@ -39,8 +39,8 @@ state = {
   showDeets: false,  // on change, turns on/off detail view for all tasks 
   showDone: true,  // determines whether it shows tasks that are done 
   noTasks: "loading", // determines what the NoTasks component says when there are no tasks (search/loading/no tasks)
-  showCategory: false,  // determines whether to show all categories (false) or just one (true)
   categories: [],   // array of all the categories
+  showCategory: false,  // determines whether to show all categories (false) or just one (true)
   currentCategory: ""  // the current category, if any, to show
 }
 
@@ -92,9 +92,15 @@ loadUserSettings = () => {
     .then(response => {
       var sc = firebaseArrMaker(response)[0].settings.showCategory;
       var cc = firebaseArrMaker(response)[0].settings.currentCategory;
+      var sd = firebaseArrMaker(response)[0].settings.showDone;
+      var pr = firebaseArrMaker(response)[0].settings.property;
+      var or = firebaseArrMaker(response)[0].settings.order;
       this.setState({
         showCategory: sc,
-        currentCategory: cc
+        currentCategory: cc,
+        showDone: sd,
+        property: pr,
+        order: or
       }, ()=>{
         this.getTasks()
       } )
@@ -102,21 +108,6 @@ loadUserSettings = () => {
 } 
 
 getTasks(){
-  // if(this.state.showCategory){
-  //   console.log("it's true!!");
-    // tasksCollection
-    // .where("category","==",this.state.currentCategory)
-    // .where("userID","==",this.state.userID)
-    // .get()
-    // .then( snapshot => {
-    //   taskList = firebaseArrMaker(snapshot);
-    //   this.setState({
-    //     tasks: taskList,
-    //     showDone: false,
-    //   }, ()=> console.log(this.state.tasks));
-    //   }
-    //   ).catch( error => console.log(error));
-  // } else {
   tasksCollection
     .where("userID","==",this.state.userID)
     .orderBy(this.state.property, this.state.order)
@@ -170,9 +161,15 @@ dateFirst = () => {
 
   taskSort = (e) => {
     if(e.target.name === "done" && this.state.showDone){
-      this.setState({showDone: false}, ()=>this.showNotDone());
+      this.setState({showDone: false}, ()=>{
+        this.showNotDone();
+        this.updateUserSettings();
+      } );
     } else {
-      this.setState({property: e.target.name, showDone: true, order: e.target.name === "date" ? "asc" : "desc"},() => this.getTasks() );
+      this.setState({property: e.target.name, showDone: true, order: e.target.name === "date" ? "asc" : "desc"},() => {
+        this.getTasks();
+        this.updateUserSettings();
+      }  );
     }
   }
 
@@ -194,7 +191,10 @@ dateFirst = () => {
     users.doc(this.state.userID).update({
       settings: {
         showCategory: this.state.showCategory,
-        currentCategory: this.state.currentCategory
+        currentCategory: this.state.currentCategory,
+        showDone: this.state.showDone,
+        property: this.state.property,
+        order: this.state.order
       }
     })
   }
