@@ -13,8 +13,7 @@ class Header extends React.Component {
     }
 
     showCategory = (e) => {
-        var cat = e.target.name;
-        cat === "all" ? this.props.getUser() : this.props.showCategory(cat);
+        this.props.showCategory(e.target.name);
     }
 
     toggleForm = () => { 
@@ -32,17 +31,6 @@ class Header extends React.Component {
     toggleSignIn = () => {
         this.props.toggleSignIn();
     }
-
-    // signOut = () => {
-    //     firebase
-    //         .auth()
-    //         .signOut()
-    //         .then(() => {
-    //             console.log("signed out");
-    //             this.props.getUser();
-    //         } )
-    //         .catch(error => console.log(error))
-    // }
 
     render(){
         var showDeets = this.props.showDeets ?  "Hide All Details" : "Show All Details";

@@ -1,6 +1,6 @@
 import React from 'react';
 import './App.css';
-import firebase from './utils/firebase';
+import firebase, { users } from './utils/firebase';
 import { db, tasksCollection, firebaseTimestamp } from './utils/firebase';
 import { firebaseArrMaker } from './utils/tools';
 import Header from './components/header';
@@ -14,7 +14,7 @@ import LoginForm from './components/users/loginform';
 
 var taskList = [];
 var categories = [];
-var property, currentUser, loggedIn, userEmail, userID;
+var settings, currentUser, loggedIn, userEmail, userID;
 
 class App extends React.Component {
 
@@ -39,7 +39,9 @@ state = {
   showDeets: false,  // on change, turns on/off detail view for all tasks 
   showDone: true,  // determines whether it shows tasks that are done 
   noTasks: "loading", // determines what the NoTasks component says when there are no tasks (search/loading/no tasks)
-  categories: []
+  showCategory: false,  // determines whether to show all categories (false) or just one (true)
+  categories: [],   // array of all the categories
+  currentCategory: ""  // the current category, if any, to show
 }
 
 componentDidMount(){
@@ -48,14 +50,8 @@ componentDidMount(){
       console.log("Just checked - you're logged in!")
       console.log(user)
       userEmail = user.email;
-      // loggedIn = true;
-      // this.checkUser();
+      userID = user.uid;
     }
-  //   } else {
-  //     console.log("Just checked - you're logged out!");
-  //     loggedIn = false;
-  //   }
-  // })
   this.checkUser();
 })
 };
@@ -66,16 +62,18 @@ checkUser = () => {
   currentUser = firebase.auth().currentUser;
   if(currentUser){
     userID = currentUser.uid;
-    console.log("I'm signed in!!")
+    // console.log("I'm signed in!!")
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
       .catch(error => console.log(error))
-      .then(()=>console.log("persistence"))
+      .then(()=>console.log("persistence set"))
     this.setState({loggedIn: true, userEmail: currentUser.email, userID: userID}, ()=>{
       console.log(this.state.userEmail);
       this.setState({
         background: null, 
         signInDisp: false
-      }, ()=>this.getTasks());
+      }, ()=>{
+        this.loadUserSettings();
+      } );
     } )
   } else {
     console.log("I'm signed out!!")
@@ -89,13 +87,43 @@ checkUser = () => {
   }
 }
 
+loadUserSettings = () => {
+  users.get()
+    .then(response => {
+      var sc = firebaseArrMaker(response)[0].settings.showCategory;
+      var cc = firebaseArrMaker(response)[0].settings.currentCategory;
+      this.setState({
+        showCategory: sc,
+        currentCategory: cc
+      }, ()=>{
+        this.getTasks()
+      } )
+    })
+} 
+
 getTasks(){
+  // if(this.state.showCategory){
+  //   console.log("it's true!!");
+    // tasksCollection
+    // .where("category","==",this.state.currentCategory)
+    // .where("userID","==",this.state.userID)
+    // .get()
+    // .then( snapshot => {
+    //   taskList = firebaseArrMaker(snapshot);
+    //   this.setState({
+    //     tasks: taskList,
+    //     showDone: false,
+    //   }, ()=> console.log(this.state.tasks));
+    //   }
+    //   ).catch( error => console.log(error));
+  // } else {
   tasksCollection
     .where("userID","==",this.state.userID)
     .orderBy(this.state.property, this.state.order)
     .get()
     .then( snapshot => {
       taskList = firebaseArrMaker(snapshot);
+      console.log(taskList);
       if(this.state.property === "date"){
         this.dateFirst(taskList);
       }
@@ -106,6 +134,7 @@ getTasks(){
     } 
   
     ).catch( error => console.log(error));
+  // }
 }
 
 dateFirst = () => {
@@ -116,7 +145,6 @@ dateFirst = () => {
   }
 
   getCategories = (tasks) => {
-    console.log(tasks);
     var catRawArray = this.state.tasks.map(item => item.category).forEach(item=> {
         if(!categories.includes(item)&&item!="No Category"){
           categories.push(item)
@@ -149,18 +177,26 @@ dateFirst = () => {
   }
 
   showCategory = (cat) => {
-    tasksCollection
-    .where("category","==",cat)
-    .where("userID","==",this.state.userID)
-    .get()
-    .then( snapshot => {
-      taskList = firebaseArrMaker(snapshot);
-      this.setState({
-        tasks: taskList,
-        showDone: false,
-    }, ()=> console.log(this.state.tasks));
+    if(cat === "all"){
+      this.setState({showCategory: false}, ()=>{
+        this.getTasks();
+        this.updateUserSettings();
+      } )
+    } else {
+      this.setState({showCategory: true, currentCategory: cat},()=>{
+        this.getTasks();
+        this.updateUserSettings();
+      } )
     }
-  ).catch( error => console.log(error));
+  }
+
+  updateUserSettings = () => {
+    users.doc(this.state.userID).update({
+      settings: {
+        showCategory: this.state.showCategory,
+        currentCategory: this.state.currentCategory
+      }
+    })
   }
 
   // toggles the display between boxes and rows
@@ -170,9 +206,11 @@ dateFirst = () => {
 
   // opens and closes form for starting new task
   toggleForm = () => {
-    this.state.formDisp ? 
+    if(this.state.formDisp){
       this.setState({formState: "newTask", background: null},()=>this.setState({formDisp: false})) 
-      : this.setState({formState: "newTask", star: false, background: "dim"}, ()=>this.setState({formDisp: true}));
+    } else {
+      this.setState({formState: "newTask", star: false, background: "dim"}, ()=>this.setState({formDisp: true}));
+    }
   }
 
   closeForm = () => {
@@ -245,12 +283,21 @@ render(){
 
   var loginMessage = this.state.loggedIn? "Hello, " + this.state.userEmail + "!" : null;
 
+  var tasksToShow = !this.state.showCategory ? this.state.tasks
+      : this.state.tasks.filter(item => item.category === this.state.currentCategory);
+
   return (
     <>
+      <header>
+        <div>
+          <h1 id="title">Stay Organized!</h1>
+        </div>
         <div className="loginMessage">
           {loginMessage}
           <button className="logOut btn btn-sm btn-secondary" onClick={this.signOut}>Log out</button>
-          (Still a work in progress; stay tuned for updates!)</div>
+        </div>
+      </header>
+        
       {/* The form is outside 'app' - to avoid inheriting lower opacity when the form is displayed*/}
       <div style={{display: this.state.formDisp ? 'block' : 'none'}}> 
           <Form 
@@ -289,29 +336,20 @@ render(){
             getUser={()=>this.checkUser()}
             formDisp={this.state.formDisp}
             toggleForm={this.toggleForm}
-            taskSort={this.taskSort}
             order={this.state.order}
             showDone={this.state.showDone}
             showDeets={this.state.showDeets}
             toggleDeets={this.toggleDeets}
             loggedIn={loggedIn}
             categories={this.state.categories}
+            taskSort={this.taskSort}
             showCategory={this.showCategory}
             />
         </div>
 
         {/* main body: */}
         <div className="main-body">
-          {/* The new task/edit task form */}
        
-{/* The complete quick list - bring back as a dropdown */}
-          {/* <div className="overView card">
-            {taskList.length > 0 ? 
-              taskList.map(task =>  <OverView taskNumber={taskList.indexOf(task) + 1} taskTitle={task.title}/>)
-            : "No tasks"
-            }
-          </div> */}
-
                 <Search 
                   taskList={taskList} 
                   displaySearch={(fl,sp) => this.displaySearch(fl,sp)}
@@ -321,8 +359,8 @@ render(){
         {this.state.showSearch === false ? null : searchDisp}
 
         <div className={cols}>
-            {this.state.tasks.length > 0 ? 
-              this.state.tasks.map((task)=> ( 
+            {tasksToShow.length > 0 ? 
+              tasksToShow.map((task)=> ( 
                 <div key={task.id} className="taskContainer">
                     <Tasks 
                       taskDisp={this.state.taskDisp}

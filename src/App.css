@@ -6,7 +6,7 @@
   --clr-gray: #6c757d;
 
   --fs-h1: 2rem;
-  --fs-h2: 1.5rem;
+  --fs-h2: 1.25rem;
   --fs-h3: 1rem;
   --fs-body: .75rem;
   --fs-small: .6rem;
@@ -61,7 +61,7 @@ h1{
 }
 
 h2{
-  font-size: var(--fs-h2);
+  font-size: var(--fs-h3);
 }
 /* Main formatting: */
 .app{
@@ -90,6 +90,14 @@ h2{
 }
 
 /* Header */
+header h1{
+  text-align: center;
+  background-color: var(--clr-gray);
+  color: white;
+  font-style: italic;
+  padding-bottom: .5rem;
+  font-size: 1.75rem !important;
+}
 
 .headerDiv{
   display: grid;
@@ -222,6 +230,9 @@ input{
 /* These are for both task titles in Tasks and input and button in Search */
 .inlineGroup{
   white-space: nowrap;
+}
+#noTasksDiv{
+  padding: 6px 12px;
 }
 
 .taskTitle{
@@ -511,7 +522,7 @@ input{
 }
 
 .form{
-  position: absolute;
+  position: fixed;
   z-index: 10000;
   /* margin: 10vw auto; */
   /* background: var(--clr-ter); */

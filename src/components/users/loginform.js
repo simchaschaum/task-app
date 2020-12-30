@@ -34,8 +34,8 @@ class LoginForm extends Component{
             .createUserWithEmailAndPassword(username,password)
             .then(response => {
                 console.log("uid: " + response.user.uid);
+                this.handleStoreUser(response);
                 response.user.sendEmailVerification(()=>console.log('mail sent'))
-                // this.handleStoreUser(response);
                 this.props.getUser();
                 // response.user.sendEmailVerification(()=> console.log("Verification Email Sent"))
             } )
@@ -66,7 +66,7 @@ class LoginForm extends Component{
     }
     loginFailed = () => {
         // this.setState({loginFailed: true})
-        alert("Sorry! No username and password.  Please try again or reset your password.")
+        alert("Sorry! Username and password aren't recognized.  Please try again or reset your password. If this is your first time, please register.")
     }
 
     logout = () => {
@@ -107,7 +107,7 @@ class LoginForm extends Component{
             .auth()
             .signInWithPopup(provider)
             .then( result => {
-                // this.handleStoreUser(result);
+                this.handleStoreUser(result);
                 console.log(result);
                 this.props.getUser();
                 this.props.getTasks();
@@ -116,14 +116,15 @@ class LoginForm extends Component{
         this.clearForm();
     }
 
-    // handleStoreUser = (data) => {
-    //     users.doc(data.user.uid)
-    //         .set({ 
-    //             email: data.user.email
-    //         })
-    //         .then( response => console.log(response))
-    //         .catch (error => console.log(error))
-    // }
+    handleStoreUser = (data) => {
+        users.doc(data.user.uid)
+            .set({ 
+                email: data.user.email,
+                settings: {}
+            })
+            .then( response => console.log(response))
+            .catch (error => console.log(error))
+    }
 
     toggleSignIn = (e) => {
         e.preventDefault();
@@ -227,9 +228,10 @@ class LoginForm extends Component{
                 <div className="form-group">
                     <input className="form-control" 
                         name="password" 
+                        minlength="6"
                         value={this.state.user.password} 
                         type="password" 
-                        placeholder="Enter Password" 
+                        placeholder="Enter Password (at least 6 characters)" 
                         onChange={(e) => this.handleChange(e)} 
                         required>
                     </input>

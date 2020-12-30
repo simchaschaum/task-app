@@ -129,10 +129,8 @@ class Tasks extends React.Component{
                 break;
         }
         const fullDay = this.props.dateDue.match(/\d{2}$/);
-        console.log("full day = " + fullDay);
         const day = String(fullDay).match(/^\d/) == "0" ? String(fullDay).match(/\d$/) : String(fullDay).match(/^\d{2}/);
         const date = day ? month + " " + day + ", " + year : null;
-        
 
         return(
             <>
@@ -141,9 +139,9 @@ class Tasks extends React.Component{
                         <div className="title" id={titleCols}>
                             <div className="titleTop">
                                 <div>
-                                    <h2 className="taskTitle"> 
+                                    <h3 className="taskTitle"> 
                                         {this.props.taskTitle} 
-                                    </h2>  
+                                    </h3>  
                                 </div>
 
                                <div id="catShowDiv">

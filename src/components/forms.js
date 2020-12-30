@@ -4,7 +4,6 @@ import Dropdown from 'react-bootstrap/Dropdown';
 import firebase, {db, tasksCollection, firebaseTimestamp} from '../utils/firebase';
 import { firebaseArrMaker } from '../utils/tools';
 
-var starIcon = "https://img.icons8.com/ios/24/000000/star--v1.png";
 var cat;
 
 class Form extends Component{
@@ -24,9 +23,6 @@ class Form extends Component{
 
     setEditForm = (star, cat) => {
         this.setState({star:star, category: cat === "No Category" ? "Category" : cat});
-        star ? 
-            starIcon = "https://img.icons8.com/ios-filled/24/000000/star.png"
-            : starIcon =  "https://img.icons8.com/ios/24/000000/star--v1.png";
     }
 
     input = (event) => {
@@ -93,10 +89,8 @@ class Form extends Component{
     toggleStar = (e) => {
         e.preventDefault();
         if(this.state.star === true){
-            starIcon = "https://img.icons8.com/ios/24/000000/star--v1.png";
             var cs = false;
             }  else {
-            starIcon =  "https://img.icons8.com/ios-filled/24/000000/star.png";
             var cs = true;
         };
         this.setState({star: cs, starEdited: true});
@@ -122,7 +116,6 @@ class Form extends Component{
 
 
     closeForm = (e) => {
-        starIcon = "https://img.icons8.com/ios/24/000000/star--v1.png";
         e.preventDefault();
         this.props.closeForm();
         this.clearState();
@@ -135,7 +128,7 @@ class Form extends Component{
             priority: "", 
             date: "", 
             category: "No Category",
-            star: this.props.taskStar,
+            star: false,
             titleEdited: false, 
             detailsEdited: false, 
             dateEdited: false, 
@@ -198,6 +191,10 @@ class Form extends Component{
         const category = this.state.categoryEdited ? this.state.category 
             : this.props.taskToEdit.category === "No Category" || this.props.formState === "newTask" ? "Category"
                 : this.props.taskToEdit.category;
+        
+        const starIcon = this.state.star? "https://img.icons8.com/ios-filled/24/000000/star.png" : "https://img.icons8.com/ios/24/000000/star--v1.png";
+
+        const today = new Date().toISOString().split('T')[0];
                                                                     
         return(
             <div className="d-flex justify-content-center"> 
@@ -213,6 +210,7 @@ class Form extends Component{
                             <input id="newTaskDate" className="form-control-lg" 
                             type="date" 
                             name="date" 
+                            min={today}
                             value={this.state.date} 
                             onChange={(e)=>this.input(e)}
                             ></input>
@@ -233,7 +231,7 @@ class Form extends Component{
                             <Dropdown.Menu id="catDropdown"> 
                                 <div className="row catInputDiv">
                                     <div className="col-sm-8">
-                                        <input id="categoryInput" className="form-control" placeholder="Add a Category" onChange={(e)=>this.categoryInput(e)}></input>
+                                        <input id="categoryInput" className="form-control" placeholder="Add a Category" maxlength="10" onChange={(e)=>this.categoryInput(e)}></input>
                                     </div>
                                     <div className="col-sm-2">
                                         <button className="btn btn-secondary" onClick={(e)=>this.addCategory(e)}>Press</button>
