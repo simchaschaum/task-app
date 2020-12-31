@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import firebase, {db, tasksCollection, firebaseTimestamp} from '../utils/firebase';
 import { firebaseArrMaker } from '../utils/tools';
-import { dateFormatter } from './dateFormat';
+import { dateFormatter, dateForCompareFormatter } from './dateFormat';
 
 var expanded = "Show Details"
 
@@ -73,7 +73,7 @@ class Tasks extends React.Component{
                 : <img className="icon" src="https://img.icons8.com/ios-glyphs/60/000000/show-property.png"/>;
 
         var expandedButton = this.props.taskDetails === "" ? null
-            :  <div className="toolTipContainer">
+            :  <div className="toolTipContainer" id="expandedButton">
                     <button className="expandButton taskBtn btn btn-sm" onClick={this.expand}>
                         {expanded}
                     </button>
@@ -88,14 +88,15 @@ class Tasks extends React.Component{
         var titleCols = this.props.taskCols === "taskCols" ? "titleCols" : null;
 
         const date = this.props.dateDue != "" ? dateFormatter(this.props.dateDue) : null;
-
+        const dateColor = new Date(dateForCompareFormatter(this.props.dateDue)) < new Date() ? "red" : "black";
+        
         return(
             <>
            <div className={taskSubcontainer} id={taskTitleAndButtonsCols}>
                        
-                        <div className="title" id={titleCols}>
-                            <div className="titleTop">
-                                <div>
+                        <div className="titleDiv" id={titleCols}>
+  
+                                <div id="title">
                                     <h3 className={this.props.taskDone ? "taskTitle taskTitleDone" : "taskTitle"}> 
                                         {this.props.taskTitle} 
                                     </h3>  
@@ -109,16 +110,17 @@ class Tasks extends React.Component{
                                             : null }
                                 </div> 
                                 
-                                <div className="toolTipContainer">
-                                    <span className="taskPriority taskTitle"> 
-                                        {this.props.taskStar === true ? <img id="star" className="icon" src="https://img.icons8.com/emoji/48/000000/star-emoji.png"/> : null} 
-                                    </span>
-                                    <span className="toolTip toolTipAbove">{toolTips.star}</span>
-                                </div>
+                               
+                                    {this.props.taskStar === true ? 
+                                         <div className="toolTipContainer taskPriority taskTitle" id="starShowDiv">
+                                            <img id="star" className="icon" src="https://img.icons8.com/emoji/48/000000/star-emoji.png"/> 
+                                            <span className="toolTip toolTipAbove">{toolTips.star}</span>
+                                        </div>
+                                    : null} 
 
-                            </div>   
-                                <div className={this.props.taskDone ? "dateDue dateDueDone" : "dateDue"} >
-                                    {date}
+                            
+                                <div className={this.props.taskDone ? "dateDue dateDueDone" : "dateDue"} id="dateDue" style={{color:dateColor}}>
+                                    {date}         
                                 </div>
 
                         </div>
@@ -131,7 +133,7 @@ class Tasks extends React.Component{
                                 {expandedButton}
 
                             {/* Edit task button: */}
-                                <div className="toolTipContainer">
+                                <div className="toolTipContainer" id="editButton">
                                     <button className="editButton taskBtn btn-sm btn" onClick={this.editTask}>
                                         <img className="icon"src="https://img.icons8.com/pastel-glyph/64/000000/edit--v1.png"/>
                                     </button>
@@ -139,7 +141,7 @@ class Tasks extends React.Component{
                                 </div>
 
                             {/* Delete button: */}
-                                <div className="toolTipContainer">
+                                <div className="toolTipContainer" id="deleteButton">
                                     <button className="deleteButton taskBtn btn-sm btn" onClick={()=>this.deleteTask()}>
                                     <img className="icon" src="https://img.icons8.com/metro/52/000000/delete-sign.png"/>
                                     </button>
@@ -147,7 +149,7 @@ class Tasks extends React.Component{
                                 </div>
 
                             {/* Mark as done button: */}
-                                <div className="toolTipContainer">
+                                <div className="toolTipContainer" id="doneButton">
                                     <button className="doneButton taskBtn btn btn-sm" onClick={this.toggleDone}>
                                         {this.props.taskDone ? 
                                             <img className="icon" src="https://img.icons8.com/ios/100/000000/checked-2--v2.png"/> 

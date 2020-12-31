@@ -308,7 +308,6 @@ input{
 }
 
 
-
 /* button-group in boxes: */
 @media(min-width: 600px){
   #taskBtnCols{
@@ -344,26 +343,58 @@ input{
   }
 }
 
-.title{
+.titleDiv{
   padding-left: 1rem;
   max-width: 60%;
   display: grid;
-  grid-template-rows: 
-      auto 1fr;
+  grid-template-columns: auto 1fr 1fr;
+  grid-template-rows: auto 1fr
 }
-@media(max-width:850px){
-  .title{
+@media(max-width:800px){
+  .titleDiv{
     padding-left: 0.5em;
+    grid-template-columns: auto 1fr;
+    grid-template-rows: auto 1fr 1fr
   }
 }
-.titleTop{
-  display: grid;
-  grid-template-columns:75% 1fr 1fr;
+
+#starShowDiv{
+  grid-row: 1/2;
+  grid-column: 3/4;
+  transform: translateY(5px);
+}
+#title{
+grid-row:1/2;
+grid-column: 1/2;
+}
+#catShowDiv{
+transform: translateY(5px);
+grid-row:1/2;
+grid-column: 2/3;
+}
+#dateDue{
+grid-row:2/3;
+grid-column: 1/2;
 }
 
-#star{
-  margin-left: 15px;
-  width: 35px;
+@media(max-width: 800px){
+  #starShowDiv{
+      grid-row: 3/3;
+      grid-column: 1/2;
+      transform: translateY(0);
+  }
+  #title{
+    grid-row:1/2;
+    grid-column: 1/2;
+  }
+  #catShowDiv{
+    grid-row:1/2;
+    grid-column: 2/3;
+  }
+  #dateDue{
+    grid-row:2/3;
+    grid-column: 1/2;
+  }
 }
 
 .dateDue{
@@ -386,9 +417,8 @@ input{
 }
 
 .taskBtnGrp{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-evenly;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   padding: 5px;
   width: 40%
 }
@@ -396,6 +426,34 @@ input{
   .taskBtnGrp{
     display: grid;
     grid-template-columns: 1fr 1fr;
+  }
+}
+
+#expandedButton{
+  grid-column: 1/2;
+}
+#editButton{
+  grid-column: 2/3;
+}
+#deleteButton{
+  grid-column: 3/4;
+}
+#doneButton{
+  grid-column: 4/5;
+}
+
+@media(max-width:800px){
+  #expandedButton{
+    grid-column: 1/2;
+  }
+  #editButton{
+    grid-column: 2/3;
+  }
+  #deleteButton{
+    grid-column: 1/2;
+  }
+  #doneButton{
+    grid-column: 2/3;
   }
 }
 
@@ -410,13 +468,13 @@ input{
 
 @media(max-width: 800px){
   .icon{
-    width: 1.5em;
+    width: 2.5em;
     height: auto;
   }
 }
 @media(max-width: 700px){
   .icon{
-    width: 1.25em;
+    width: 2.5em;
     height: auto;
   }
 }
@@ -432,7 +490,6 @@ input{
 .toolTipContainer{
   position: relative;
   display: inline-block;
-  text-align: right;
   }
 
 .toolTip{
@@ -501,13 +558,16 @@ input{
   transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out !important;
 }
 
-#starIcon{
+#star{
   transform: translateY(-3px) !important;
+  width: 35px;
+  text-align: left !important;
 }
 @media(max-width:700px){
-  #starIcon{
-    height: 50px;
-    margin-top: 15px;
+  #star{
+    height: 25px;
+    width: auto;
+    margin-top: 5px;
   }
 }
 
@@ -543,6 +603,11 @@ input{
   border-radius: .25rem;
   overflow-wrap: break-word;
   box-shadow: var(--bs);
+}
+@media(max-width: 700px){
+  .form{
+    position: absolute;
+  }
 }
 
 .editText{
