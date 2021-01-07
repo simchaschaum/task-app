@@ -108,7 +108,7 @@ class Tasks extends React.Component{
                                             <p className="catShowText">{this.props.taskCategory}</p> 
                                         </div>
                                             : null }
-                                </div> 
+                                </div>      
                                 
                                
                                     {this.props.taskStar === true ? 
@@ -183,6 +183,9 @@ export class Notasks extends Component{
                     break;
                 case "noTasks":
                     noTasks = "There are no tasks to do.  *Whew!*";
+                    break;
+                case "allDone":
+                    noTasks = "Looks like you're all done! Congratulations.";
                     break;
                 default:
                     noTasks = "Tasks Loading... "

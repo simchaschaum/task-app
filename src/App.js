@@ -119,13 +119,28 @@ getTasks(){
       }
       this.setState({
         tasks: taskList,
-        noTasks: taskList.length > 0 ? "loading" : "noTasks"
-      }, ()=> this.getCategories(this.state.tasks));
+        noTasks: taskList.length === 0 ? "noTasks"  
+          : this.checkAllDone(taskList) ? "loading" 
+            : "allDone"
+      }, ()=> {
+        this.getCategories(this.state.tasks);
+      } );
     } 
   
     ).catch( error => console.log(error));
   // }
 }
+
+checkAllDone(taskList){    // returns true if there is at least one task that isn't done yet
+  var done = false;
+  taskList.map(task => {
+    if(task.done === false){ 
+        done = true;
+        return;
+      } 
+    });
+    return done;
+};
 
 dateFirst = () => {
   var datedTasks = taskList.filter(item => item.date !== "");
@@ -291,8 +306,9 @@ render(){
   return (
     <>
       <header>
-        <div>
+        <div id="titleHeader">
           <h1 id="title">Stay Organized!</h1>
+          <p>Organizing Your Life, One Task At A Time</p>
         </div>
         <div className="loginMessage">
           {loginMessage}
@@ -328,7 +344,13 @@ render(){
     }
    
       <div className="app">
-      <div className="cover" id={background}></div>
+      <div className="cover" id={background}>
+        {this.state.background === "white"? 
+        <div id="titleHeader">
+          <h1 id="title">Stay Organized!</h1>
+          <p>Organizing Your Life, One Task At A Time</p>
+        </div> : null}
+      </div>
 
       {/* along the left-side, non scrolling */}
        <div className="left-side">

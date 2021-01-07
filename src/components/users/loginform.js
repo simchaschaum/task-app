@@ -131,7 +131,8 @@ class LoginForm extends Component{
         this.props.toggleSignIn();
     }
 
-    resetPassword = () => {
+    resetPassword = (e) => {
+        e.preventDefault();
         this.setState({resetFormDisp: this.state.resetFormDisp ? false : true})
     }
 
@@ -153,11 +154,17 @@ class LoginForm extends Component{
         var altText = this.state.register ?
             <p>
                 Already have an account?
-                <a className="link" onClick={()=>this.setState({register:false})}> Sign in.</a> 
+                <button className="link" onClick={(e)=>{
+                    e.preventDefault();
+                    this.setState({register:false});}
+                    } > Sign in.</button> 
             </p>
                 :   <p>
                         New User? Please 
-                        <a className="link" onClick={()=>this.setState({register:true})}>  Register.</a> 
+                        <button className="link" onClick={(e)=>{
+                            e.preventDefault();
+                            this.setState({register:true});}
+                            }>  Register.</button> 
                     </p>
         var loginFailedText = this.state.loginFailed ? 
             <p id="loginFailedText">
@@ -196,7 +203,7 @@ class LoginForm extends Component{
                 </button>
                 </div>
                 <p>
-                    Remember your password? <a className="link" onClick={this.resetPassword}>Sign in</a>.
+                    Remember your password? <button className="link" onClick={this.resetPassword}>Sign in</button>.
                 </p>
 
             </form>

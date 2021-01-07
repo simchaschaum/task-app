@@ -90,13 +90,21 @@ h2{
 }
 
 /* Header */
-header h1{
+#titleHeader{
   text-align: center;
   background-color: var(--clr-gray);
   color: white;
   font-style: italic;
-  padding-bottom: .5rem;
+  padding-bottom: 2px;
+  z-index: 1000;
+}
+#titleHeader>h1{
   font-size: 1.75rem !important;
+  margin-bottom: 5px;
+}
+#titleHeader>p{
+  font-size: .75rem;
+  margin-bottom: 0;
 }
 
 .headerDiv{
@@ -463,6 +471,9 @@ input{
 .taskBtn{
   display: inline-flex !important;
 }
+.taskBtn:hover{
+  transform: scale(1.2, 1.2);
+}
 
 .icon{
   width: 2em;
@@ -483,11 +494,12 @@ input{
 }
 
 .detailsParagraph{
-  /* border: .5px solid var(--clr-gray); */
-  width: 75%;
+  max-width: 75%;
   margin: 0 auto;
   text-align: justify;
   padding: 1em;
+  white-space: pre-wrap;
+  word-break: break-word;
 }
 
 .toolTipContainer{
@@ -530,10 +542,6 @@ input{
 .toolTipBelow{
   transform: translateY(40px);
   margin-left: -22px;
-}
-
-.detailsParagraph{
-  white-space: pre-wrap;
 }
 
 /* tasks overview (probably in its own pulldown or menu */
@@ -727,7 +735,7 @@ input{
 .signInForm{
   width: 45%;
   background: white;
-  margin-top: 10vh;
+  margin-top: 0;
 }
 @media(max-width: 700px){
   .signInForm{
@@ -750,6 +758,8 @@ input{
 .link{
   color: blue;
   cursor: pointer;
+  border: 0;
+  background: none;
 }
 
 #or{

@@ -51,7 +51,7 @@ class Form extends Component{
     submitDetails = (event) => {
         event.preventDefault();
         if(this.props.formState === "newTask"){
-            if(this.state.title != ""){
+            if(this.state.title !== ""){
                 tasksCollection.add({
                     title: this.state.title,
                     details: this.state.details,
@@ -89,10 +89,11 @@ class Form extends Component{
 
     toggleStar = (e) => {
         e.preventDefault();
+        var cs;
         if(this.state.star === true){
-            var cs = false;
+            cs = false;
             }  else {
-            var cs = true;
+            cs = true;
         };
         this.setState({star: cs, starEdited: true});
  } 
@@ -190,7 +191,7 @@ class Form extends Component{
                </div>
         
         const today = new Date().toISOString().split('T')[0];
-        const dueDate =  this.props.formState === "editTask" && this.props.taskToEdit.date != "" ? 
+        const dueDate =  this.props.formState === "editTask" && this.props.taskToEdit.date !== "" ? 
             <Dropdown>
                 <Dropdown.Toggle variant="secondary"  id="dropdown-basic" className="formMidRowBtn">
                     {dateFormatter(this.props.taskToEdit.date)}
@@ -239,7 +240,7 @@ class Form extends Component{
                 {/* Mark as priority: */}
                         <label className="form-label">
                             <div className="btn btn-lg btn-secondary formMidRowBtn" name="star" onClick={this.toggleStar}>
-                                <img id="starIcon" src={starIcon}/>
+                                <img id="starIcon" src={starIcon} alt="star icon"/>
                             </div>                        
                         </label>
  
