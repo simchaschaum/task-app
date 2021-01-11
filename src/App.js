@@ -62,7 +62,6 @@ checkUser = () => {
   currentUser = firebase.auth().currentUser;
   if(currentUser){
     userID = currentUser.uid;
-    // console.log("I'm signed in!!")
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
       .catch(error => console.log(error))
       .then(()=>console.log("persistence set"))

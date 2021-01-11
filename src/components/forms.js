@@ -48,10 +48,9 @@ class Form extends Component{
         }
     }
 
-    submitDetails = (event) => {
+    submitNewDetails = (event) => {
         event.preventDefault();
-        if(this.props.formState === "newTask"){
-            if(this.state.title !== ""){
+        if(this.state.title !== ""){
                 tasksCollection.add({
                     title: this.state.title,
                     details: this.state.details,
@@ -63,26 +62,30 @@ class Form extends Component{
                     userID: this.props.userID
                 })
                 .then(this.props.updateDisp());
-            } else {
-                alert("This task is blank; no task saved.")
+                this.props.closeForm();
+                this.clearState();
+            } 
+            else {
+                alert("This task is blank. Make sure to include a title before saving.")
             }
-            
-        } else {
-            var title = this.state.titleEdited === false ? this.props.taskToEdit.title : this.state.title;
-            var details = this.state.detailsEdited === false ? this.props.taskToEdit.details : this.state.details;
-            var star = this.state.starEdited === false ? this.props.taskToEdit.star : this.state.star;
-            var date = this.state.dateEdited === false ? this.props.taskToEdit.date : this.state.date;
-            var catToEnter = this.state.categoryEdited === false ? this.props.taskToEdit.category : this.state.category;
-            tasksCollection.doc(this.props.taskID)
-                .update({
-                    title: title,
-                    details: details,
-                    star: star,
-                    date: date,
-                    category: catToEnter
-                })
-                .then(this.props.updateDisp())
-        };
+        } 
+
+    submitEditedDetails = (event) => {
+        event.preventDefault();
+        var title = this.state.titleEdited === false ? this.props.taskToEdit.title : this.state.title;
+        var details = this.state.detailsEdited === false ? this.props.taskToEdit.details : this.state.details;
+        var star = this.state.starEdited === false ? this.props.taskToEdit.star : this.state.star;
+        var date = this.state.dateEdited === false ? this.props.taskToEdit.date : this.state.date;
+        var catToEnter = this.state.categoryEdited === false ? this.props.taskToEdit.category : this.state.category;
+        tasksCollection.doc(this.props.taskID)
+            .update({
+                title: title,
+                details: details,
+                star: star,
+                date: date,
+                category: catToEnter
+            })
+            .then(this.props.updateDisp())
         this.props.closeForm();
         this.clearState();
       }
@@ -157,12 +160,13 @@ class Form extends Component{
                 </div>
             :   <div className="form-group row">
                     <div className="col-sm-12">
-                        <input id="newTaskTitle" className="form-control" 
+                        <input id="newTaskTitle" className="form-control"  required
                             name="title" 
                             value={this.state.title} 
                             type="text" placeholder="Enter Title" 
                             onChange={(e) => this.input(e)} 
-                            required>
+                            required
+                            >
                         </input>
                     </div>
                 </div>
@@ -227,7 +231,7 @@ class Form extends Component{
                                                                  
         return(
             <div className="d-flex justify-content-center"> 
-                <form noValidate className="formContainer form form-group" onSubmit={(e)=>this.submitDetails(e)}>
+                <form noValidate className="formContainer form form-group" onSubmit={(e)=>this.props.formState==="newTask" ? this.submitNewDetails(e) : this.submitEditedDetails(e)}>
                    {title} <br />
                    
                    {details} <br />
