@@ -32,9 +32,20 @@ class Header extends React.Component {
         this.props.toggleSignIn();
     }
 
+    deleteDone = () => {
+        this.props.deleteDone();
+    }
+
     render(){
         var showDeets = this.props.showDeets ?  "Hide All Details" : "Show All Details";
         var showDone = this.props.showDone ? "Show Not Done" : "Show All Tasks";
+        var trueFalse = this.props.tasksDone.length > 0 ? false : true;
+
+        const toolTip = {
+            disabled: "Button Disabled - No tasks marked 'done'",
+            enabled: "Delete all tasks marked 'done'"
+        }
+       
         return (
             <>
                 <header>
@@ -81,6 +92,14 @@ class Header extends React.Component {
                             <Dropdown.Item name="all" onClick={(e)=>this.showCategory(e)}>Show All</Dropdown.Item>
                                
                         </DropdownButton>
+
+                        <div className="dropdown headerItem toolTipContainer">
+                            <Button id="dropdown-basic-button" className="headerButton" onClick={this.deleteDone} disabled={trueFalse}> 
+                                    <span className="btnDisText"> Delete Done </span>
+                                    <img src="https://img.icons8.com/android/24/ffffff/trash.png"/>                            
+                                </Button>
+                                <span className="toolTip">{this.props.tasksDone.length > 0 ? toolTip.enabled : toolTip.disabled}</span>
+                        </div>
 
                         
                     </div>

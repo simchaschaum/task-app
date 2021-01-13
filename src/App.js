@@ -102,7 +102,7 @@ loadUserSettings = () => {
       }, ()=>{
         this.getTasks()
       } )
-    })
+    }).catch(error => console.log("error loading settings" + error.message) )
 } 
 
 getTasks(){
@@ -272,6 +272,21 @@ dateFirst = () => {
         .catch(error => console.log(error))
   }
 
+  deleteDone = () => {
+    if(window.confirm("Are you sure you want to delete all messages that are marked 'done'?")){
+        var delArr = this.state.tasks.filter(task => task.done);
+        delArr.forEach(task => {
+          tasksCollection.doc(task.id).delete()
+            .then(()=>{
+              console.log(task.title + " deleted!");
+              this.getTasks();
+            })
+            .catch(error => console.log(error))
+        })
+    }
+  }
+
+
 render(){
   
   var searchDisp = 
@@ -367,6 +382,8 @@ render(){
             categories={this.state.categories}
             taskSort={this.taskSort}
             showCategory={this.showCategory}
+            deleteDone={this.deleteDone}
+            tasksDone={tasksDone}
             />
         </div>
 
