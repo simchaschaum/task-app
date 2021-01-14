@@ -41,7 +41,8 @@ state = {
   noTasks: "loading", // determines what the NoTasks component says when there are no tasks (search/loading/no tasks)
   categories: [],   // array of all the categories
   showCategory: false,  // determines whether to show all categories (false) or just one (true)
-  currentCategory: ""  // the current category, if any, to show
+  currentCategory: "", // the current category, if any, to show
+  menuShow: false   // toggles menu open and closed in mobile mode
 }
 
 componentDidMount(){
@@ -284,7 +285,11 @@ dateFirst = () => {
             .catch(error => console.log(error))
         })
     }
-  }
+  };
+
+menuShow = () => {
+  this.setState({menuShow: this.state.menuShow ? false : true});  
+};
 
 
 render(){
@@ -321,8 +326,15 @@ render(){
     <>
       <header>
         <div id="titleHeader">
-          <h1 id="title">Stay Organized!</h1>
-          <p>Organizing Your Life, One Task At A Time</p>
+          <div id="titleHeader1">
+            <h1 id="title">Stay Organized!</h1>
+            <p>Organizing Your Life, One Task At A Time</p>           
+          </div>
+          <div id="titleHeader2">
+            <button id="hamburger" onClick={this.menuShow}>
+              <img src="https://img.icons8.com/android/24/ffffff/menu.png"/>
+            </button>
+          </div>
         </div>
         <div className="loginMessage">
           {loginMessage}
@@ -384,6 +396,8 @@ render(){
             showCategory={this.showCategory}
             deleteDone={this.deleteDone}
             tasksDone={tasksDone}
+            menuShow={this.state.menuShow}
+            menuClose={this.menuShow}
             />
         </div>
 
