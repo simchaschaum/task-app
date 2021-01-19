@@ -85,7 +85,11 @@ class Form extends Component{
                 date: date,
                 category: catToEnter
             })
-            .then(this.props.updateDisp())
+            .then(()=>{
+                this.props.updateDisp()
+                console.log("updated")
+                } )
+            .catch(error => console.log(error));
         this.props.closeForm();
         this.clearState();
       }

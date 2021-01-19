@@ -325,17 +325,19 @@ render(){
   return (
     <>
       <header>
-        <div id="titleHeader">
-          <div id="titleHeader1">
-            <h1 id="title">Stay Organized!</h1>
+
+        <div className="titleHeader">
+          <div className="titleHeader1">
+            <h1>Stay Organized!</h1>
             <p>Organizing Your Life, One Task At A Time</p>           
           </div>
-          <div id="titleHeader2">
+          <div className="titleHeader2">
             <button id="hamburger" onClick={this.menuShow}>
               <img src="https://img.icons8.com/android/24/ffffff/menu.png"/>
             </button>
           </div>
         </div>
+
         <div className="loginMessage">
           {loginMessage}
           <button className="logOut btn btn-sm btn-secondary" onClick={this.signOut}>Log out</button>
@@ -347,7 +349,7 @@ render(){
           <Form 
              ref="form"
              formState={this.state.formState} 
-             updateDisp={this.checkUser} 
+             updateDisp={this.loadUserSettings} 
              closeForm={this.toggleForm} 
              taskList={this.state.tasks} 
              taskToEdit={this.state.taskToEdit} 
@@ -372,10 +374,13 @@ render(){
       <div className="app">
       <div className="cover" id={background}>
         {this.state.background === "white"? 
-        <div id="titleHeader">
-          <h1 id="title">Stay Organized!</h1>
-          <p>Organizing Your Life, One Task At A Time</p>
-        </div> : null}
+        <div className="titleHeader">
+          <div className="titleHeader1">
+            <h1>Stay Organized!</h1>
+            <p>Organizing Your Life, One Task At A Time</p>
+          </div> 
+        </div>
+        : null}
       </div>
 
       {/* along the left-side, non scrolling */}
