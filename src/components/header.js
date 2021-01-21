@@ -35,6 +35,11 @@ class Header extends React.Component {
         this.props.menuClose();
     }
 
+    closeDetails = () => {
+        this.props.tasksDetailsToggle(false);
+        this.props.menuClose();
+    }
+
     taskSort = (e) => {
         e.preventDefault();
         this.props.taskSort(e);
@@ -47,8 +52,9 @@ class Header extends React.Component {
         var trueFalse = this.props.tasksDone.length > 0 ? false : true;
 
         const toolTip = {
-            disabled: "Button Disabled - No tasks marked 'done'",
-            enabled: "Delete all tasks marked 'done'"
+            disabled: "Button disabled - No tasks marked 'done'",
+            enabled: "Delete all tasks marked 'done'",
+            closeDetails: "Hide details on all tasks"
         }
        
         var menuShow = this.props.menuShow? "headerDiv-open" : null;
@@ -90,6 +96,14 @@ class Header extends React.Component {
                             <Dropdown.Item name="all" onClick={(e)=>this.showCategory(e)}>Show All</Dropdown.Item>
                                
                         </DropdownButton>
+
+                        <div className="dropdown headerItem toolTipContainer">
+                            <Button id="dropdown-basic-button" className="headerButton" onClick={this.closeDetails}> 
+                                    <span className="btnDisText"> Close All </span>
+                                    <img className="icon" src="https://img.icons8.com/windows/32/000000/hide.png"/>                            
+                                </Button>
+                                <span className="toolTip">{toolTip.closeDetails}</span>
+                        </div>
 
                         <div className="dropdown headerItem toolTipContainer">
                             <Button id="dropdown-basic-button" className="headerButton" onClick={this.deleteDone} disabled={trueFalse}> 

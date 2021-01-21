@@ -42,7 +42,8 @@ state = {
   categories: [],   // array of all the categories
   showCategory: false,  // determines whether to show all categories (false) or just one (true)
   currentCategory: "", // the current category, if any, to show
-  menuShow: false   // toggles menu open and closed in mobile mode
+  menuShow: false,   // toggles menu open and closed in mobile mode
+  tasksDetailsExpanded: true // closes all details in tasks 
 }
 
 componentDidMount(){
@@ -187,6 +188,10 @@ dateFirst = () => {
     }
   }
 
+  tasksDetailsToggle = (bool) => {
+      this.setState({tasksDetailsExpanded: bool});
+  }
+
   showCategory = (cat) => {
     if(cat === "all"){
       this.setState({showCategory: false}, ()=>{
@@ -329,7 +334,7 @@ render(){
         <div className="titleHeader">
           <div className="titleHeader1">
             <h1>Stay Organized!</h1>
-            <p>Organizing Your Life, One Task At A Time</p>           
+            <p>Organizing Your Life, One Task At A Time</p>    
           </div>
           <div className="titleHeader2">
             <button id="hamburger" onClick={this.menuShow}>
@@ -403,6 +408,8 @@ render(){
             tasksDone={tasksDone}
             menuShow={this.state.menuShow}
             menuClose={this.menuShow}
+            tasksDetailsExpanded = {this.state.tasksDetailsExpanded}
+            tasksDetailsToggle = {this.tasksDetailsToggle}
             />
         </div>
 
@@ -438,6 +445,8 @@ render(){
                       toggleDone={() => {
                         task.done = (task.done === true ? false : true)
                       }} 
+                      tasksDetailsExpanded = {this.state.tasksDetailsExpanded}
+                      tasksDetailsToggle = {this.tasksDetailsToggle}
                       />
                   </div>
               ))           
