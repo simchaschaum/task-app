@@ -14,13 +14,22 @@ class Tasks extends React.Component{
         this.expand = this.expand.bind(this);
         this.deleteTask = this.deleteTask.bind(this);
 };  
+// 
+
+
+
     expand = () => {
-        if(this.state.expanded===false){
+          if(this.state.expanded===false){
             this.setState({expanded:true});
            } else {
             this.setState({expanded:false});
         }
+        this.props.tasksDetailsToggle(true);
     };
+
+    tasksExpand = () => {
+        this.setState({expanded:true})
+    }
 
     toggleDone = () => {
         if(this.props.taskDone === true){
@@ -69,8 +78,9 @@ class Tasks extends React.Component{
             star: "This task is important"
         }
 
-        var expanded = this.state.expanded ? <img className="icon" src="https://img.icons8.com/windows/32/000000/hide.png"/> 
-                : <img className="icon" src="https://img.icons8.com/ios-glyphs/60/000000/show-property.png"/>;
+        var expanded = (!this.state.expanded || !this.props.tasksDetailsExpanded) ? <img className="icon" src="https://img.icons8.com/ios-glyphs/60/000000/show-property.png"/> 
+            : <img className="icon" src="https://img.icons8.com/windows/32/000000/hide.png"/>;
+        
 
         var expandedButton = this.props.taskDetails === "" ? null
             :  <div className="toolTipContainer" id="expandedButton">
@@ -78,7 +88,7 @@ class Tasks extends React.Component{
                         {expanded}
                     </button>
                     <span className="toolTip toolTipAbove">
-                        {this.state.expanded ? toolTips.hide : toolTips.show} 
+                        {(!this.state.expanded || !this.props.tasksDetailsExpanded) ? toolTips.show : toolTips.hide} 
                     </span>
                 </div>
 
@@ -162,7 +172,7 @@ class Tasks extends React.Component{
                         </div>
                 
             </div>
-            <div className="detailsParagraph" style={{display: this.state.expanded ? 'block' : 'none'}}>
+            <div className="detailsParagraph" style={{display: (!this.state.expanded || !this.props.tasksDetailsExpanded) ? 'none' : 'block'}}>
                 {this.props.taskDetails}
             </div>
                        
