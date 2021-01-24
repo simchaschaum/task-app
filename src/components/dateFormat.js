@@ -5,18 +5,18 @@ export const dateFormatter = (rawDate) => {
     var year = rawDate.match(/\d{4}/);
     var monthNum = rawDate.match(/(?<=-)\d{2}(?=-)/);
     var month;
-    if (monthNum === "01"){ month = "Jan"} else
-    if (monthNum === "02"){ month = "Feb"} else
-    if (monthNum === "03"){ month = "March"} else
-    if (monthNum === "04"){ month = "April"} else
-    if (monthNum === "05"){ month = "May"} else
-    if (monthNum === "06"){ month = "June"} else
-    if (monthNum === "07"){ month = "July"} else
-    if (monthNum === "08"){ month = "Aug"} else
-    if (monthNum === "09"){ month = "Sept"} else
-    if (monthNum === "10"){ month = "Oct"} else
-    if (monthNum === "11"){ month = "Nov"} else
-    if (monthNum === "12"){ month = "Dec"};
+    if (monthNum == "01"){ month = "Jan"} else
+    if (monthNum == "02"){ month = "Feb"} else
+    if (monthNum == "03"){ month = "March"} else
+    if (monthNum == "04"){ month = "April"} else
+    if (monthNum == "05"){ month = "May"} else
+    if (monthNum == "06"){ month = "June"} else
+    if (monthNum == "07"){ month = "July"} else
+    if (monthNum == "08"){ month = "Aug"} else
+    if (monthNum == "09"){ month = "Sept"} else
+    if (monthNum == "10"){ month = "Oct"} else
+    if (monthNum == "11"){ month = "Nov"} else
+    if (monthNum == "12"){ month = "Dec"};
 
     // switch(monthNum){
     //     case "01":
@@ -56,7 +56,7 @@ export const dateFormatter = (rawDate) => {
     //         month = "Dec";
     // }
     const fullDay = rawDate.match(/\d{2}$/);
-    const day = String(fullDay).match(/^\d/) === "0" ? String(fullDay).match(/\d$/) : String(fullDay).match(/^\d{2}/);
+    const day = String(fullDay).match(/^\d/) == "0" ? String(fullDay).match(/\d$/) : String(fullDay).match(/^\d{2}/);
     return month + " " + day + ", " + year;
 };
 

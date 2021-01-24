@@ -48,6 +48,11 @@ class Form extends Component{
         }
     }
 
+    removeDate = (e) => {
+        e.preventDefault();
+        this.setState({date: "", dateEdited: true})
+    }
+
     submitNewDetails = (event) => {
         event.preventDefault();
         if(this.state.title !== ""){
@@ -180,7 +185,8 @@ class Form extends Component{
                    <div className="col-sm-12">
                         <textArea id="editDetails" className="editText form-control" 
                             name="details" 
-                            contentEditable="true" suppressContentEditableWarning={true}
+                            contentEditable="true" 
+                            suppressContentEditableWarning={true}
                             onChange={(e) => this.input(e)}
                             >
                                 {this.props.taskToEdit.details}
@@ -202,7 +208,9 @@ class Form extends Component{
         const dueDate =  this.props.formState === "editTask" && this.props.taskToEdit.date !== "" ? 
             <Dropdown>
                 <Dropdown.Toggle variant="secondary"  id="dropdown-basic" className="formMidRowBtn">
-                    {dateFormatter(this.props.taskToEdit.date)}
+                    {(this.state.dateEdited && this.state.date === "") ? 
+                        "No Date"
+                            : dateFormatter(this.props.taskToEdit.date)}
                 </Dropdown.Toggle>
                 <Dropdown.Menu id="catDropdown">
                     <label className="form-label">
@@ -214,6 +222,10 @@ class Form extends Component{
                             onChange={(e)=>this.input(e)}
                         ></input>
                     </label>
+                    <Dropdown.Item 
+                        onClick={(e)=>this.removeDate(e)}
+                        >No Due Date
+                        </Dropdown.Item>
                 </Dropdown.Menu>
             </Dropdown>
             : 
