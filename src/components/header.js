@@ -46,15 +46,24 @@ class Header extends React.Component {
         this.props.menuClose();
     }
 
+    makeSchedule = (e) => {
+        e.preventDefault();
+        this.props.makeSchedule();
+        this.props.menuClose();
+    }
+
     render(){
         var showDeets = this.props.showDeets ?  "Hide All Details" : "Show All Details";
         var showDone = this.props.showDone ? "Show Not Done" : "Show All Tasks";
         var trueFalse = this.props.tasksDone.length > 0 ? false : true;
+        var selectedTrueFalse = this.props.selectedTasks.length > 0 ? false : true;
 
         const toolTip = {
             disabled: "Button disabled - No tasks marked 'done'",
             enabled: "Delete all tasks marked 'done'",
-            closeDetails: "Hide details on all tasks"
+            closeDetails: "Hide details on all tasks",
+            createSchedule: "Make a schedule of selected tasks",
+            createScheduleDisabled: "No tasks selected"
         }
        
         var menuShow = this.props.menuShow? "headerDiv-open" : null;
@@ -96,6 +105,13 @@ class Header extends React.Component {
                             <Dropdown.Item name="all" onClick={(e)=>this.showCategory(e)}>Show All</Dropdown.Item>
                                
                         </DropdownButton>
+
+                        <div className="dropdown headerItem toolTipContainer">
+                            <Button id="dropdown-basic-button" className="headerButton" onClick={this.makeSchedule} disabled={selectedTrueFalse}> 
+                                    <span className="btnDisText"> Create Schedule! </span>
+                                    <img src="https://img.icons8.com/metro/26/ffffff/overtime.png"/>                                </Button>
+                                <span className="toolTip">{this.props.selectedTasks.length > 0 ? toolTip.createSchedule : toolTip.createScheduleDisabled}</span>
+                        </div>
 
                         <div className="dropdown headerItem toolTipContainer">
                             <Button id="dropdown-basic-button" className="headerButton" onClick={this.closeDetails}> 

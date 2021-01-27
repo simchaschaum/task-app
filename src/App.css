@@ -301,6 +301,8 @@ input{
 
 /* Tasks: */
 /* These are for both task titles in Tasks and input and button in Search */
+
+
 .inlineGroup{
   white-space: nowrap;
 }
@@ -388,6 +390,22 @@ input{
 }
 
 /* .taskcontainer is in App component, surrounds each instance of Task component */
+
+.taskContainer:hover #taskSelect{
+  display: block;
+}
+
+#taskSelect{
+  display: none;  
+  position: absolute;
+  z-index: 1000;
+  margin: 2px 2px;
+  transform: translateX(-15px);
+}
+
+#taskSelect:checked{
+  background-color: var(--clr-gray);
+}
 
 .taskContainer{
   margin: 10px auto;

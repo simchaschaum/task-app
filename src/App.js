@@ -13,38 +13,46 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import LoginForm from './components/users/loginform';
 
 var taskList = [];
+var selectedTasks = [];
 var categories = [];
 var settings, currentUser, loggedIn, userEmail, userID;
 
 class App extends React.Component {
+  constructor(props){
+    super(props);
+    this.tasks = React.createRef();
+    this.state = {
+      loggedIn: false,  
+      userID: "",   // the user ID of whoever's logged in
+      userEmail: "",   // their email
+      tasks: [],      // will be the array of tasks from Firebase 
+      formDisp: false,  // whether to display the form to add or edit tasks
+      signInDisp: false, // whether to display sign in/ register form 
+      background: null,  // controls cover over background when form/signin is up
+      property: "addedAt", // the property by which to sort the tasks
+      order: "desc",      // descending or ascending
+      formState: "newTask", // determines whether the form will be editing or adding a task
+      id: "",
+      taskToEdit: "", 
+      taskDetailsToEdit: "",
+      searchParams: "",
+      showSearch: false, 
+      taskDisp: "rows", // displays tasks in "rows" or "boxes" (3 or 4 per row)
+      star: "",
+      showDeets: false,  // on change, turns on/off detail view for all tasks 
+      showDone: true,  // determines whether it shows tasks that are done 
+      noTasks: "loading", // determines what the NoTasks component says when there are no tasks (search/loading/no tasks)
+      categories: [],   // array of all the categories
+      showCategory: false,  // determines whether to show all categories (false) or just one (true)
+      currentCategory: "", // the current category, if any, to show
+      menuShow: false,   // toggles menu open and closed in mobile mode
+      tasksDetailsExpanded: true, // when false closes all details in tasks 
+      selectedTasks: [],  // array of tasks that were selected with a checkbox
+      selectedTasksCleared: false, // when true, clears all selection 
+      schedules: []  // array of daily schedules 
+    }
 
-state = {
-  loggedIn: false,  
-  userID: "",   // the user ID of whoever's logged in
-  userEmail: "",   // their email
-  tasks: [],      // will be the array of tasks from Firebase 
-  formDisp: false,  // whether to display the form to add or edit tasks
-  signInDisp: false, // whether to display sign in/ register form 
-  background: null,  // controls cover over background when form/signin is up
-  property: "addedAt", // the property by which to sort the tasks
-  order: "desc",      // descending or ascending
-  formState: "newTask", // determines whether the form will be editing or adding a task
-  id: "",
-  taskToEdit: "", 
-  taskDetailsToEdit: "",
-  searchParams: "",
-  showSearch: false, 
-  taskDisp: "rows", // displays tasks in "rows" or "boxes" (3 or 4 per row)
-  star: "",
-  showDeets: false,  // on change, turns on/off detail view for all tasks 
-  showDone: true,  // determines whether it shows tasks that are done 
-  noTasks: "loading", // determines what the NoTasks component says when there are no tasks (search/loading/no tasks)
-  categories: [],   // array of all the categories
-  showCategory: false,  // determines whether to show all categories (false) or just one (true)
-  currentCategory: "", // the current category, if any, to show
-  menuShow: false,   // toggles menu open and closed in mobile mode
-  tasksDetailsExpanded: true // closes all details in tasks 
-}
+  }
 
 componentDidMount(){
   firebase.auth().onAuthStateChanged( user => {
@@ -296,6 +304,45 @@ menuShow = () => {
   this.setState({menuShow: this.state.menuShow ? false : true});  
 };
 
+toggleSelected = (id,title,details,star,cat,date) => {
+  if(this.state.selectedTasksCleared){
+    this.setState({selectedTasksCleared: false})
+  }
+  var found = false;
+  var index;
+  selectedTasks.forEach(task => {
+    if (task.id === id){
+      index = selectedTasks.indexOf(task);
+      found = true;
+    }
+  });
+  if(found){
+    selectedTasks.splice(index,1);
+  } else {
+    selectedTasks.push({
+      id:id,
+      title:title,
+      details:details,
+      star:star,
+      cat:cat,
+      date:date, 
+      time: "",
+      order: ""
+    });
+  }
+  this.setState({selectedTasks:selectedTasks}, ()=>  console.log(selectedTasks));
+}
+
+makeSchedule = () => {
+  // * - on header have button 'create schedule'.  Only have it active when state.selectedTasks is populated.
+  // * - Add state.selectedTasks to state.schedules; then empty selectedTasks;
+  // clear the selections on <tasks> -- have to change the state in each task; ALSO FOR EXPANDED TO FIX BUG!!
+  // map state.schedules here.  
+  // here, toggle which to show and which to display:none - tasks or schedules. (Have title "schedules" above schedules)
+  // on <Schedules>, give option to include time or order.  If order: dropdown?? or drag and drop list? 
+  selectedTasks = [];
+  this.setState({schedules: this.state.selectedTasks}, ()=>this.setState({selectedTasks: [], selectedTasksCleared: true}, ()=>console.log(this.state.selectedTasks)));
+  }
 
 render(){
   
@@ -410,6 +457,8 @@ render(){
             menuClose={this.menuShow}
             tasksDetailsExpanded = {this.state.tasksDetailsExpanded}
             tasksDetailsToggle = {this.tasksDetailsToggle}
+            makeSchedule={this.makeSchedule}
+            selectedTasks={this.state.selectedTasks}
             />
         </div>
 
@@ -447,6 +496,9 @@ render(){
                       }} 
                       tasksDetailsExpanded = {this.state.tasksDetailsExpanded}
                       tasksDetailsToggle = {this.tasksDetailsToggle}
+                      selectTask={this.toggleSelected}
+                      selectedTasks={this.state.selectedTasks}
+                      clearTasks={this.state.selectedTasksCleared}
                       />
                   </div>
               ))           
@@ -468,12 +520,18 @@ render(){
                       taskCategory={task.category}
                       updateDisp={this.checkUser} 
                       dateDue={task.date} 
+                      selectTask={()=>alert("yup")}
                       editTask={() => 
                         this.editTask(task,task.id)
                       } 
                       toggleDone={() => {
                         task.done = (task.done === true ? false : true)
                       }} 
+                      tasksDetailsExpanded = {this.state.tasksDetailsExpanded}
+                      tasksDetailsToggle = {this.tasksDetailsToggle}
+                      selectTask={this.toggleSelected}
+                      selectedTasks={this.state.selectedTasks}
+                      clearTasks={this.state.selectedTasksCleared}
                       />
                   </div>
               ))
