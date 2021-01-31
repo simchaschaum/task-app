@@ -46,15 +46,30 @@ class Header extends React.Component {
         this.props.menuClose();
     }
 
+    makeSchedule = (e) => {
+        e.preventDefault();
+        this.props.makeSchedule();
+        this.props.menuClose();
+    }
+
+    showHideSchedule = (e) => {
+        e.preventDefault();
+        this.props.showHideSchedule();
+        this.props.menuClose();
+    }
+
     render(){
         var showDeets = this.props.showDeets ?  "Hide All Details" : "Show All Details";
         var showDone = this.props.showDone ? "Show Not Done" : "Show All Tasks";
         var trueFalse = this.props.tasksDone.length > 0 ? false : true;
+        var selectedTrueFalse = this.props.selectedTasks.length > 0 ? false : true;
 
         const toolTip = {
             disabled: "Button disabled - No tasks marked 'done'",
             enabled: "Delete all tasks marked 'done'",
-            closeDetails: "Hide details on all tasks"
+            closeDetails: "Hide details on all tasks",
+            createSchedule: "Make a schedule of selected tasks",
+            createScheduleDisabled: "No tasks selected"
         }
        
         var menuShow = this.props.menuShow? "headerDiv-open" : null;
@@ -98,10 +113,27 @@ class Header extends React.Component {
                         </DropdownButton>
 
                         <div className="dropdown headerItem toolTipContainer">
+                            <Button id="dropdown-basic-button" className="headerButton" onClick={this.makeSchedule} disabled={selectedTrueFalse}> 
+                                    <span className="btnDisText">Create Schedule</span>
+                                    <br></br>
+                                    <img className="headerBtnImg" src="https://img.icons8.com/metro/26/ffffff/overtime.png"/>
+                                    <img className="headerBtnImg" src="https://img.icons8.com/pastel-glyph/64/ffffff/edit--v1.png"/>                               
+                                </Button>
+                                <span className="toolTip">{this.props.selectedTasks.length > 0 ? toolTip.createSchedule : toolTip.createScheduleDisabled}</span>
+                        </div>
+
+                        <div className="dropdown headerItem">
+                            <Button id="dropdown-basic-button" className="headerButton" onClick={this.showHideSchedule}> 
+                                    <span className="btnDisText"> {this.props.showSchedule ? "Hide Schedule" : "Show Schedule"} </span>
+                                    <br></br>
+                                    <img className="headerBtnImg" src="https://img.icons8.com/metro/26/ffffff/overtime.png"/>
+                                    <img className="headerBtnImg" src="https://img.icons8.com/material-sharp/24/ffffff/visible.png"/>                            </Button>
+                        </div>
+
+                        <div className="dropdown headerItem toolTipContainer">
                             <Button id="dropdown-basic-button" className="headerButton" onClick={this.closeDetails}> 
                                     <span className="btnDisText"> Close All </span>
-                                    <img className="icon" src="https://img.icons8.com/windows/32/000000/hide.png"/>                            
-                                </Button>
+                                    <img src="https://img.icons8.com/ios-glyphs/30/ffffff/invisible.png"/>                                </Button>
                                 <span className="toolTip">{toolTip.closeDetails}</span>
                         </div>
 

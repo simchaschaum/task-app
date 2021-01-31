@@ -228,6 +228,11 @@ input{
   grid-template-columns: 45% 45%;
   justify-content: center;
 }
+.headerBtnImg{
+  height: 26px;
+  width: 26px;
+  margin-right: 5px;
+}
 
 #dropdown-basic-button, .headerButton{
   width: 85%;
@@ -301,6 +306,8 @@ input{
 
 /* Tasks: */
 /* These are for both task titles in Tasks and input and button in Search */
+
+
 .inlineGroup{
   white-space: nowrap;
 }
@@ -388,6 +395,25 @@ input{
 }
 
 /* .taskcontainer is in App component, surrounds each instance of Task component */
+
+.taskContainer:hover #taskSelect{
+  display: block;
+}
+
+#taskSelect{
+  display: none;  
+  position: absolute;
+  z-index: 1000;
+  margin: 2px 2px;
+  transform: translateX(-15px);
+}
+#taskSelectNone{
+  display: none;
+}
+
+#taskSelect:checked{
+  background-color: var(--clr-gray);
+}
 
 .taskContainer{
   margin: 10px auto;
@@ -870,3 +896,75 @@ footer{
   width: 75%;
   margin: 0 auto;
 }
+
+/* Schedule Component */
+
+/* First 2 are in app.js: */
+#schedTaskContainerApp{  
+  border: var(--clr-gray) solid 1px;
+  border-radius: .25rem;
+  margin-top: 5px;
+}
+
+#backToSchedule{
+  margin-left: calc(50% - 134.25px/2);
+  margin-bottom: 5px;
+  border: var(--clr-gray) 1px solid;
+  border-radius: .25rem;
+  color: white;
+  background-color: var(--clr-gray);
+}
+
+.arrowImg{
+  width: 100%;
+  height: 100%;
+}
+.schedButton{
+  padding: 0;
+  width: 100%;
+  border: 0;
+  background: var(--clr-gray) !important
+}
+#schedOrderDiv{
+  display: block;
+  width: 50%;
+}
+.schedControl{
+  float: left;
+  margin-right: 5px;
+}
+#schedDone{
+  transform: scale(1.75) translateX(2px) translateY(2px)
+}
+#schedContainer{
+  display: block;
+  width: 10%;
+  float: left;
+}
+
+#showTask{
+  background-color: var(--clr-gray) !important;
+}
+
+#schedTime{
+  margin-right: 10px !important;
+}
+
+#schedTimeInput{
+  border: 0;
+  margin-left: 10px;
+  border-radius: .25rem;
+}
+
+#removeTime{
+  border: none;
+  background-color: var(--clr-gray);
+  color: white;
+  border-radius: .25rem;
+  height: 31px;
+  margin-left: 10px;
+}
+
+
+
+

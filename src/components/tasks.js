@@ -4,19 +4,31 @@ import { firebaseArrMaker } from '../utils/tools';
 import { dateFormatter, dateForCompareFormatter } from './dateFormat';
 
 var expanded = "Show Details"
+// var selected = false;
 
 class Tasks extends React.Component{
     constructor(props){
         super(props);
         this.state={
             expanded: false,
+            selected: false
             };
         this.expand = this.expand.bind(this);
         this.deleteTask = this.deleteTask.bind(this);
 };  
-// 
 
+    componentDidUpdate(prevProps){
+        if(this.props.clearTasks && !prevProps.clearTasks){
+            this.setState({selected: false})
+        }
+        if(!this.props.tasksDetailsExpanded && this.state.expanded){
+            this.setState({expanded:false})
+        }
+    }
 
+    clearSelected = () =>{
+        this.setState({selected: false})
+    }
 
     expand = () => {
           if(this.state.expanded===false){
@@ -56,7 +68,7 @@ class Tasks extends React.Component{
             tasksCollection.doc(this.props.taskID)
                 .delete()
                 .then(()=>{
-                    console.log(this.props.taskTitle + "  Deleted!");
+                    console.log(`${this.props.taskTitle} Deleted!`);
                     this.props.updateDisp();
                 })
                 .catch(error => console.log(error));
@@ -67,8 +79,19 @@ class Tasks extends React.Component{
         this.props.editTask();
     }
 
+    handleSelected = () => {
+        this.setState({selected: this.state.selected? false : true});
+        var id = this.props.taskID;
+        var title = this.props.taskTitle;
+        var details = this.props.taskDetails;
+        var star = this.props.taskStar;
+        var cat = this.props.taskCategory;
+        var date = this.props.dateDue;
+        this.props.selectTask(id,title,details,star,cat,date);
+    }
+
     render(){
- 
+
         const toolTips = {
             done: "Mark as done",
             undone: "Mark as not done",
@@ -78,6 +101,7 @@ class Tasks extends React.Component{
             star: "This task is important"
         }
 
+        // **
         var expanded = (!this.state.expanded || !this.props.tasksDetailsExpanded) ? <img className="icon" src="https://img.icons8.com/ios-glyphs/60/000000/show-property.png"/> 
             : <img className="icon" src="https://img.icons8.com/windows/32/000000/hide.png"/>;
         
@@ -100,12 +124,23 @@ class Tasks extends React.Component{
         const date = this.props.dateDue != "" ? dateFormatter(this.props.dateDue) : null;
         const dateColor = new Date(dateForCompareFormatter(this.props.dateDue)) < new Date() ? "red" : "black";
         
+        const selected = (!this.props.clearTasks && this.state.selected) ? true : false;
+
         return(
             <>
            <div className={taskSubcontainer} id={taskTitleAndButtonsCols}>
                        
                         <div className="titleDiv" id={titleCols}>
-  
+                            <input 
+                                checked={selected}
+                                className={this.props.showScheduleTask }
+                                type="checkbox"
+                                id={this.props.showScheduleTask ? "taskSelectNone" : "taskSelect"}
+                                name="taskSelect" 
+                                onChange={this.handleSelected}
+                                style={selected ? {display: "block"} : null}
+                                >
+                            </input>
                                 <div id="title">
                                     <h3 className={this.props.taskDone ? "taskTitle taskTitleDone" : "taskTitle"}> 
                                         {this.props.taskTitle} 
