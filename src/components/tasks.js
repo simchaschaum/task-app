@@ -133,8 +133,9 @@ class Tasks extends React.Component{
                         <div className="titleDiv" id={titleCols}>
                             <input 
                                 checked={selected}
+                                className={this.props.showScheduleTask }
                                 type="checkbox"
-                                id="taskSelect"
+                                id={this.props.showScheduleTask ? "taskSelectNone" : "taskSelect"}
                                 name="taskSelect" 
                                 onChange={this.handleSelected}
                                 style={selected ? {display: "block"} : null}

@@ -11,16 +11,15 @@ import Search from './components/search';
 import Login from './components/users/login';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LoginForm from './components/users/loginform';
+import Schedule from './components/schedule';
 
 var taskList = [];
-var selectedTasks = [];
 var categories = [];
 var settings, currentUser, loggedIn, userEmail, userID;
 
 class App extends React.Component {
   constructor(props){
     super(props);
-    this.tasks = React.createRef();
     this.state = {
       loggedIn: false,  
       userID: "",   // the user ID of whoever's logged in
@@ -49,7 +48,10 @@ class App extends React.Component {
       tasksDetailsExpanded: true, // when false closes all details in tasks 
       selectedTasks: [],  // array of tasks that were selected with a checkbox
       selectedTasksCleared: false, // when true, clears all selection 
-      schedules: []  // array of daily schedules 
+      schedule: [],  // array of daily schedules 
+      showSchedule: false,   // shows schedule maker in Schedule component
+      showScheduleTask: false, // shows only task that you chose from the schedule
+      scheduleTaskToShow: {}
     }
 
   }
@@ -86,7 +88,7 @@ checkUser = () => {
       } );
     } )
   } else {
-    console.log("I'm signed out!!")
+    console.log("You're signed out!!")
     this.setState({
       loggedIn: false,
       signInDisp: true,
@@ -100,6 +102,7 @@ checkUser = () => {
 loadUserSettings = () => {
   users.get()
     .then(response => {
+      var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
       var sc = firebaseArrMaker(response)[0].settings.showCategory ? firebaseArrMaker(response)[0].settings.showCategory : this.state.showCategory;
       var cc = firebaseArrMaker(response)[0].settings.currentCategory ? firebaseArrMaker(response)[0].settings.currentCategory : this.state.currentCategory;
       var pr = firebaseArrMaker(response)[0].settings.property ? firebaseArrMaker(response)[0].settings.property : this.state.property;
@@ -108,12 +111,18 @@ loadUserSettings = () => {
         showCategory: sc,
         currentCategory: cc,
         property: pr,
-        order: or
+        order: or,
+        schedule: user[0].settings.schedule
       }, ()=>{
+        console.log(this.state.schedule)
         this.getTasks()
       } )
     }).catch(error => console.log("error loading settings" + error.message) )
 } 
+
+reOrderTasks = () => {
+
+}
 
 getTasks(){
   tasksCollection
@@ -137,7 +146,6 @@ getTasks(){
     } 
   
     ).catch( error => console.log(error));
-  // }
 }
 
 checkAllDone(taskList){    // returns true if there is at least one task that isn't done yet
@@ -216,14 +224,19 @@ dateFirst = () => {
 
   updateUserSettings = () => {
     users.doc(this.state.userID).update({
+      email: this.state.userEmail,
+      id: this.state.userID,
       settings: {
         showCategory: this.state.showCategory,
         currentCategory: this.state.currentCategory,
         showDone: this.state.showDone,
         property: this.state.property,
-        order: this.state.order
+        order: this.state.order,
+        schedule: this.state.schedule
       }
     })
+    .then(console.log("done"))
+    .catch(error => console.log(error))
   }
 
   // toggles the display between boxes and rows
@@ -308,41 +321,76 @@ toggleSelected = (id,title,details,star,cat,date) => {
   if(this.state.selectedTasksCleared){
     this.setState({selectedTasksCleared: false})
   }
+  var selectedTasks = this.state.selectedTasks;
   var found = false;
   var index;
   selectedTasks.forEach(task => {
     if (task.id === id){
       index = selectedTasks.indexOf(task);
       found = true;
+      selectedTasks.splice(index,1);
     }
   });
-  if(found){
-    selectedTasks.splice(index,1);
-  } else {
+  if(!found) {
     selectedTasks.push({
       id:id,
       title:title,
       details:details,
       star:star,
-      cat:cat,
+      category:cat,
       date:date, 
+      done: false,
       time: "",
       order: ""
     });
   }
-  this.setState({selectedTasks:selectedTasks}, ()=>  console.log(selectedTasks));
+  this.setState({selectedTasks:selectedTasks}, ()=>  console.log(this.state.selectedTasks));
 }
 
 makeSchedule = () => {
-  // * - on header have button 'create schedule'.  Only have it active when state.selectedTasks is populated.
-  // * - Add state.selectedTasks to state.schedules; then empty selectedTasks;
-  // clear the selections on <tasks> -- have to change the state in each task; ALSO FOR EXPANDED TO FIX BUG!!
-  // map state.schedules here.  
-  // here, toggle which to show and which to display:none - tasks or schedules. (Have title "schedules" above schedules)
-  // on <Schedules>, give option to include time or order.  If order: dropdown?? or drag and drop list? 
-  selectedTasks = [];
-  this.setState({schedules: this.state.selectedTasks}, ()=>this.setState({selectedTasks: [], selectedTasksCleared: true}, ()=>console.log(this.state.selectedTasks)));
-  }
+  users.get().then(response => {
+    console.log("step 1");
+    var selectedTasks = this.state.selectedTasks;
+    var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
+    users.doc(user[0].id).update(
+      {
+        "settings.schedule": this.state.selectedTasks
+      }
+    )
+    .then(()=>{
+      console.log("step 2");
+      this.setState({
+        selectedTasks: [],
+        selectedTasksCleared: true,
+        showSchedule: true
+      })
+    }
+  )
+  .then(()=>{
+    console.log("step 3");
+    this.loadUserSettings();
+  })
+})
+}
+
+schedMove = (index, upDown) => {
+  var num = upDown === "up" ? index-1 : index+1;
+  var schedule = this.state.schedule;
+  var task = schedule.splice(index,1);
+  schedule.splice(num, 0, ...task);
+  this.setState({schedule: schedule}, ()=>console.log(this.state.schedule))
+}
+
+showHideSchedule = () => {
+  this.setState({showSchedule: this.state.showSchedule ? false : true})
+}
+
+showScheduleTask = (id) => {
+  var task = this.state.tasks.filter(task => task.id === id)
+  this.setState({scheduleTaskToShow: task}, ()=> {
+    this.setState({showScheduleTask: this.state.showScheduleTask ? false : true})
+  } )
+}
 
 render(){
   
@@ -366,13 +414,148 @@ render(){
       break;
   }
 
-  var loginMessage = this.state.loggedIn? "Hello, " + this.state.userEmail + "!" : null;
+  const loginMessage = this.state.loggedIn? "Hello, " + this.state.userEmail + "!" : null;
 
-  var tasksOfCategory = !this.state.showCategory ? this.state.tasks
+  // var tasks = this.state.showSchedule ? this.state.schedule : this.state.tasks; 
+
+  const tasksOfCategory = !this.state.showCategory ? this.state.tasks
       : this.state.tasks.filter(item => item.category === this.state.currentCategory);
 
-  var tasksDone = tasksOfCategory.filter(task => task.done === true);
-  var tasksNotDone = tasksOfCategory.filter(task => task.done === false);
+  const tasksDone = tasksOfCategory.filter(task => task.done === true);
+  const tasksNotDone = tasksOfCategory.filter(task => task.done === false);
+
+  const taskDisplay = 
+    <div className={cols}>
+            {tasksNotDone.length > 0 ? 
+              tasksNotDone.map((task)=> ( 
+                <div key={task.id} className="taskContainer">
+                   <Tasks 
+                      taskDisp={this.state.taskDisp}
+                      taskID={task.id} 
+                      taskCols={this.state.taskDisp === "boxes" ? "taskCols" : null}
+                      taskTitle={task.title} 
+                      taskDetails={task.details} 
+                      taskStar={task.star} 
+                      taskDone={task.done} 
+                      taskCategory={task.category}
+                      updateDisp={this.checkUser} 
+                      dateDue={task.date} 
+                      editTask={() => 
+                        this.editTask(task,task.id)
+                      } 
+                      toggleDone={() => {
+                        task.done = (task.done === true ? false : true)
+                      }} 
+                      tasksDetailsExpanded = {this.state.tasksDetailsExpanded}
+                      tasksDetailsToggle = {this.tasksDetailsToggle}
+                      selectTask={this.toggleSelected}
+                      selectedTasks={this.state.selectedTasks}
+                      clearTasks={this.state.selectedTasksCleared}
+                      />
+                  </div>
+              ))           
+              : 
+              <Notasks 
+                      noTasks={this.state.noTasks}
+                />}
+                <hr />
+              {tasksDone.map((task)=> ( 
+                  <div key={task.id} className="taskContainer">
+                    <Tasks 
+                      taskDisp={this.state.taskDisp}
+                      taskID={task.id} 
+                      taskCols={this.state.taskDisp === "boxes" ? "taskCols" : null}
+                      taskTitle={task.title} 
+                      taskDetails={task.details} 
+                      taskStar={task.star} 
+                      taskDone={task.done} 
+                      taskCategory={task.category}
+                      updateDisp={this.checkUser} 
+                      dateDue={task.date} 
+                      selectTask={()=>alert("yup")}
+                      editTask={() => 
+                        this.editTask(task,task.id)
+                      } 
+                      toggleDone={() => {
+                        task.done = (task.done === true ? false : true)
+                      }} 
+                      tasksDetailsExpanded = {this.state.tasksDetailsExpanded}
+                      tasksDetailsToggle = {this.tasksDetailsToggle}
+                      selectTask={this.toggleSelected}
+                      selectedTasks={this.state.selectedTasks}
+                      clearTasks={this.state.selectedTasksCleared}
+                      />
+                  </div>
+              ))
+              }
+    </div>
+  
+  const scheduleDisplay = 
+    this.state.showScheduleTask ? 
+      <div className={cols}>
+      {this.state.scheduleTaskToShow.map(task => 
+        (<div key={task.id} className="taskContainer">
+          <Tasks 
+            showScheduleTask={this.state.showScheduleTask}
+            taskDisp={this.state.taskDisp}
+            taskID={task.id} 
+            taskCols={this.state.taskDisp === "boxes" ? "taskCols" : null}
+            taskTitle={task.title} 
+            taskDetails={task.details} 
+            taskStar={task.star} 
+            taskDone={task.done} 
+            taskCategory={task.category}
+            updateDisp={this.checkUser} 
+            dateDue={task.date} 
+            selectTask={()=>alert("yup")}
+            editTask={() => 
+              this.editTask(task,task.id)
+            } 
+            toggleDone={() => {
+              task.done = (task.done === true ? false : true)
+            }} 
+            tasksDetailsExpanded = {this.state.tasksDetailsExpanded}
+            tasksDetailsToggle = {this.tasksDetailsToggle}
+            selectTask={this.toggleSelected}
+            selectedTasks={this.state.selectedTasks}
+            clearTasks={this.state.selectedTasksCleared}
+            />
+            <button id="backToSchedule" onClick={this.showScheduleTask}>Back to Schedule</button>
+      </div>
+    ))}
+      </div>
+    : 
+    <div className={cols}>
+    <h4>Today's Schedule:</h4>
+    {this.state.schedule.map(task => 
+      <div key={task.id} id="schedTaskContainerApp">
+        <Schedule 
+          schedule={this.state.schedule}
+          task={task}
+          title={task.title}
+          index={this.state.schedule.indexOf(task)}
+          schedMove={this.schedMove}
+          taskID={task.id}
+          taskDate={task.date}
+          taskCategory={task.category}
+          taskDetails={task.details}
+          taskStar={task.star}
+          taskDone={task.done}
+          taskTime={task.time}
+          tasksDetailsToggle={this.tasksDetailsToggle}
+          showSchedTask={this.showSchedTask}
+          userID={this.state.userID}
+          showScheduleTask={this.showScheduleTask}
+          loadUserSettings={this.loadUserSettings}
+        />
+      </div>
+    )}
+  
+  </div>
+  
+
+
+
 
   return (
     <>
@@ -422,6 +605,7 @@ render(){
         </div>
         : null
     }
+
    
       <div className="app">
       <div className="cover" id={background}>
@@ -459,6 +643,8 @@ render(){
             tasksDetailsToggle = {this.tasksDetailsToggle}
             makeSchedule={this.makeSchedule}
             selectedTasks={this.state.selectedTasks}
+            showSchedule={this.state.showSchedule}
+            showHideSchedule={this.showHideSchedule}
             />
         </div>
 
@@ -473,71 +659,8 @@ render(){
 
         {this.state.showSearch === false ? null : searchDisp}
 
-        <div className={cols}>
-            {tasksNotDone.length > 0 ? 
-              tasksNotDone.map((task)=> ( 
-                <div key={task.id} className="taskContainer">
-                    <Tasks 
-                      taskDisp={this.state.taskDisp}
-                      taskID={task.id} 
-                      taskCols={this.state.taskDisp === "boxes" ? "taskCols" : null}
-                      taskTitle={task.title} 
-                      taskDetails={task.details} 
-                      taskStar={task.star} 
-                      taskDone={task.done} 
-                      taskCategory={task.category}
-                      updateDisp={this.checkUser} 
-                      dateDue={task.date} 
-                      editTask={() => 
-                        this.editTask(task,task.id)
-                      } 
-                      toggleDone={() => {
-                        task.done = (task.done === true ? false : true)
-                      }} 
-                      tasksDetailsExpanded = {this.state.tasksDetailsExpanded}
-                      tasksDetailsToggle = {this.tasksDetailsToggle}
-                      selectTask={this.toggleSelected}
-                      selectedTasks={this.state.selectedTasks}
-                      clearTasks={this.state.selectedTasksCleared}
-                      />
-                  </div>
-              ))           
-              : 
-              <Notasks 
-                      noTasks={this.state.noTasks}
-                />}
-                <hr />  {/*format this!*/}
-              {tasksDone.map((task)=> ( 
-                  <div key={task.id} className="taskContainer">
-                    <Tasks 
-                      taskDisp={this.state.taskDisp}
-                      taskID={task.id} 
-                      taskCols={this.state.taskDisp === "boxes" ? "taskCols" : null}
-                      taskTitle={task.title} 
-                      taskDetails={task.details} 
-                      taskStar={task.star} 
-                      taskDone={task.done} 
-                      taskCategory={task.category}
-                      updateDisp={this.checkUser} 
-                      dateDue={task.date} 
-                      selectTask={()=>alert("yup")}
-                      editTask={() => 
-                        this.editTask(task,task.id)
-                      } 
-                      toggleDone={() => {
-                        task.done = (task.done === true ? false : true)
-                      }} 
-                      tasksDetailsExpanded = {this.state.tasksDetailsExpanded}
-                      tasksDetailsToggle = {this.tasksDetailsToggle}
-                      selectTask={this.toggleSelected}
-                      selectedTasks={this.state.selectedTasks}
-                      clearTasks={this.state.selectedTasksCleared}
-                      />
-                  </div>
-              ))
-              }
-        </div>
-
+        {this.state.showSchedule ? scheduleDisplay : taskDisplay}
+        
         </div>
       </div>
     </>
