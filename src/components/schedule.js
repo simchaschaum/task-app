@@ -40,12 +40,10 @@ class Schedule extends React.Component{
     schedDone = () => { 
         var schedule = this.props.schedule;
         var index = this.props.index;
-        var bool = this.state.done ? false : true;
+        var bool = this.props.taskDone ? false : true;
         schedule[index].done = bool;
-        this.setState({done: bool},()=>{
-            this.schedUpdate(schedule)
-        });
-    }   
+        this.schedUpdate(schedule);
+        }   
 
     removeTask = () => {
         var schedule = this.props.schedule;
@@ -86,7 +84,7 @@ class Schedule extends React.Component{
                         </button>
                     </div>
                     <div id="schedDoneDiv" className="schedControl">
-                        <input type="checkbox" value={this.state.done} id="schedDone" onChange={this.schedDone}></input>
+                        <input type="checkbox" value={this.state.done} id="schedDone" onChange={this.schedDone} checked={this.props.taskDone ? true : false}></input>
                     </div>
                 </div>
                 <div id="title">

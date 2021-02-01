@@ -414,6 +414,7 @@ input{
 
 .taskContainer:hover #taskSelect{
   display: block;
+  transform: scale(1.75) translateX(-12px)
 }
 
 #taskSelect{

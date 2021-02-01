@@ -371,7 +371,6 @@ addToSchedule = () => {
 makeSchedule = () => {
   users.get().then(response => {
     console.log("step 1");
-    console.log(this.state.selectedTasks);
     var selectedTasks = this.state.selectedTasks;
     var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
     users.doc(user[0].id).update(
@@ -404,7 +403,10 @@ schedMove = (index, upDown) => {
 }
 
 showHideSchedule = () => {
-  this.setState({showSchedule: this.state.showSchedule ? false : true})
+  this.setState({
+    showSchedule: this.state.showSchedule ? false : true,
+    selectedTasks: []
+  });
 }
 
 showScheduleTask = (id) => {
