@@ -430,6 +430,7 @@ input{
 
 #taskSelect:checked{
   background-color: var(--clr-gray);
+  transform: scale(1.75) translateX(-12px)
 }
 
 .taskContainer{
