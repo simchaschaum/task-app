@@ -440,8 +440,6 @@ render(){
 
   const loginMessage = this.state.loggedIn? "Hello, " + this.state.userEmail + "!" : null;
 
-  // var tasks = this.state.showSchedule ? this.state.schedule : this.state.tasks; 
-
   const tasksOfCategory = !this.state.showCategory ? this.state.tasks
       : this.state.tasks.filter(item => item.category === this.state.currentCategory);
 
@@ -532,11 +530,17 @@ render(){
               ))
               }
     </div>
-  
+
+  const noScheduleTasks = 
+  <div>
+    <h6 id="noSchedleTasks">There are no tasks in your schedule.</h6>
+    <p>Go to task view to create a schedule.</p>
+  </div>
+
   const scheduleDisplay = 
     this.state.showScheduleTask ? 
       <div className={cols}>
-      {this.state.scheduleTaskToShow.map(task => 
+       {this.state.scheduleTaskToShow.map(task => 
         (<div key={task.id} className="taskContainer">
           <Tasks 
             showScheduleTask={this.state.showScheduleTask}
@@ -570,7 +574,8 @@ render(){
     : 
     <div className={cols}>
     <h4>Today's Schedule:</h4>
-    {this.state.schedule.map(task => 
+    {this.state.schedule.length > 0 ? 
+      this.state.schedule.map(task => 
       <div key={task.id} id="schedTaskContainerApp">
         <Schedule 
           schedule={this.state.schedule}
@@ -592,7 +597,9 @@ render(){
           loadUserSettings={this.loadUserSettings}
         />
       </div>
-    )}
+    )
+      : noScheduleTasks
+    }
   
   </div>
   

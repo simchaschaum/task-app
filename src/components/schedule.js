@@ -119,10 +119,9 @@ export default Schedule;
     // * - toggle which to show and which to display:none - tasks or schedules. (Have title "schedules" above schedules)
     // * - Check timing - why doesn't updating the schedule work? 
     // * - on <Schedules>, give option to include time or order.  If order: dropdown?? or drag and drop list? 
-    // on Schedules - give option to remove from list 
+    // * - on Schedules - give option to remove from list 
     // * - on app.js - view mode of that task only in "task mode" (i.e. to edit, etc.) - style button!
-    //  add to schedule 
+    // * - add to schedule 
     // * - check off - save if it's checked 
     // include message if all is done (or animation??) 
-    // On top - clear list button
     // save showschedule/show tasks view 
