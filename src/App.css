@@ -198,7 +198,6 @@ h2{
   }
 }
 
-
 .newTaskBtn{
   min-width: 6em;
   padding-right: 0;
@@ -307,6 +306,23 @@ input{
 /* Tasks: */
 /* These are for both task titles in Tasks and input and button in Search */
 
+#schedBtnDiv{
+  height: 48px;
+  margin: 0 auto;
+  width: 90%;
+}
+
+#schedBtnInnerDiv{
+  display: flex !important;
+  justify-content: space-between !important;
+}
+
+.schedBtn{
+  height: 42px !important;
+  font-size: 1rem !important;
+  width: 47.5% !important;
+  padding: 5px 5px !important;
+}
 
 .inlineGroup{
   white-space: nowrap;
@@ -398,6 +414,7 @@ input{
 
 .taskContainer:hover #taskSelect{
   display: block;
+  transform: scale(1.75) translateX(-12px)
 }
 
 #taskSelect{
@@ -413,6 +430,7 @@ input{
 
 #taskSelect:checked{
   background-color: var(--clr-gray);
+  transform: scale(1.75) translateX(-12px)
 }
 
 .taskContainer{
@@ -944,6 +962,7 @@ footer{
 
 #showTask{
   background-color: var(--clr-gray) !important;
+  margin-right: 10px;
 }
 
 #schedTime{

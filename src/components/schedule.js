@@ -40,20 +40,24 @@ class Schedule extends React.Component{
     schedDone = () => { 
         var schedule = this.props.schedule;
         var index = this.props.index;
-        var bool = this.state.done ? false : true;
+        var bool = this.props.taskDone ? false : true;
         schedule[index].done = bool;
-        this.setState({done: bool},()=>{
-            this.schedUpdate(schedule)
-        })
-    }   
+        this.schedUpdate(schedule);
+        }   
+
+    removeTask = () => {
+        var schedule = this.props.schedule;
+        var newSched = schedule.filter(task => task !== this.props.task);
+        this.schedUpdate(newSched);
+    }
 
     schedUpdate = (schedule) => {
         users.doc(this.props.userID).update({
             "settings.schedule": schedule
         })
-        .then(()=>this.props.loadUserSettings())
+        .then(()=>this.props.loadUserSettings());
     }
-    
+   
     render(){
                 
         return(
@@ -80,7 +84,7 @@ class Schedule extends React.Component{
                         </button>
                     </div>
                     <div id="schedDoneDiv" className="schedControl">
-                        <input type="checkbox" value={this.state.done} id="schedDone" onChange={this.schedDone}></input>
+                        <input type="checkbox" value={this.state.done} id="schedDone" onChange={this.schedDone} checked={this.props.taskDone ? true : false}></input>
                     </div>
                 </div>
                 <div id="title">
@@ -99,7 +103,7 @@ class Schedule extends React.Component{
                     </div>
                 </div>
                 <button class="btn btn-secondary btn-sm" id="showTask" onClick={()=>this.props.showScheduleTask(this.props.taskID)}>Show Task</button>
-
+                <button class="btn btn-secondary btn-sm" id="removeTask" onClick={this.removeTask}>Remove Task</button>
             </div>
         )
     }
@@ -120,3 +124,5 @@ export default Schedule;
     //  add to schedule 
     // * - check off - save if it's checked 
     // include message if all is done (or animation??) 
+    // On top - clear list button
+    // save showschedule/show tasks view 
