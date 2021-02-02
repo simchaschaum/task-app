@@ -11,7 +11,7 @@ import Search from './components/search';
 import Login from './components/users/login';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import LoginForm from './components/users/loginform';
-import Schedule from './components/schedule';
+import Schedule, { ScheduleDone } from './components/schedule';
 import Button from 'react-bootstrap/Button';
 
 
@@ -61,7 +61,7 @@ class App extends React.Component {
 componentDidMount(){
   firebase.auth().onAuthStateChanged( user => {
     if (user) {
-      console.log("Just checked - you're logged in!")
+      console.log("logged in!")
       console.log(user)
       userEmail = user.email;
       userID = user.uid;
@@ -119,7 +119,6 @@ loadUserSettings = () => {
             schedule: user[0].settings.schedule,
             showSchedule: ss
           }, ()=>{
-            console.log(this.state.schedule)
             this.getTasks()
           } )
         } else {
@@ -376,7 +375,6 @@ addToSchedule = () => {
 
 makeSchedule = () => {
   users.get().then(response => {
-    console.log("step 1");
     var selectedTasks = this.state.selectedTasks;
     var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
     users.doc(user[0].id).update(
@@ -385,7 +383,6 @@ makeSchedule = () => {
       }
     )
     .then(()=>{
-      console.log("step 2");
       this.setState({
         selectedTasks: [],
         selectedTasksCleared: true,
@@ -394,7 +391,6 @@ makeSchedule = () => {
     }
   )
   .then(()=>{
-    console.log("step 3");
     this.loadUserSettings();
   })
 })
@@ -405,7 +401,9 @@ schedMove = (index, upDown) => {
   var schedule = this.state.schedule;
   var task = schedule.splice(index,1);
   schedule.splice(num, 0, ...task);
-  this.setState({schedule: schedule}, ()=>console.log(this.state.schedule))
+  this.setState({selectedTasks: schedule}, ()=>{
+    this.makeSchedule();
+  })
 }
 
 showHideSchedule = () => {
@@ -424,6 +422,7 @@ showHideSchedule = () => {
   })
 }
 
+// When "show task" is clicked on a task when in schedule mode
 showScheduleTask = (id) => {
   var task = this.state.tasks.filter(task => task.id === id)
   this.setState({scheduleTaskToShow: task}, ()=> {
@@ -546,13 +545,27 @@ render(){
               }
     </div>
 
+// Displays when the schedule isn't populated with any tasks 
   const noScheduleTasks = 
   <div>
     <h6 id="noSchedleTasks">There are no tasks in your schedule.</h6>
     <p>Go to task view to create a schedule.</p>
   </div>
 
+// returns true if all the tasks on the schedule are marked 'done'
+  const scheduleAllDone = () => {
+    var done = true;
+    this.state.schedule.forEach(task => {
+      if(task.done==false){
+        done = false;
+      }
+    })
+    return done;
+  } 
+
+  // The schedule of tasks - what will display if the schedule view is chosen 
   const scheduleDisplay = 
+  // state.showScheduleTask:true - shows you the task view of any task from the schedule you choose.  You can then see details, modify, etc.
     this.state.showScheduleTask ? 
       <div className={cols}>
        {this.state.scheduleTaskToShow.map(task => 
@@ -587,9 +600,10 @@ render(){
     ))}
       </div>
     : 
+    // The standard schedule view: 
     <div className={cols}>
-    <h4>Today's Schedule:</h4>
-    {this.state.schedule.length > 0 ? 
+    {scheduleAllDone() ? <ScheduleDone /> : <h4>Today's Schedule:</h4>}
+      {this.state.schedule.length > 0 ? 
       this.state.schedule.map(task => 
       <div key={task.id} id="schedTaskContainerApp">
         <Schedule 
@@ -732,23 +746,3 @@ render(){
 
 
 export default App;
-
-
-// listener for changes 
-
-// firebase.auth().onAuthStateChanged( user => {
-//   if (user) {
-//     console.log("user signed in: " + user.email);
-//     console.log("user signed in: " + user.uid);
-//     console.log(user)
-//     userEmail = user.email;
-//     loggedIn = true;
-//   } else {
-//     console.log("no user");
-//     loggedIn = false;
-//   }
-// })
-
-// firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
-//   .then(()=>console.log("persistence"))
-//   .catch(error => console.log(error));

@@ -984,6 +984,12 @@ footer{
   margin-left: 10px;
 }
 
+#scheduleDoneDiv{
+  margin: 0 auto;
+}
 
+.scheduleDone{
+  display: inline-block;
+}
 
 

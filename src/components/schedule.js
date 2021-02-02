@@ -64,18 +64,6 @@ class Schedule extends React.Component{
             <div id="schedTaskContainer">
                 <div id="schedContainer">
 
-                    {/* <div id="schedTimeDiv" className="schedControl">
-                    <Dropdown className="schedControl schedButton">
-                        <Dropdown.Toggle variant="secondary">
-                            Set Time
-                        </Dropdown.Toggle>
-
-                        <Dropdown.Menu>
-                            <input type="time"></input>
-                        </Dropdown.Menu>
-                    </Dropdown> 
-                    </div>  */}
-
                     <div id="schedOrderDiv" className="schedControl">
                         <button id="schedUp" className="schedButton" onClick={()=>this.schedMove("up")}>
                             <img src="https://img.icons8.com/ultraviolet/40/000000/sort-up.png" className="arrowImg"/>                    </button>
@@ -110,6 +98,16 @@ class Schedule extends React.Component{
 }
 export default Schedule;
 
+export const ScheduleDone = () => {
+    return(
+        <div id="scheduleDoneDiv">
+            <img className="scheduleDone" src="https://img.icons8.com/wired/40/000000/confetti.png"/>
+            <h4 className="scheduleDone">You did everything on your schedule!</h4>
+            <img className="scheduleDone" src="https://img.icons8.com/wired/40/000000/confetti.png"/>
+        </div>)
+}
+
+
  // * - on header have button 'create schedule'.  Only have it active when state.selectedTasks is populated.
     // * - Add state.selectedTasks to state.schedules; then empty selectedTasks;
     // * - clear the selections on <tasks> -- have to change the state in each task; ALSO FOR EXPANDED TO FIX BUG!!
@@ -123,8 +121,8 @@ export default Schedule;
     // * - on app.js - view mode of that task only in "task mode" (i.e. to edit, etc.) - style button!
     // * - add to schedule 
     // * - check off - save if it's checked 
-    // include message if all is done (or animation??) 
+    // * - include message if all is done (or animation??) 
     // * - save showschedule/show tasks view 
     // save order when switching order of tasks 
-    // load settings - figure out what's wrong
+    // * - load settings - figure out what's wrong
     // after editing in schedule mode - update task 
