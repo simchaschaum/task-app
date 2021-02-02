@@ -124,4 +124,7 @@ export default Schedule;
     // * - add to schedule 
     // * - check off - save if it's checked 
     // include message if all is done (or animation??) 
-    // save showschedule/show tasks view 
+    // * - save showschedule/show tasks view 
+    // save order when switching order of tasks 
+    // load settings - figure out what's wrong
+    // after editing in schedule mode - update task 

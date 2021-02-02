@@ -105,21 +105,27 @@ loadUserSettings = () => {
   users.get()
     .then(response => {
       var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
-      var sc = firebaseArrMaker(response)[0].settings.showCategory ? firebaseArrMaker(response)[0].settings.showCategory : this.state.showCategory;
-      var cc = firebaseArrMaker(response)[0].settings.currentCategory ? firebaseArrMaker(response)[0].settings.currentCategory : this.state.currentCategory;
-      var pr = firebaseArrMaker(response)[0].settings.property ? firebaseArrMaker(response)[0].settings.property : this.state.property;
-      var or = firebaseArrMaker(response)[0].settings.order ? firebaseArrMaker(response)[0].settings.order : this.state.order;
-      this.setState({
-        showCategory: sc,
-        currentCategory: cc,
-        property: pr,
-        order: or,
-        schedule: user[0].settings.schedule
-      }, ()=>{
-        console.log(this.state.schedule)
-        this.getTasks()
-      } )
-    }).catch(error => console.log("error loading settings" + error.message) )
+      if(user[0].settings){
+          var sc = user[0].settings.showCategory ? user[0].settings.showCategory : this.state.showCategory;
+          var cc = user[0].settings.currentCategory ? user[0].settings.currentCategory : this.state.currentCategory;
+          var pr = user[0].settings.property ? user[0].settings.property : this.state.property;
+          var or = user[0].settings.order ? user[0].settings.order : this.state.order;
+          var ss = user[0].settings.showSchedule? user[0].settings.showSchedule : this.state.showSchedule;
+          this.setState({
+            showCategory: sc,
+            currentCategory: cc,
+            property: pr,
+            order: or,
+            schedule: user[0].settings.schedule,
+            showSchedule: ss
+          }, ()=>{
+            console.log(this.state.schedule)
+            this.getTasks()
+          } )
+        } else {
+          this.getTasks();
+        }
+      }).catch(error => console.log("error loading settings" + error.message) )
 } 
 
 reOrderTasks = () => {
@@ -403,10 +409,19 @@ schedMove = (index, upDown) => {
 }
 
 showHideSchedule = () => {
+  var bool = this.state.showSchedule ? false : true;
   this.setState({
-    showSchedule: this.state.showSchedule ? false : true,
+    showSchedule: bool,
     selectedTasks: []
   });
+  users.get().then(response => {
+    var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
+    users.doc(user[0].id).update(
+      {
+        "settings.showSchedule": bool
+      }
+    )
+  })
 }
 
 showScheduleTask = (id) => {
