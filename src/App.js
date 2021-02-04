@@ -59,6 +59,7 @@ class App extends React.Component {
 
   }
 
+// Step 1: listens for signin state change, sets some variables -> checkUser function
 componentDidMount(){
   firebase.auth().onAuthStateChanged( user => {
     if (user) {
@@ -67,11 +68,13 @@ componentDidMount(){
       userEmail = user.email;
       userID = user.uid;
     }
-  this.checkUser();
-})
+    this.checkUser();
+  })
 };
 
-// checkUser checks the current user AND toggles the sign in form!
+// Step 2: checkUser checks the current user; 
+// No user -> opens signin form
+// User -> set persistence, sets states: userEmail, userID, logged in; then sets display; then --> loadusersettings function
 checkUser = () => {
   categories.length = 0;
   currentUser = firebase.auth().currentUser;
@@ -87,7 +90,6 @@ checkUser = () => {
         signInDisp: false
       }, ()=>{
         this.loadUserSettings();
-        // this.getTasks();
       } );
     } )
   } else {
@@ -102,6 +104,7 @@ checkUser = () => {
   }
 }
 
+// Step 3: loads user settings from database, including display settings; also loads current schedule. Sets states.
 loadUserSettings = () => {
   console.log("loadusersettings"); 
   users.get()
@@ -113,16 +116,16 @@ loadUserSettings = () => {
           var pr = user[0].settings.property ? user[0].settings.property : this.state.property;
           var or = user[0].settings.order ? user[0].settings.order : this.state.order;
           var ss = user[0].settings.showSchedule? user[0].settings.showSchedule : this.state.showSchedule;
+          var sc = user[0].settings.schedule ? user[0].settings.schedule : [];
           this.setState({
             showCategory: sc,
             currentCategory: cc,
             property: pr,
             order: or,
-            schedule: user[0].settings.schedule,
-            showSchedule: ss
-          }, ()=>{
+            showSchedule: ss,
+            schedule: sc,
+            }, ()=>{
             console.log(this.state.schedule);
-// **
             this.getTasks()
           } )
         } else {
@@ -131,7 +134,7 @@ loadUserSettings = () => {
       }).catch(error => console.log("error loading settings" + error.message) )
     } 
 
-
+// Step 4: gets tasks from database, sets them in state.tasks.  If state.showschedueltask is true
 getTasks(){
   tasksCollection
     .where("userID","==",this.state.userID)
@@ -139,7 +142,6 @@ getTasks(){
     .get()
     .then( snapshot => {
       taskList = firebaseArrMaker(snapshot);
-      console.log(taskList);
       if(this.state.property === "date"){
         this.dateFirst(taskList);
       }
@@ -149,6 +151,7 @@ getTasks(){
           : this.checkAllDone(taskList) ? "loading" 
             : "allDone"
       }, ()=> {
+        console.log(this.state.tasks);
         this.getCategories(this.state.tasks);
       } );
     })
@@ -498,6 +501,7 @@ render(){
   const taskDisplay = 
     <div className={cols}>
       <div id="schedBtnDiv">
+        {/* To display if a task is selected: */}
       {this.state.selectedTasks.length > 0 ? 
        <div id="schedBtnInnerDiv">
           {/* Create Schedule Button */}
@@ -587,12 +591,18 @@ render(){
 
 // returns true if all the tasks on the schedule are marked 'done'
   const scheduleAllDone = () => {
-    var done = true;
-    this.state.schedule.forEach(task => {
-      if(task.done==false){
-        done = false;
-      }
-    })
+    var done = false;
+    var schedule = this.state.schedule;
+    if(schedule.length > 0){
+      done = true;
+      this.state.schedule.forEach(task => {
+        if(task.done==false){
+          done = false;
+        }
+      })
+    }
+    console.log("done");
+    console.log(done)
     return done;
   } 
 
@@ -602,7 +612,7 @@ render(){
   const scheduleDisplay = 
   // state.showScheduleTask:true - shows you the task view of any task from the schedule you choose.  You can then see details, modify, etc.
     this.state.showScheduleTask ? 
-         <div className={cols}>
+      <div className={cols}>
        {this.state.scheduleTaskToShow.length !== 1 ? backToSchedule : 
        this.state.scheduleTaskToShow.map(task => 
         (<div key={task.id} className="taskContainer">
