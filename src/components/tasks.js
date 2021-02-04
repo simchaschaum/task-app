@@ -70,10 +70,10 @@ class Tasks extends React.Component{
                 .then(()=>{
                     console.log(`${this.props.taskTitle} Deleted!`);
                     this.props.updateDisp();
+                    this.props.updateSchedule(this.props.tasks);
                 })
                 .catch(error => console.log(error));
         };
-        this.props.updateSchedule(this.props.taskID, "delete");
     }
 
     editTask = () => {

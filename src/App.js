@@ -106,7 +106,7 @@ checkUser = () => {
 
 // Step 3: loads user settings from database, including display settings; also loads current schedule. Sets states.
 loadUserSettings = () => {
-  console.log("loadusersettings"); 
+  console.log("loading user settings..."); 
   users.get()
     .then(response => {
       var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
@@ -154,15 +154,54 @@ getTasks(){
       }, ()=> {
         console.log(this.state.tasks);
         this.getCategories(this.state.tasks);
+        this.updateSchedule(this.state.tasks);
       } );
     })
     .then(()=>{
       if(this.state.showScheduleTask){
         var task = this.state.tasks.filter(task => task.id === this.state.scheduleTaskToShowId);
         this.setState({scheduleTaskToShow: task},()=>console.log(this.state.scheduleTaskToShow))
-      }
+      };
+      console.log(this.state.schedule)
+
     })
     .catch( error => console.log(error));
+}
+
+updateSchedule = (tasks) => {
+  var sched = this.state.schedule;
+  var newSched = [];
+  sched.forEach(schedTask => {
+    tasks.forEach(task => {
+      if(schedTask.id===task.id){
+        newSched.push(task)
+       }
+    }
+    )
+    } 
+  )  
+  this.setState({selectedTasks: newSched}, ()=>{
+    users.get().then(response => {
+      var selectedTasks = this.state.selectedTasks;
+      var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
+      users.doc(user[0].id).update(
+        {
+          "settings.schedule": newSched,
+          "settings.showSchedule": true
+        }
+      )
+      .then(()=>{
+        this.setState({
+          schedule: newSched,
+          selectedTasks: [],
+          selectedTasksCleared: true,
+        });
+
+      }
+    )
+  })
+})
+  
 }
 
 checkAllDone(taskList){    // returns true if there is at least one task that isn't done yet
@@ -202,8 +241,8 @@ dateFirst = () => {
         taskList = firebaseArrMaker(snapshot);
         this.setState({
           tasks: taskList, showDone: false
-      }, ()=> console.log(this.state.tasks));
-      }
+         });
+       }
     ).catch( error => console.log(error));
   }
 
@@ -256,6 +295,8 @@ dateFirst = () => {
     })
     .catch(error => console.log(error))
   }
+
+
 
   // toggles the display between boxes and rows
   toggleDisplay = (e) => {
@@ -363,27 +404,6 @@ toggleSelected = (id,title,details,star,cat,date) => {
     });
   }
   this.setState({selectedTasks:selectedTasks}, ()=>  console.log(this.state.selectedTasks));
-}
-
-// if a task gets deleted, update schedule too (everything else gets updated with gettasks)
-updateSchedule = (id, action) => {
-  this.getTasks();
-  var schedule = this.state.schedule;
-  var newSchedule = [];
-  this.state.tasks.forEach(task => {
-    if(action=== "delete"){
-      if(task.id !== id){
-        newSchedule.push(task);
-      }
-    } else {
-        newSchedule.push(task);
-    };
-  })
-  console.log("newschedule:")
-  console.log(newSchedule)
-  this.setState({selectedTasks: newSchedule}, ()=> {
-    this.makeSchedule()
-  })
 }
 
 addToSchedule = () => {
@@ -524,6 +544,8 @@ render(){
               tasksNotDone.map((task)=> ( 
                 <div key={task.id} className="taskContainer">
                    <Tasks 
+                      tasks={this.state.tasks}
+                      updateSchedule={this.updateSchedule}
                       taskDisp={this.state.taskDisp}
                       taskID={task.id} 
                       taskCols={this.state.taskDisp === "boxes" ? "taskCols" : null}
@@ -556,6 +578,8 @@ render(){
               {tasksDone.map((task)=> ( 
                   <div key={task.id} className="taskContainer">
                     <Tasks 
+                      tasks={this.state.tasks}
+                      updateSchedule={this.updateSchedule}
                       taskDisp={this.state.taskDisp}
                       taskID={task.id} 
                       taskCols={this.state.taskDisp === "boxes" ? "taskCols" : null}
@@ -617,6 +641,8 @@ render(){
        this.state.scheduleTaskToShow.map(task => 
         (<div key={task.id} className="taskContainer">
           <Tasks 
+            tasks={this.state.tasks}
+            updateSchedule={this.updateSchedule}
             userID={this.state.userID}
             taskDisp={this.state.taskDisp}
             taskID={task.id} 
@@ -645,7 +671,6 @@ render(){
             scheduleTaskToShow={this.state.scheduleTaskToShowId}
             loadUserSettings={this.loadUserSettings}
             reloadSchedule={this.reloadSchedule}
-            updateSchedule={this.updateSchedule}
             />
             <button id="backToSchedule" onClick={this.showScheduleTask}>Back to Schedule</button>
       </div>
@@ -721,6 +746,7 @@ render(){
              userID={this.state.userID}
             categories={this.state.categories}
             updateSchedule={this.updateSchedule}
+            loadUserSettings={this.loadUserSettings}
             />
       </div>
 
