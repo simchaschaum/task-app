@@ -110,7 +110,7 @@ loadUserSettings = () => {
   users.get()
     .then(response => {
       var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
-      if(typeof user[0].settings !== undefined){
+      if(typeof user[0].settings != "undefined"){
         var settings = user[0].settings;
           // var sc = settings.hasOwnProperty("showCategory") ? settings.showCategory : this.state.showCategory;
           var cc = settings.hasOwnProperty("currentCategory") ? settings.currentCategory : this.state.currentCategory;
@@ -119,6 +119,7 @@ loadUserSettings = () => {
           var ss = settings.hasOwnProperty("showSchedule")? settings.showSchedule : this.state.showSchedule;
           var sc = settings.hasOwnProperty("schedule") ? settings.schedule : [];
           this.setState({
+            // I have no idea why this has to be like this and doesn't work with the variable above:
             showCategory: settings.hasOwnProperty("showCategory") ? settings.showCategory : this.state.showCategory,
             currentCategory: cc,
             property: pr,
