@@ -110,22 +110,22 @@ loadUserSettings = () => {
   users.get()
     .then(response => {
       var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
-      if(user[0].settings){
-          var sc = user[0].settings.showCategory ? user[0].settings.showCategory : this.state.showCategory;
-          var cc = user[0].settings.currentCategory ? user[0].settings.currentCategory : this.state.currentCategory;
-          var pr = user[0].settings.property ? user[0].settings.property : this.state.property;
-          var or = user[0].settings.order ? user[0].settings.order : this.state.order;
-          var ss = user[0].settings.showSchedule? user[0].settings.showSchedule : this.state.showSchedule;
-          var sc = user[0].settings.schedule ? user[0].settings.schedule : [];
+      if(typeof user[0].settings !== undefined){
+        var settings = user[0].settings;
+          // var sc = settings.hasOwnProperty("showCategory") ? settings.showCategory : this.state.showCategory;
+          var cc = settings.hasOwnProperty("currentCategory") ? settings.currentCategory : this.state.currentCategory;
+          var pr = settings.hasOwnProperty("property") ? settings.property : this.state.property;
+          var or = settings.hasOwnProperty("order") ? settings.order : this.state.order;
+          var ss = settings.hasOwnProperty("showSchedule")? settings.showSchedule : this.state.showSchedule;
+          var sc = settings.hasOwnProperty("schedule") ? settings.schedule : [];
           this.setState({
-            showCategory: sc,
+            showCategory: settings.hasOwnProperty("showCategory") ? settings.showCategory : this.state.showCategory,
             currentCategory: cc,
             property: pr,
             order: or,
             showSchedule: ss,
             schedule: sc,
             }, ()=>{
-            console.log(this.state.schedule);
             this.getTasks()
           } )
         } else {
@@ -227,12 +227,12 @@ dateFirst = () => {
   showCategory = (cat) => {
     if(cat === "all"){
       this.setState({showCategory: false}, ()=>{
-        this.getTasks();
+        // this.getTasks();
         this.updateUserSettings();
       } )
     } else {
       this.setState({showCategory: true, currentCategory: cat},()=>{
-        this.getTasks();
+        // this.getTasks();
         this.updateUserSettings();
       } )
     }
@@ -240,18 +240,19 @@ dateFirst = () => {
 
   updateUserSettings = () => {
     users.doc(this.state.userID).update({
-      email: this.state.userEmail,
-      id: this.state.userID,
-      settings: {
-        showCategory: this.state.showCategory,
-        currentCategory: this.state.currentCategory,
-        showDone: this.state.showDone,
-        property: this.state.property,
-        order: this.state.order,
-        schedule: this.state.schedule
-      }
+      "email": this.state.userEmail,
+      "id": this.state.userID,
+      "settings.showCategory" : this.state.showCategory,
+      "settings.currentCategory" : this.state.currentCategory,
+      "settings.showDone" : this.state.showDone,
+      "settings.property": this.state.property,
+      "settings.order" : this.state.order,
+      "settings.schedule" : this.state.schedule,
+      "settings.showSchedule" : this.state.showSchedule
     })
-    .then(console.log("done"))
+    .then((response)=>{
+      console.log("settings updated");
+    })
     .catch(error => console.log(error))
   }
 
@@ -409,14 +410,14 @@ makeSchedule = () => {
     var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
     users.doc(user[0].id).update(
       {
-        "settings.schedule": this.state.selectedTasks
+        "settings.schedule": this.state.selectedTasks,
+        "settings.showSchedule": true
       }
     )
     .then(()=>{
       this.setState({
         selectedTasks: [],
         selectedTasksCleared: true,
-        showSchedule: true
       })
     }
   )
@@ -601,8 +602,6 @@ render(){
         }
       })
     }
-    console.log("done");
-    console.log(done)
     return done;
   } 
 
