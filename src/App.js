@@ -53,7 +53,8 @@ class App extends React.Component {
       schedule: [],  // array of daily schedule
       showSchedule: false,   // shows schedule maker in Schedule component
       showScheduleTask: false, // shows only task that you chose from the schedule
-      scheduleTaskToShow: {}
+      scheduleTaskToShow: [], // when in schedule mode, you click "show task", this is the task you see
+      scheduleTaskToShowId: 0  // the task ID of the task you see 
     }
 
   }
@@ -102,6 +103,7 @@ checkUser = () => {
 }
 
 loadUserSettings = () => {
+  console.log("loadusersettings"); 
   users.get()
     .then(response => {
       var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
@@ -119,17 +121,16 @@ loadUserSettings = () => {
             schedule: user[0].settings.schedule,
             showSchedule: ss
           }, ()=>{
+            console.log(this.state.schedule);
+// **
             this.getTasks()
           } )
         } else {
           this.getTasks();
         }
       }).catch(error => console.log("error loading settings" + error.message) )
-} 
+    } 
 
-reOrderTasks = () => {
-
-}
 
 getTasks(){
   tasksCollection
@@ -150,9 +151,14 @@ getTasks(){
       }, ()=> {
         this.getCategories(this.state.tasks);
       } );
-    } 
-  
-    ).catch( error => console.log(error));
+    })
+    .then(()=>{
+      if(this.state.showScheduleTask){
+        var task = this.state.tasks.filter(task => task.id === this.state.scheduleTaskToShowId);
+        this.setState({scheduleTaskToShow: task},()=>console.log(this.state.scheduleTaskToShow))
+      }
+    })
+    .catch( error => console.log(error));
 }
 
 checkAllDone(taskList){    // returns true if there is at least one task that isn't done yet
@@ -354,6 +360,27 @@ toggleSelected = (id,title,details,star,cat,date) => {
   this.setState({selectedTasks:selectedTasks}, ()=>  console.log(this.state.selectedTasks));
 }
 
+// if a task gets deleted, update schedule too (everything else gets updated with gettasks)
+updateSchedule = (id, action) => {
+  this.getTasks();
+  var schedule = this.state.schedule;
+  var newSchedule = [];
+  this.state.tasks.forEach(task => {
+    if(action=== "delete"){
+      if(task.id !== id){
+        newSchedule.push(task);
+      }
+    } else {
+        newSchedule.push(task);
+    };
+  })
+  console.log("newschedule:")
+  console.log(newSchedule)
+  this.setState({selectedTasks: newSchedule}, ()=> {
+    this.makeSchedule()
+  })
+}
+
 addToSchedule = () => {
   var selectedTasks = this.state.selectedTasks;
   var schedule = this.state.schedule;
@@ -422,11 +449,17 @@ showHideSchedule = () => {
   })
 }
 
-// When "show task" is clicked on a task when in schedule mode
+// When "show task" is clicked on a task when in schedule mode or back to schedule is clicked 
 showScheduleTask = (id) => {
+  var bool = this.state.showScheduleTask ? false : true;
   var task = this.state.tasks.filter(task => task.id === id)
-  this.setState({scheduleTaskToShow: task}, ()=> {
-    this.setState({showScheduleTask: this.state.showScheduleTask ? false : true})
+  this.setState({scheduleTaskToShow: this.state.showScheduleTask ? [] : task}, ()=> {
+    this.setState({showScheduleTask: bool, scheduleTaskToShowId: id});
+    if(bool){
+      window.scrollTo(0,0)
+    } else {
+      this.loadUserSettings();
+    }
   } )
 }
 
@@ -506,7 +539,7 @@ render(){
                       selectTask={this.toggleSelected}
                       selectedTasks={this.state.selectedTasks}
                       clearTasks={this.state.selectedTasksCleared}
-                      />
+                    />
                   </div>
               ))           
               : 
@@ -563,15 +596,18 @@ render(){
     return done;
   } 
 
+ const backToSchedule = <button id="backToSchedule1" onClick={this.showScheduleTask}>Back to Schedule</button>;
+
   // The schedule of tasks - what will display if the schedule view is chosen 
   const scheduleDisplay = 
   // state.showScheduleTask:true - shows you the task view of any task from the schedule you choose.  You can then see details, modify, etc.
     this.state.showScheduleTask ? 
-      <div className={cols}>
-       {this.state.scheduleTaskToShow.map(task => 
+         <div className={cols}>
+       {this.state.scheduleTaskToShow.length !== 1 ? backToSchedule : 
+       this.state.scheduleTaskToShow.map(task => 
         (<div key={task.id} className="taskContainer">
           <Tasks 
-            showScheduleTask={this.state.showScheduleTask}
+            userID={this.state.userID}
             taskDisp={this.state.taskDisp}
             taskID={task.id} 
             taskCols={this.state.taskDisp === "boxes" ? "taskCols" : null}
@@ -594,6 +630,12 @@ render(){
             selectTask={this.toggleSelected}
             selectedTasks={this.state.selectedTasks}
             clearTasks={this.state.selectedTasksCleared}
+            schedule={this.state.schedule}
+            showScheduleTask={this.state.showScheduleTask}
+            scheduleTaskToShow={this.state.scheduleTaskToShowId}
+            loadUserSettings={this.loadUserSettings}
+            reloadSchedule={this.reloadSchedule}
+            updateSchedule={this.updateSchedule}
             />
             <button id="backToSchedule" onClick={this.showScheduleTask}>Back to Schedule</button>
       </div>
@@ -660,6 +702,7 @@ render(){
              ref="form"
              formState={this.state.formState} 
              updateDisp={this.loadUserSettings} 
+             getTasks={this.getTasks}
              closeForm={this.toggleForm} 
              taskList={this.state.tasks} 
              taskToEdit={this.state.taskToEdit} 
@@ -667,7 +710,8 @@ render(){
              taskStar={this.state.star}  
              userID={this.state.userID}
             categories={this.state.categories}
-           />
+            updateSchedule={this.updateSchedule}
+            />
       </div>
 
       {this.state.signInDisp ? 

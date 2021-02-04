@@ -91,12 +91,17 @@ class Form extends Component{
                 category: catToEnter
             })
             .then(()=>{
-                this.props.updateDisp()
-                console.log("updated")
+                this.props.updateSchedule(this.props.taskID, "update");
+                this.props.closeForm();
+                this.clearState();
                 } )
             .catch(error => console.log(error));
-        this.props.closeForm();
-        this.clearState();
+    /*    **up to here - make sure the order is:
+    1) update tasks on database
+    2) update tasks on state.tasks
+    3) update schedule
+
+    */
       }
 
     toggleStar = (e) => {

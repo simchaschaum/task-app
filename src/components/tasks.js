@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import firebase, {db, tasksCollection, firebaseTimestamp} from '../utils/firebase';
+import firebase, {db, users, tasksCollection, firebaseTimestamp} from '../utils/firebase';
 import { firebaseArrMaker } from '../utils/tools';
 import { dateFormatter, dateForCompareFormatter } from './dateFormat';
 
@@ -59,10 +59,10 @@ class Tasks extends React.Component{
             .then(()=>{
                 console.log(this.props.taskTitle + "  " + done);
                 this.props.updateDisp();
-            } )
-            .catch(error => console.log(error));   
+            })
+            .catch(error => console.log(error));  
     };
-    
+ 
     deleteTask = () => {
         if(window.confirm("Are you sure you want to delete this task?")){
             tasksCollection.doc(this.props.taskID)
@@ -72,7 +72,8 @@ class Tasks extends React.Component{
                     this.props.updateDisp();
                 })
                 .catch(error => console.log(error));
-        }
+        };
+        this.props.updateSchedule(this.props.taskID, "delete");
     }
 
     editTask = () => {
