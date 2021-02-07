@@ -37,6 +37,7 @@ class App extends React.Component {
       taskToEdit: "", 
       taskDetailsToEdit: "",
       searchParams: "",
+      filteredList: [],  // holds the list of tasks that result from the most recent search
       showSearch: false, 
       taskDisp: "rows", // displays tasks in "rows" or "boxes" (3 or 4 per row)
       star: "",
@@ -146,8 +147,12 @@ getTasks(){
       if(this.state.property === "date"){
         this.dateFirst(taskList);
       }
+      console.log("filteredList");  //**
+      console.log(this.state.filteredList);
       this.setState({
-        tasks: taskList,
+        // if state.showsearch is true - still showing searched for task, not the whole list
+        tasks: this.state.showSearch ? this.state.filteredList : taskList,
+        // tasks: taskList,
         noTasks: taskList.length === 0 ? "noTasks"  
           : this.checkAllDone(taskList) ? "loading" 
             : "allDone"
@@ -343,8 +348,12 @@ dateFirst = () => {
   }
   
   displaySearch = (filteredList, searchParams) => {
-      this.setState({searchParams: searchParams}, ()=>this.setState({tasks: filteredList, searchParams: searchParams}, ()=>this.setState({showSearch: true, noTasks: "search"}, ()=>
-      console.log(this.state.searchParams))) )  
+      this.setState({searchParams: searchParams, filteredList: filteredList}, ()=>this.setState({tasks: filteredList, searchParams: searchParams}, ()=>this.setState({showSearch: true, noTasks: "search"}, ()=>{
+        console.log(this.state.searchParams);
+        console.log("state.tasks");
+        console.log(this.state.tasks);
+      }
+      )) )  
     }
 
   finishSearch = () => {

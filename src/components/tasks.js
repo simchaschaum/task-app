@@ -227,7 +227,7 @@ export class Notasks extends Component{
                     noTasks = "Your search found no tasks.";
                     break;
                 case "noTasks":
-                    noTasks = "There are no tasks to do.  *Whew!*";
+                    noTasks = "There are no tasks to do.  Add something!";
                     break;
                 case "allDone":
                     noTasks = "Looks like you're all done! Congratulations.";
