@@ -175,7 +175,17 @@ updateSchedule = (tasks) => {
   sched.forEach(schedTask => {
     tasks.forEach(task => {
       if(schedTask.id===task.id){
-        newSched.push(schedTask)
+        newSched.push({
+          id:task.id,
+          title:task.title,
+          details:task.details,
+          star:task.star,
+          category:task.category,
+          date:task.date, 
+          done: schedTask.done,
+          time: schedTask.time,
+          order: schedTask.order
+        })
        }
     }
     )
