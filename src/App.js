@@ -732,7 +732,7 @@ render(){
   
  return (
     <>
-      <header>
+      <header id="pageHeader">
 
         <div className="titleHeader">
           <div className="titleHeader1">
@@ -784,19 +784,19 @@ render(){
 
    
       <div className="app">
-      <div className="cover" id={background}>
-        {this.state.background === "white"? 
-        <div className="titleHeader">
-          <div className="titleHeader1">
-            <h1>Stay Organized!</h1>
-            <p>Organizing Your Life, One Task At A Time</p>
-          </div> 
+        <div className="cover" id={background}>
+          {this.state.background === "white"? 
+          <div className="titleHeader">
+            <div className="titleHeader1">
+              <h1>Stay Organized!</h1>
+              <p>Organizing Your Life, One Task At A Time</p>
+            </div> 
+          </div>
+          : null}
         </div>
-        : null}
-      </div>
 
       {/* along the left-side, non scrolling */}
-       <div className="left-side">
+        <div className="left-side">
           <Header 
             toggleDisplay={(e) => this.toggleDisplay(e)}
             toggleSignIn={()=>this.toggleSignIn()}

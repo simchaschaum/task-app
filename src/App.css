@@ -91,6 +91,17 @@ h2{
 }
 
 /* Page Header */
+
+header{
+  position: fixed;
+  width: 100%;
+  background-color: white;
+  z-index: 1000;
+  opacity: 100%;
+  height: 86px;
+  box-shadow: 0 4px 2px -2px var(--clr-gray);
+}
+
 .titleHeader{
   text-align: center;
   background-color: var(--clr-gray);
@@ -98,6 +109,7 @@ h2{
   font-style: italic;
   padding-bottom: 2px;
   z-index: 1000;
+  /* position: fixed; */
 }
 @media(max-width:600px){
   .titleHeader{
@@ -128,6 +140,9 @@ h2{
 }
 
 .headerDiv{
+  margin-top: 82px;
+  position: fixed;
+  width: 20%;
   display: grid;
   grid-template-rows: 1.25fr 1fr 1fr 1fr 1fr;
   margin-left: 10px;
@@ -142,10 +157,7 @@ h2{
 }
 @media(max-width:600px){
   .headerDiv{
-    top:0;
-    bottom:0;
-    left:0;
-    right:0;
+    width: 100%;
     padding-top: 5%;
     position: fixed;
     background: #ffffff;
@@ -266,7 +278,8 @@ input{
 }
 
 .searchDiv{
-  margin: 10px;
+  margin-top: 95px;
+  /* margin: 10px; */
   }
 
 #searchInput{
@@ -420,7 +433,7 @@ input{
 #taskSelect{
   display: none;  
   position: absolute;
-  z-index: 1000;
+  /* z-index: 10000 !important; */
   margin: 2px 2px;
   transform: translateX(-15px);
 }

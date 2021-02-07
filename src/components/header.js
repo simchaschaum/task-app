@@ -76,7 +76,7 @@ class Header extends React.Component {
 
         return (
             <>
-                <header>
+                <div>
                     <div className="headerDiv" id={menuShow}>
                         {/* The Logo */}
                         <div className="headerItem" id="headerTop">
@@ -153,7 +153,7 @@ class Header extends React.Component {
 
                         
                     </div>
-                </header>
+                </div>
                         
             </>
             
