@@ -83,6 +83,12 @@ h2{
 .loginMessage{
   margin-left: 20px;
 }
+@media(max-width:600px){
+  .loginMessage{
+    font-size: 12px;
+    margin-top: 5px;
+  }
+}
 .logOut{
   padding-top: 0 !important;
   padding-bottom: 0 !important;
@@ -279,7 +285,6 @@ input{
 
 .searchDiv{
   margin-top: 95px;
-  /* margin: 10px; */
   }
 
 #searchInput{
