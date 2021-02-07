@@ -187,8 +187,7 @@ updateSchedule = (tasks) => {
       var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
       users.doc(user[0].id).update(
         {
-          "settings.schedule": newSched,
-          "settings.showSchedule": true
+          "settings.schedule": newSched
         }
       )
       .then(()=>{

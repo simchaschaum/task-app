@@ -127,6 +127,6 @@ export const ScheduleDone = () => {
     // * - updateDone (tasks)
     /*
     * - Bug: when updating done on task,it updates on schedule too;  to fix: on updateSchedule(), load task to schedule with only some details.  Same as in toggleSelected(), line 379
-    Bug: when updating title/details or done on tasks, or even creating a new task - every other update triggers showschedule:true.  
-    Bug: time button on schedule 
+    * - Bug: when updating title/details or done on tasks, or even creating a new task - every other update triggers showschedule:true.  Also in combination. 
+    * - Bug: time button on schedule 
     */

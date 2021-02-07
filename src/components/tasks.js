@@ -102,7 +102,6 @@ class Tasks extends React.Component{
             star: "This task is important"
         }
 
-        // **
         var expanded = (!this.state.expanded || !this.props.tasksDetailsExpanded) ? <img className="icon" src="https://img.icons8.com/ios-glyphs/60/000000/show-property.png"/> 
             : <img className="icon" src="https://img.icons8.com/windows/32/000000/hide.png"/>;
         
