@@ -58,7 +58,7 @@ class Tasks extends React.Component{
             })
             .then(()=>{
                 console.log(this.props.taskTitle + "  " + done);
-                this.props.updateDisp();
+                this.props.loadUserSettings();
             })
             .catch(error => console.log(error));  
     };
@@ -69,8 +69,8 @@ class Tasks extends React.Component{
                 .delete()
                 .then(()=>{
                     console.log(`${this.props.taskTitle} Deleted!`);
-                    this.props.updateDisp();
-                    this.props.updateSchedule(this.props.tasks);
+                    this.props.loadUserSettings();
+                    // this.props.updateSchedule(this.props.tasks);
                 })
                 .catch(error => console.log(error));
         };

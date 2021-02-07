@@ -121,7 +121,12 @@ export const ScheduleDone = () => {
     // * - save showschedule/show tasks view 
     // * - save order when switching order of tasks 
     // * - load settings - figure out what's wrong
-    // after editing in schedule mode - update task 
+    // * after editing in schedule mode - update task 
 
-    // when clicking a button on Tasks - if state.showscheduletask is true, at the end, loadUserSettings
-    // - updateDone (tasks)
+    // * - when clicking a button on Tasks - if state.showscheduletask is true, at the end, loadUserSettings
+    // * - updateDone (tasks)
+    /*
+    * - Bug: when updating done on task,it updates on schedule too;  to fix: on updateSchedule(), load task to schedule with only some details.  Same as in toggleSelected(), line 379
+    Bug: when updating title/details or done on tasks, or even creating a new task - every other update triggers showschedule:true.  
+    Bug: time button on schedule 
+    */

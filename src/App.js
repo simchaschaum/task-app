@@ -154,7 +154,7 @@ getTasks(){
       }, ()=> {
         console.log(this.state.tasks);
         this.getCategories(this.state.tasks);
-        this.updateSchedule(this.state.tasks);
+        this.updateSchedule(this.state.tasks); 
       } );
     })
     .then(()=>{
@@ -168,20 +168,21 @@ getTasks(){
     .catch( error => console.log(error));
 }
 
+// Step 5 - updating the schedule 
 updateSchedule = (tasks) => {
   var sched = this.state.schedule;
   var newSched = [];
   sched.forEach(schedTask => {
     tasks.forEach(task => {
       if(schedTask.id===task.id){
-        newSched.push(task)
+        newSched.push(schedTask)
        }
     }
     )
     } 
   )  
-  this.setState({selectedTasks: newSched}, ()=>{
-    users.get().then(response => {
+    users.get()
+    .then(response => {
       var selectedTasks = this.state.selectedTasks;
       var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
       users.doc(user[0].id).update(
@@ -200,8 +201,7 @@ updateSchedule = (tasks) => {
       }
     )
   })
-})
-  
+
 }
 
 checkAllDone(taskList){    // returns true if there is at least one task that isn't done yet
@@ -546,6 +546,7 @@ render(){
                    <Tasks 
                       tasks={this.state.tasks}
                       updateSchedule={this.updateSchedule}
+                      loadUserSettings={this.loadUserSettings}
                       taskDisp={this.state.taskDisp}
                       taskID={task.id} 
                       taskCols={this.state.taskDisp === "boxes" ? "taskCols" : null}
@@ -580,6 +581,7 @@ render(){
                     <Tasks 
                       tasks={this.state.tasks}
                       updateSchedule={this.updateSchedule}
+                      loadUserSettings={this.loadUserSettings}
                       taskDisp={this.state.taskDisp}
                       taskID={task.id} 
                       taskCols={this.state.taskDisp === "boxes" ? "taskCols" : null}
@@ -643,6 +645,7 @@ render(){
           <Tasks 
             tasks={this.state.tasks}
             updateSchedule={this.updateSchedule}
+            loadUserSettings={this.loadUserSettings}
             userID={this.state.userID}
             taskDisp={this.state.taskDisp}
             taskID={task.id} 
