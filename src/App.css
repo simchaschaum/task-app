@@ -149,6 +149,7 @@ header{
   margin-top: 82px;
   position: fixed;
   width: 20%;
+  height: 200px;
   display: grid;
   grid-template-rows: 1.25fr 1fr 1fr 1fr 1fr;
   margin-left: 10px;
