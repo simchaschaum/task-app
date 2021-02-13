@@ -181,15 +181,15 @@ updateSchedule = (tasks) => {
     tasks.forEach(task => {
       if(schedTask.id===task.id){
         newSched.push({
-          id:task.id,
+          id:task.id,            // for most of these, use task because that's from the list that's been updated.
           title:task.title,
           details:task.details,
           star:task.star,
           category:task.category,
           date:task.date, 
-          done: schedTask.done,
-          time: schedTask.time,
-          order: schedTask.order
+          done: schedTask.done,    // here, use schedTask because we are using the 'done' from the schedule, not from the task
+          time: schedTask.time,   // same for time 
+          order: schedTask.order  // same for order
         })
        }
     }

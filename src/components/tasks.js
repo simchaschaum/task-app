@@ -158,7 +158,7 @@ class Tasks extends React.Component{
                                
                                     {this.props.taskStar === true ? 
                                          <div className="toolTipContainer taskPriority taskTitle" id="starShowDiv">
-                                            <img id="star" className="icon" src="https://img.icons8.com/emoji/48/000000/star-emoji.png"/> 
+                                            <img id="star" className="icon" src="https://img.icons8.com/ios-filled/24/000000/star.png"/> 
                                             <span className="toolTip toolTipAbove">{toolTips.star}</span>
                                         </div>
                                     : null} 

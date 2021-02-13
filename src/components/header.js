@@ -95,7 +95,8 @@ class Header extends React.Component {
                                     <span className="btnDisText"> {this.props.showSchedule ? "Show Tasks" : "Show Schedule"} </span>
                                     <br></br>
                                     <img className="headerBtnImg" src="https://img.icons8.com/metro/26/ffffff/overtime.png"/>
-                                    <img className="headerBtnImg" src="https://img.icons8.com/material-sharp/24/ffffff/visible.png"/>                            </Button>
+                                    {/* <img className="headerBtnImg" src="https://img.icons8.com/material-sharp/24/ffffff/visible.png"/>                            */}
+                            </Button>
                         </div>
 
                         {/* New Task Button */}
@@ -150,9 +151,17 @@ class Header extends React.Component {
                                 </Button>
                                 <span className="toolTip">{this.props.tasksDone.length > 0 ? toolTip.enabled : toolTip.disabled}</span>
                         </div>
-
+                        <footer>
+                            <div class="footerDiv">
+                                {/* <p>Website by Simcha Schaum
+                                <img class="searchIcon" src="https://img.icons8.com/emoji/48/000000/smiling-face.png"/>
+                                <br/> */}
+                                <p>All icons by <a target="_blank" href="https://icons8.com">Icons8</a></p>
+                            </div>
+                        </footer>
                         
                     </div>
+             
                 </div>
                         
             </>
