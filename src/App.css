@@ -25,7 +25,9 @@ html{
 main{
   min-height: 70vw;
 }
-
+:active{
+  outline: none;
+}
 /* Whole background gets dimmed/whited out when form is showing in foreground */
 .cover {
   position: absolute;
@@ -435,6 +437,7 @@ input{
 
 /* .taskcontainer is in App component, surrounds each instance of Task component */
 
+/* When hovering on whole taskContainer, the input#taskSelect is displayed. */
 .taskContainer:hover #taskSelect{
   display: block;
   transform: scale(1.75) translateX(-12px)
@@ -940,6 +943,7 @@ input{
   cursor: pointer;
   border: 0;
   background: none;
+  padding: 0;
 }
 
 #or{

@@ -52,7 +52,7 @@ class App extends React.Component {
       selectedTasks: [],  // array of tasks that were selected with a checkbox
       selectedTasksCleared: false, // when true, clears all selection 
       schedule: [],  // array of daily schedule
-      showSchedule: false,   // shows schedule maker in Schedule component
+      showSchedule: false,   // shows schedule in Schedule component
       showScheduleTask: false, // shows only task that you chose from the schedule
       scheduleTaskToShow: [], // when in schedule mode, you click "show task", this is the task you see
       scheduleTaskToShowId: 0  // the task ID of the task you see 
@@ -348,16 +348,18 @@ dateFirst = () => {
   }
   
   displaySearch = (filteredList, searchParams) => {
-      this.setState({searchParams: searchParams, filteredList: filteredList}, ()=>this.setState({tasks: filteredList, searchParams: searchParams}, ()=>this.setState({showSearch: true, noTasks: "search"}, ()=>{
-        console.log(this.state.searchParams);
-        console.log("state.tasks");
-        console.log(this.state.tasks);
-      }
-      )) )  
+      this.setState({searchParams: searchParams, filteredList: filteredList, showSchedule: false}, 
+        ()=>this.setState({tasks: filteredList, searchParams: searchParams}, 
+          ()=>this.setState({showSearch: true, noTasks: "search"}, ()=>{
+              console.log(this.state.searchParams);
+              console.log("state.tasks");
+              console.log(this.state.tasks);
+            }
+        )))  
     }
 
   finishSearch = () => {
-    this.setState({showSearch: false, noTasks: "loading"}, () => this.getTasks());
+    this.setState({showSearch: false, noTasks: "loading"}, () => this.loadUserSettings());
     document.getElementById("searchInput").value = "";
     }
  

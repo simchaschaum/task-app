@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react';
 import React, { Component } from 'react'; 
+import { findAllInRenderedTree } from 'react-dom/test-utils';
 import firebase, {tasksCollection, users} from '../../utils/firebase';
 
 class LoginForm extends Component{
@@ -149,22 +150,35 @@ class LoginForm extends Component{
             .catch(error => console.log(error));
     }
 
+    startDemo = (e) => {
+        e.preventDefault();
+        this.setState({
+            user:{
+                username: "demo@demo.com",
+                password: "123456"
+            }
+        }, ()=>{
+            this.handleSubmit(e);
+            this.setState({register: false})
+        })
+    }
+
     render(){
         var text = this.state.register ? "Register" : "Sign in"
         var altText = this.state.register ?
             <p>
-                Already have an account?
-                <button className="link" onClick={(e)=>{
+                <button className="link" onClick={(e)=>this.startDemo(e)}>Try the Demo!</button>
+                <br />
+                Already have an account? <button className="link" onClick={(e)=>{
                     e.preventDefault();
                     this.setState({register:false});}
                     } > Sign in.</button> 
             </p>
                 :   <p>
-                        New User? Please 
-                        <button className="link" onClick={(e)=>{
+                        New User? Please <button className="link" onClick={(e)=>{
                             e.preventDefault();
                             this.setState({register:true});}
-                            }>  Register.</button> 
+                            }>Register</button> or <button className="link" onClick={(e)=>this.startDemo(e)}>Try the Demo!</button>
                     </p>
         var loginFailedText = this.state.loginFailed ? 
             <p id="loginFailedText">
