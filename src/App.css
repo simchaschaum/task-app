@@ -411,6 +411,8 @@ input{
 .taskContainerRows{
   display: grid;
   grid-template-columns: 1fr;
+  width: 80%;
+  margin: 0 auto;
 }
 
 /* task display as boxes - styling individual boxes: */
