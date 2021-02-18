@@ -149,15 +149,25 @@ header{
 }
 
 /* The menu - either on the left side or accessed by the hamburger in mobile mode */
+.left-side{
+  padding-right: 20px;
+}
+
 .headerDiv{
   margin-top: 82px;
   position: fixed;
+  overflow: hidden;
   width: 20%;
   height: 85vh;
   display: grid;
   grid-template-rows: 1.25fr 1fr 1fr 1fr 1fr;
-  margin-left: 10px;
+  margin-left: 10px;  
 }
+.headerDiv:hover{
+  overflow-y: auto;
+}
+
+  
 @media(min-width:601px){
   #menuClose{
     display: none;
@@ -186,7 +196,7 @@ header{
     transition-duration: 250ms;
   }
   .headerItem{
-    width: 100%;
+    width: 200px;
     display: flex !important;
     flex-direction: column;
     align-items: stretch !important;
@@ -259,24 +269,35 @@ input{
 }
 
 #dropdown-basic-button, .headerButton{
-  width: 85%;
+  width: 175px;
   height: 60px;
   margin-top: 5px;
   margin-bottom: 5px;
   background: var(--clr-gray);
   border: var(--clr-gray);
-  justify-self: center;
 }
-@media(max-width: 850px){
-  .dropdown-basic-button, .headerButton{
-   font-size: var(--fs-body);
-   align-self: center;
-   height: 70px;
-   width: auto;
-     }
+@media(max-width:1050px){
+  #dropdown-basic-button, .headerButton{
+    width:160px
+  }
+}
+@media(max-width:900px){
+  #dropdown-basic-button, .headerButton{
+    width:140px
+  }
   /* Text that disapears when viewport narrows */
   .btnDisText{
     display: none;
+  }
+}
+@media(max-width:800px){
+  #dropdown-basic-button, .headerButton{
+    width:115px
+  }
+}
+@media(max-width:700px){
+  #dropdown-basic-button, .headerButton{
+    width:100px
   }
 }
 /* hover effects for side buttons: */
@@ -286,7 +307,7 @@ input{
 
 /* elements in Search */
 .logoIcon{
-  height: 100px;
+  height: 75px;
   /* margin: 10px 50px; */
 }
 

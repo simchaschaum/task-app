@@ -75,8 +75,6 @@ class Header extends React.Component {
         var menuShow = this.props.menuShow? "headerDiv-open" : null;
 
         return (
-            <>
-                <div>
                     <div className="headerDiv" id={menuShow}>
                         {/* The Logo */}
                         <div className="headerItem" id="headerTop">
@@ -161,12 +159,8 @@ class Header extends React.Component {
                         </footer>
                         
                     </div>
-             
-                </div>
-                        
-            </>
-            
-        )
+                                     
+            )
         }
 }
 
