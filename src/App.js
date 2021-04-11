@@ -446,26 +446,28 @@ addToSchedule = () => {
 }
 
 makeSchedule = () => {
-  users.get().then(response => {
-    var selectedTasks = this.state.selectedTasks;
-    var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
-    users.doc(user[0].id).update(
-      {
-        "settings.schedule": this.state.selectedTasks,
-        "settings.showSchedule": true
+  if (window.confirm("Creating a new schedule will overwrite the existing one.  Should we continue?")){
+    users.get().then(response => {
+      var selectedTasks = this.state.selectedTasks;
+      var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
+      users.doc(user[0].id).update(
+        {
+          "settings.schedule": this.state.selectedTasks,
+          "settings.showSchedule": true
+        }
+      )
+      .then(()=>{
+        this.setState({
+          selectedTasks: [],
+          selectedTasksCleared: true,
+        })
       }
     )
     .then(()=>{
-      this.setState({
-        selectedTasks: [],
-        selectedTasksCleared: true,
-      })
-    }
-  )
-  .then(()=>{
-    this.loadUserSettings();
+      this.loadUserSettings();
+    })
   })
-})
+  }
 }
 
 schedMove = (index, upDown) => {

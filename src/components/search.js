@@ -14,13 +14,6 @@ class Search extends Component{
 
     handleSearch = (e) => {
         e.preventDefault();
-        // var filteredList = [];
-        // this.props.taskList.forEach( item => {
-        //     if(item.title.toLowerCase().includes(this.state.searchParams.toLowerCase())
-        //             || item.details.toLowerCase().includes(this.state.searchParams.toLowerCase())){
-        //         filteredList.push(item);
-        //         }   
-        // }
         var filteredList = this.props.taskList.filter( item => item.title.toLowerCase().includes(this.state.searchParams.toLowerCase())
                    || item.details.toLowerCase().includes(this.state.searchParams.toLowerCase()));
         console.log(filteredList);

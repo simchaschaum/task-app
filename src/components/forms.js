@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Dropdown from 'react-bootstrap/Dropdown';
 import firebase, {db, tasksCollection, firebaseTimestamp} from '../utils/firebase';
 import { firebaseArrMaker } from '../utils/tools';
-import { dateFormatter} from './dateFormat';
+import { dateFormatter, yearFinder} from './dateFormat';
 
 var cat;
 
@@ -26,26 +26,34 @@ class Form extends Component{
         this.setState({star:star, category: cat === "No Category" ? "Category" : cat});
     }
 
+
+    // https://stackoverflow.com/questions/40762549/html5-input-type-date-onchange-event 
     input = (event) => {
         let name = event.target.name;
         let value = event.target.value;
-        this.setState({
-            [name]:value
-        });
-        switch(name){
-            case "title":
-                this.setState({titleEdited: true})
-                break;
-            case "details":
-                this.setState({detailsEdited: true})
-                break;
-            case "star":
-                this.setState({starEdited: true})
-                break;
-            default:
-                this.setState({dateEdited: true})
-                break;
+        if(name === "date"){
+            let yearLength = value.toString().match(/^\d/).length;
+            if(yearLength > 4){
+                alert("Please enter a valid date.");
+            } 
         }
+            this.setState({
+                [name]:value
+            });
+            switch(name){
+                case "title":
+                    this.setState({titleEdited: true})
+                    break;
+                case "details":
+                    this.setState({detailsEdited: true})
+                    break;
+                case "star":
+                    this.setState({starEdited: true})
+                    break;
+                default:
+                    this.setState({dateEdited: true})
+                    break;
+            }
     }
 
     removeDate = (e) => {
@@ -55,49 +63,67 @@ class Form extends Component{
 
     submitNewDetails = (event) => {
         event.preventDefault();
-        if(this.state.title !== ""){
-                tasksCollection.add({
-                    title: this.state.title,
-                    details: this.state.details,
-                    date: this.state.date,
-                    star: this.state.star,
-                    done: false,
-                    category: this.state.category,
-                    addedAt: firebaseTimestamp(),
-                    userID: this.props.userID
-                })
-                .then(this.props.updateDisp());
-                this.props.closeForm();
-                this.clearState();
-            } 
-            else {
-                alert("This task is blank. Make sure to include a title before saving.")
-            }
+        if(!this.dateChecker(this.state.date) && this.state.date != ""){
+            alert("Please enter a valid date.");
+        } else {
+            if(this.state.title !== ""){
+                    tasksCollection.add({
+                        title: this.state.title,
+                        details: this.state.details,
+                        date: this.state.date,
+                        star: this.state.star,
+                        done: false,
+                        category: this.state.category,
+                        addedAt: firebaseTimestamp(),
+                        userID: this.props.userID
+                    })
+                    .then(this.props.updateDisp());
+                    this.props.closeForm();
+                    this.clearState();
+                } 
+                else {
+                    alert("This task is blank. Make sure to include a title before saving.")
+                }
+            }   
         } 
 
     submitEditedDetails = (event) => {
         event.preventDefault();
-        var title = this.state.titleEdited === false ? this.props.taskToEdit.title : this.state.title;
-        var details = this.state.detailsEdited === false ? this.props.taskToEdit.details : this.state.details;
-        var star = this.state.starEdited === false ? this.props.taskToEdit.star : this.state.star;
-        var date = this.state.dateEdited === false ? this.props.taskToEdit.date : this.state.date;
-        var catToEnter = this.state.categoryEdited === false ? this.props.taskToEdit.category : this.state.category;
-        tasksCollection.doc(this.props.taskID)
-            .update({
-                title: title,
-                details: details,
-                star: star,
-                date: date,
-                category: catToEnter
-            })
-            .then(()=>{
-                this.props.loadUserSettings()
-                this.props.closeForm();
-                this.clearState();
-                } )
-            .catch(error => console.log(error));
-  
+        if(this.state.dateEdited && !this.dateChecker(this.state.date) && this.state.date != ""){
+            alert("Please enter a valid date.");
+        } else {
+            var title = this.state.titleEdited === false ? this.props.taskToEdit.title : this.state.title;
+            var details = this.state.detailsEdited === false ? this.props.taskToEdit.details : this.state.details;
+            var star = this.state.starEdited === false ? this.props.taskToEdit.star : this.state.star;
+            var date = this.state.dateEdited === false ? this.props.taskToEdit.date : this.state.date;
+            var catToEnter = this.state.categoryEdited === false ? this.props.taskToEdit.category : this.state.category;
+            tasksCollection.doc(this.props.taskID)
+                .update({
+                    title: title,
+                    details: details,
+                    star: star,
+                    date: date,
+                    category: catToEnter
+                })
+                .then(()=>{
+                    this.props.loadUserSettings()
+                    this.props.closeForm();
+                    this.clearState();
+                    } )
+                .catch(error => console.log(error));
+        }
       }
+    
+    // Prevents typing in random digits for the year
+    dateChecker = (date) => {
+        let year = yearFinder(date);
+        let thisYear = new Date().toISOString().match(/^\d{4}/)[0];
+        if(year >= thisYear){
+            return true
+        } else {
+            return false
+        }
+    }
 
     toggleStar = (e) => {
         e.preventDefault();
