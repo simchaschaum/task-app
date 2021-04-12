@@ -102,31 +102,3 @@ export const ScheduleDone = () => {
             <img className="scheduleDone" src="https://img.icons8.com/wired/40/000000/confetti.png"/>
         </div>)
 }
-
-
- // * - on header have button 'create schedule'.  Only have it active when state.selectedTasks is populated.
-    // * - Add state.selectedTasks to state.schedules; then empty selectedTasks;
-    // * - clear the selections on <tasks> -- have to change the state in each task; ALSO FOR EXPANDED TO FIX BUG!!
-    // * - upload schedule to user settings
-    // * - Download schedule in app.js 
-    // * - Put it in place of tasklist 
-    // * - toggle which to show and which to display:none - tasks or schedules. (Have title "schedules" above schedules)
-    // * - Check timing - why doesn't updating the schedule work? 
-    // * - on <Schedules>, give option to include time or order.  If order: dropdown?? or drag and drop list? 
-    // * - on Schedules - give option to remove from list 
-    // * - on app.js - view mode of that task only in "task mode" (i.e. to edit, etc.) - style button!
-    // * - add to schedule 
-    // * - check off - save if it's checked 
-    // * - include message if all is done (or animation??) 
-    // * - save showschedule/show tasks view 
-    // * - save order when switching order of tasks 
-    // * - load settings - figure out what's wrong
-    // * after editing in schedule mode - update task 
-
-    // * - when clicking a button on Tasks - if state.showscheduletask is true, at the end, loadUserSettings
-    // * - updateDone (tasks)
-    /*
-    * - Bug: when updating done on task,it updates on schedule too;  to fix: on updateSchedule(), load task to schedule with only some details.  Same as in toggleSelected(), line 379
-    * - Bug: when updating title/details or done on tasks, or even creating a new task - every other update triggers showschedule:true.  Also in combination. 
-    * - Bug: time button on schedule 
-    */
