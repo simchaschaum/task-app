@@ -55,7 +55,8 @@ class App extends React.Component {
       showSchedule: false,   // shows schedule in Schedule component
       showScheduleTask: false, // shows only task that you chose from the schedule
       scheduleTaskToShow: [], // when in schedule mode, you click "show task", this is the task you see
-      scheduleTaskToShowId: 0  // the task ID of the task you see 
+      scheduleTaskToShowId: 0,  // the task ID of the task you see 
+      wait: false
     }
 
   }
@@ -138,6 +139,7 @@ loadUserSettings = () => {
 
 // Step 4: gets tasks from database, sets them in state.tasks.  If state.showschedueltask is true
 getTasks(){
+  console.log("getTasks()");
   tasksCollection
     .where("userID","==",this.state.userID)
     .orderBy(this.state.property, this.state.order)
@@ -147,8 +149,6 @@ getTasks(){
       if(this.state.property === "date"){
         this.dateFirst(taskList);
       }
-      console.log("filteredList");  //**
-      console.log(this.state.filteredList);
       this.setState({
         // if state.showsearch is true - still showing searched for task, not the whole list
         tasks: this.state.showSearch ? this.state.filteredList : taskList,
@@ -157,7 +157,6 @@ getTasks(){
           : this.checkAllDone(taskList) ? "loading" 
             : "allDone"
       }, ()=> {
-        console.log(this.state.tasks);
         this.getCategories(this.state.tasks);
         this.updateSchedule(this.state.tasks); 
       } );
@@ -167,16 +166,16 @@ getTasks(){
         var task = this.state.tasks.filter(task => task.id === this.state.scheduleTaskToShowId);
         this.setState({scheduleTaskToShow: task},()=>console.log(this.state.scheduleTaskToShow))
       };
-      console.log(this.state.schedule)
-
     })
     .catch( error => console.log(error));
 }
 
 // Step 5 - updating the schedule 
 updateSchedule = (tasks) => {
+  console.log("step 1 - updateSchedule() start!");
   var sched = this.state.schedule;
   var newSched = [];
+  console.log("step 2 - newSched = []");
   sched.forEach(schedTask => {
     tasks.forEach(task => {
       if(schedTask.id===task.id){
@@ -196,6 +195,7 @@ updateSchedule = (tasks) => {
     )
     } 
   )  
+  console.log("step 3 - newSched = " + newSched);
     users.get()
     .then(response => {
       var selectedTasks = this.state.selectedTasks;
@@ -205,17 +205,20 @@ updateSchedule = (tasks) => {
           "settings.schedule": newSched
         }
       )
-      .then(()=>{
-        this.setState({
-          schedule: newSched,
-          selectedTasks: [],
-          selectedTasksCleared: true,
-        });
-
-      }
-    )
   })
-
+  .then(()=>{
+    this.setState({
+      schedule: newSched,
+      selectedTasks: [],
+      selectedTasksCleared: true,
+    });
+    console.log("step 4 - state set")
+  }
+)
+.then(()=>{
+  this.setState({wait: false})
+  console.log("step 5 - updateschedule complete")
+})
 }
 
 checkAllDone(taskList){    // returns true if there is at least one task that isn't done yet
@@ -445,9 +448,9 @@ addToSchedule = () => {
   });
 }
 
-makeSchedule = () => {
+verifyNewSchedule = () => {
   // Only create new schedule if EITHER there is no pre-existing schedule OR user confirms it's OK to overrwrite. 
-  // separated the two conditions so confirmation doesn't pop pu when there's no pre-existing schedule. 
+  // separated the two conditions so confirmation doesn't pop pu when there's no pre-existing schedule.
   let ok = false;
   if (this.state.schedule.length === 0){
     ok = true;
@@ -458,7 +461,18 @@ makeSchedule = () => {
     }
   }
     if(ok){
-      users.get().then(response => {
+      this.makeSchedule();
+    }
+}
+waitChange = (tf) => {
+  this.setState({wait: true})
+}
+
+makeSchedule = () => {
+    console.log("makeSchedule");
+    console.log("selectedtasks = ");
+    console.log(this.state.selectedTasks);
+    users.get().then(response => {
         var selectedTasks = this.state.selectedTasks;
         var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
         users.doc(user[0].id).update(
@@ -478,7 +492,6 @@ makeSchedule = () => {
         this.loadUserSettings();
       })
     })
-    }
 }
 
 schedMove = (index, upDown) => {
@@ -560,7 +573,7 @@ render(){
       {this.state.selectedTasks.length > 0 ? 
        <div id="schedBtnInnerDiv">
           {/* Create Schedule Button */}
-            <Button id="dropdown-basic-button" className="schedBtn" onClick={this.makeSchedule} > 
+            <Button id="dropdown-basic-button" className="schedBtn" onClick={this.verifyNewSchedule} > 
               <span className="btnDisText">Create Schedule</span>
               <img className="headerBtnImg" src="https://img.icons8.com/metro/26/ffffff/overtime.png"/>
               <img className="headerBtnImg" src="https://img.icons8.com/pastel-glyph/64/ffffff/edit--v1.png"/>                               
@@ -737,6 +750,8 @@ render(){
           userID={this.state.userID}
           showScheduleTask={this.showScheduleTask}
           loadUserSettings={this.loadUserSettings}
+          waitChange={this.waitChange}
+          wait={this.state.wait}
         />
       </div>
     )

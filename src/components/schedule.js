@@ -20,7 +20,8 @@ class Schedule extends React.Component{
     }
 
     schedMove = (upDown) => {
-        this.props.schedMove(this.props.index, upDown)
+        this.props.waitChange(true);
+        this.props.schedMove(this.props.index, upDown);
     }
 
     schedTime = (e) => {
@@ -55,15 +56,17 @@ class Schedule extends React.Component{
     }
    
     render(){
+
+        let wait = this.props.wait ? true : false;
                 
         return(
             <div id="schedTaskContainer">
                 <div id="schedContainer">
 
                     <div id="schedOrderDiv" className="schedControl">
-                        <button id="schedUp" className="schedButton" onClick={()=>this.schedMove("up")}>
+                        <button id="schedUp" className="schedButton" onClick={()=>this.schedMove("up")} disabled={wait}>
                             <img src="https://img.icons8.com/ultraviolet/40/000000/sort-up.png" className="arrowImg"/>                    </button>
-                        <button id="schedDown" className="schedButton" onClick={()=>this.schedMove("down")}>
+                        <button id="schedDown" className="schedButton" onClick={()=>this.schedMove("down")} disabled={wait}>
                             <img src="https://img.icons8.com/ultraviolet/40/000000/sort-down.png" className="arrowImg"/>
                         </button>
                     </div>
