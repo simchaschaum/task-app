@@ -119,7 +119,7 @@ loadUserSettings = () => {
           var pr = settings.hasOwnProperty("property") ? settings.property : this.state.property;
           var or = settings.hasOwnProperty("order") ? settings.order : this.state.order;
           var ss = settings.hasOwnProperty("showSchedule")? settings.showSchedule : this.state.showSchedule;
-          var sc = settings.hasOwnProperty("schedule") ? settings.schedule : [];
+          var sc = settings.hasOwnProperty("schedule") ? settings.schedule : []; 
           this.setState({
             // I have no idea why this has to be like this and doesn't work with the variable above:
             showCategory: settings.hasOwnProperty("showCategory") ? settings.showCategory : this.state.showCategory,
@@ -173,6 +173,7 @@ getTasks(){
 // Step 5 - updating the schedule 
 updateSchedule = (tasks) => {
   console.log("step 1 - updateSchedule() start!");
+  console.log("state.schedule = " + this.state.schedule);
   var sched = this.state.schedule;
   var newSched = [];
   console.log("step 2 - newSched = []");
@@ -205,20 +206,20 @@ updateSchedule = (tasks) => {
           "settings.schedule": newSched
         }
       )
-  })
-  .then(()=>{
-    this.setState({
-      schedule: newSched,
-      selectedTasks: [],
-      selectedTasksCleared: true,
-    });
-    console.log("step 4 - state set")
-  }
-)
-.then(()=>{
-  this.setState({wait: false})
-  console.log("step 5 - updateschedule complete")
-})
+      })
+      .then(()=>{
+        this.setState({
+          schedule: newSched,
+          selectedTasks: [],
+          selectedTasksCleared: true,
+        });
+        console.log("step 4 - state set")
+      }
+    )
+      .then(()=>{
+        this.setState({wait: false})
+        console.log("step 5 - updateschedule complete")
+      })
 }
 
 checkAllDone(taskList){    // returns true if there is at least one task that isn't done yet
@@ -472,26 +473,46 @@ makeSchedule = () => {
     console.log("makeSchedule");
     console.log("selectedtasks = ");
     console.log(this.state.selectedTasks);
-    users.get().then(response => {
-        var selectedTasks = this.state.selectedTasks;
-        var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
-        users.doc(user[0].id).update(
-          {
-            "settings.schedule": this.state.selectedTasks,
-            "settings.showSchedule": true
-          }
+    // users.get().then(response => {  // ** 
+    var selectedTasks = this.state.selectedTasks;
+    // Don't need the next 2 lines because I already have state.userID.
+    // var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
+    // users.doc(user[0].id).update(
+    users.doc(this.state.userID).update(
+      {
+        "settings.schedule": this.state.selectedTasks,
+        "settings.showSchedule": true
+      }
         )
-        .then(()=>{
-          this.setState({
-            selectedTasks: [],
-            selectedTasksCleared: true,
-          })
-        }
-      )
       .then(()=>{
-        this.loadUserSettings();
-      })
-    })
+        if(this.state.selectedTasks.length !== 0){
+          this.setState({
+            schedule: this.state.selectedTasks
+          }, ()=>{
+              console.log("state.schedule = " + this.state.schedule)
+  
+              this.setState({
+                selectedTasks: [],
+                selectedTasksCleared: true
+              }
+          )
+              })                                                                                                            
+        };  
+
+          })
+      //   .then(()=>{
+      //     this.setState({
+      //       selectedTasks: [],
+      //       selectedTasksCleared: true
+      //     })
+      //   }
+      // )
+      // .then(()=>{
+        // ** NEED THIS AT ALL?
+        // this.loadUserSettings(); 
+        // this.updateSchedule(); 
+      // })
+    // }) // ** 
 }
 
 schedMove = (index, upDown) => {

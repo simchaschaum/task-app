@@ -20,6 +20,7 @@ class Schedule extends React.Component{
     }
 
     schedMove = (upDown) => {
+        console.log("PRESSED");  // for testing 
         this.props.waitChange(true);
         this.props.schedMove(this.props.index, upDown);
     }
@@ -57,7 +58,8 @@ class Schedule extends React.Component{
    
     render(){
 
-        let wait = this.props.wait ? true : false;
+        // let wait = this.props.wait ? true : false;  // keeps the delay until after first move is complete
+        let wait = false;
                 
         return(
             <div id="schedTaskContainer">
