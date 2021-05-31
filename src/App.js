@@ -65,8 +65,6 @@ class App extends React.Component {
 componentDidMount(){
   firebase.auth().onAuthStateChanged( user => {
     if (user) {
-      console.log("logged in!")
-      console.log(user)
       userEmail = user.email;
       userID = user.uid;
     }
@@ -84,9 +82,7 @@ checkUser = () => {
     userID = currentUser.uid;
     firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
       .catch(error => console.log(error))
-      .then(()=>console.log("persistence set"))
     this.setState({loggedIn: true, userEmail: currentUser.email, userID: userID}, ()=>{
-      console.log(this.state.userEmail);
       this.setState({
         background: null, 
         signInDisp: false
@@ -95,7 +91,6 @@ checkUser = () => {
       } );
     } )
   } else {
-    console.log("You're signed out!!")
     this.setState({
       loggedIn: false,
       signInDisp: true,
@@ -108,7 +103,6 @@ checkUser = () => {
 
 // Step 3: loads user settings from database, including display settings; also loads current schedule. Sets states.
 loadUserSettings = () => {
-  console.log("loading user settings..."); 
   users.get()
     .then(response => {
       var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
@@ -139,7 +133,6 @@ loadUserSettings = () => {
 
 // Step 4: gets tasks from database, sets them in state.tasks.  If state.showschedueltask is true
 getTasks(){
-  console.log("getTasks()");
   tasksCollection
     .where("userID","==",this.state.userID)
     .orderBy(this.state.property, this.state.order)
@@ -164,7 +157,7 @@ getTasks(){
     .then(()=>{
       if(this.state.showScheduleTask){
         var task = this.state.tasks.filter(task => task.id === this.state.scheduleTaskToShowId);
-        this.setState({scheduleTaskToShow: task},()=>console.log(this.state.scheduleTaskToShow))
+        this.setState({scheduleTaskToShow: task})
       };
     })
     .catch( error => console.log(error));
@@ -172,11 +165,8 @@ getTasks(){
 
 // Step 5 - updating the schedule 
 updateSchedule = (tasks) => {
-  console.log("step 1 - updateSchedule() start!");
-  console.log("state.schedule = " + this.state.schedule);
   var sched = this.state.schedule;
   var newSched = [];
-  console.log("step 2 - newSched = []");
   sched.forEach(schedTask => {
     tasks.forEach(task => {
       if(schedTask.id===task.id){
@@ -196,7 +186,6 @@ updateSchedule = (tasks) => {
     )
     } 
   )  
-  console.log("step 3 - newSched = " + newSched);
     users.get()
     .then(response => {
       var selectedTasks = this.state.selectedTasks;
@@ -213,12 +202,10 @@ updateSchedule = (tasks) => {
           selectedTasks: [],
           selectedTasksCleared: true,
         });
-        console.log("step 4 - state set")
       }
     )
       .then(()=>{
         this.setState({wait: false})
-        console.log("step 5 - updateschedule complete")
       })
 }
 
@@ -354,12 +341,7 @@ dateFirst = () => {
   displaySearch = (filteredList, searchParams) => {
       this.setState({searchParams: searchParams, filteredList: filteredList, showSchedule: false}, 
         ()=>this.setState({tasks: filteredList, searchParams: searchParams}, 
-          ()=>this.setState({showSearch: true, noTasks: "search"}, ()=>{
-              console.log(this.state.searchParams);
-              console.log("state.tasks");
-              console.log(this.state.tasks);
-            }
-        )))  
+          ()=>this.setState({showSearch: true, noTasks: "search"})))  
     }
 
   finishSearch = () => {
@@ -388,7 +370,6 @@ dateFirst = () => {
         delArr.forEach(task => {
           tasksCollection.doc(task.id).delete()
             .then(()=>{
-              console.log(task.title + " deleted!");
               this.getTasks();
             })
             .catch(error => console.log(error))
@@ -427,7 +408,7 @@ toggleSelected = (id,title,details,star,cat,date) => {
       order: ""
     });
   }
-  this.setState({selectedTasks:selectedTasks}, ()=>  console.log(this.state.selectedTasks));
+  this.setState({selectedTasks:selectedTasks});
 }
 
 addToSchedule = () => {
@@ -470,9 +451,6 @@ waitChange = (tf) => {
 }
 
 makeSchedule = () => {
-    console.log("makeSchedule");
-    console.log("selectedtasks = ");
-    console.log(this.state.selectedTasks);
     var selectedTasks = this.state.selectedTasks;
     this.setState({showSchedule: true});
     users.doc(this.state.userID).update(
@@ -486,8 +464,6 @@ makeSchedule = () => {
           this.setState({
             schedule: this.state.selectedTasks
           }, ()=>{
-              console.log("state.schedule = " + this.state.schedule)
-  
               this.setState({
                 selectedTasks: [],
                 selectedTasksCleared: true

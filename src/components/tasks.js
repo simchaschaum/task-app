@@ -57,7 +57,6 @@ class Tasks extends React.Component{
                 done: done
             })
             .then(()=>{
-                console.log(this.props.taskTitle + "  " + done);
                 this.props.loadUserSettings();
             })
             .catch(error => console.log(error));  
