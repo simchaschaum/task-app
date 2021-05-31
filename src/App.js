@@ -473,11 +473,8 @@ makeSchedule = () => {
     console.log("makeSchedule");
     console.log("selectedtasks = ");
     console.log(this.state.selectedTasks);
-    // users.get().then(response => {  // ** 
     var selectedTasks = this.state.selectedTasks;
-    // Don't need the next 2 lines because I already have state.userID.
-    // var user = firebaseArrMaker(response).filter(user => user.id === this.state.userID);
-    // users.doc(user[0].id).update(
+    this.setState({showSchedule: true});
     users.doc(this.state.userID).update(
       {
         "settings.schedule": this.state.selectedTasks,
