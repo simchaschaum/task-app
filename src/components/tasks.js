@@ -52,14 +52,14 @@ class Tasks extends React.Component{
     }
     
     updateDone = (done) => {
+        // update the database
         tasksCollection.doc(this.props.taskID)
             .update({
                 done: done
             })
-            .then(()=>{
-                this.props.loadUserSettings();
-            })
             .catch(error => console.log(error));  
+        //upate the display
+        this.props.toggleDone(done, this.props.taskID);
     };
  
     deleteTask = () => {
@@ -140,32 +140,32 @@ class Tasks extends React.Component{
                                 style={selected ? {display: "block"} : null}
                                 >
                             </input>
-                                <div id="title">
-                                    <h3 className={this.props.taskDone ? "taskTitle taskTitleDone" : "taskTitle"}> 
-                                        {this.props.taskTitle} 
-                                    </h3>  
-                                </div>
+                            <div id="title">
+                                <h3 className={this.props.taskDone ? "taskTitle taskTitleDone" : "taskTitle"}> 
+                                    {this.props.taskTitle} 
+                                </h3>  
+                            </div>
 
-                               <div id="catShowDiv">
-                                    {this.props.taskCategory != "No Category" ?
-                                        <div className="catShowDiv">
-                                            <p className="catShowText">{this.props.taskCategory}</p> 
-                                        </div>
-                                            : null }
-                                </div>      
+                            <div id="catShowDiv">
+                                 {this.props.taskCategory != "No Category" ?
+                                     <div className="catShowDiv">
+                                         <p className="catShowText">{this.props.taskCategory}</p> 
+                                     </div>
+                                         : null }
+                            </div>      
                                 
                                
-                                    {this.props.taskStar === true ? 
-                                         <div className="toolTipContainer taskPriority taskTitle" id="starShowDiv">
-                                            <img id="star" className="icon" src="https://img.icons8.com/ios-filled/24/000000/star.png"/> 
-                                            <span className="toolTip toolTipAbove">{toolTips.star}</span>
-                                        </div>
-                                    : null} 
+                            {this.props.taskStar === true ? 
+                                 <div className="toolTipContainer taskPriority taskTitle" id="starShowDiv">
+                                    <img id="star" className="icon" src="https://img.icons8.com/ios-filled/24/000000/star.png"/> 
+                                    <span className="toolTip toolTipAbove">{toolTips.star}</span>
+                                </div>
+                            : null} 
 
                             
-                                <div className={this.props.taskDone ? "dateDue dateDueDone" : "dateDue"} id="dateDue" style={{color:dateColor}}>
-                                    {date}         
-                                </div>
+                            <div className={this.props.taskDone ? "dateDue dateDueDone" : "dateDue"} id="dateDue" style={{color:dateColor}}>
+                                {date}         
+                            </div>
 
                         </div>
                     

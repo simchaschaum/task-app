@@ -139,6 +139,8 @@ getTasks(){
     .get()
     .then( snapshot => {
       taskList = firebaseArrMaker(snapshot);
+      // Testing:
+      console.log(taskList);
       if(this.state.property === "date"){
         this.dateFirst(taskList);
       }
@@ -377,6 +379,17 @@ dateFirst = () => {
     }
   };
 
+// updates the done status of the task in the display (happens concurrently to database updating)
+toggleDone = (done, id) => {
+  let allTasks = this.state.tasks;
+  allTasks.forEach(task => {
+    if(task["id"] === id){
+      task["done"] = task["done"]? false : true;
+    }
+  } )
+  this.setState({tasks: allTasks})
+}
+
 menuShow = () => {
   this.setState({menuShow: this.state.menuShow ? false : true});  
 };
@@ -600,8 +613,8 @@ render(){
                       editTask={() => 
                         this.editTask(task,task.id)
                       } 
-                      toggleDone={() => {
-                        task.done = (task.done === true ? false : true)
+                      toggleDone={(done, id) => {
+                        this.toggleDone(done, id)
                       }} 
                       tasksDetailsExpanded = {this.state.tasksDetailsExpanded}
                       tasksDetailsToggle = {this.tasksDetailsToggle}
@@ -636,8 +649,8 @@ render(){
                       editTask={() => 
                         this.editTask(task,task.id)
                       } 
-                      toggleDone={() => {
-                        task.done = (task.done === true ? false : true)
+                      toggleDone={(done, id) => {
+                        this.toggleDone(done, id)
                       }} 
                       tasksDetailsExpanded = {this.state.tasksDetailsExpanded}
                       tasksDetailsToggle = {this.tasksDetailsToggle}
@@ -701,8 +714,8 @@ render(){
             editTask={() => 
               this.editTask(task,task.id)
             } 
-            toggleDone={() => {
-              task.done = (task.done === true ? false : true)
+            toggleDone={(done, id) => {
+              this.toggleDone(done, id)
             }} 
             tasksDetailsExpanded = {this.state.tasksDetailsExpanded}
             tasksDetailsToggle = {this.tasksDetailsToggle}

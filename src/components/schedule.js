@@ -20,7 +20,6 @@ class Schedule extends React.Component{
     }
 
     schedMove = (upDown) => {
-        console.log("PRESSED");  // for testing 
         this.props.waitChange(true);
         this.props.schedMove(this.props.index, upDown);
     }
