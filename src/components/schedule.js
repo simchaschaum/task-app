@@ -66,9 +66,9 @@ class Schedule extends React.Component{
 
                     <div id="schedOrderDiv" className="schedControl">
                         <button id="schedUp" className="schedButton" onClick={()=>this.schedMove("up")} disabled={wait}>
-                            <img src="https://img.icons8.com/ultraviolet/40/000000/sort-up.png" className="arrowImg"/>                    </button>
+                            <img src="https://img.icons8.com/ultraviolet/40/000000/sort-up.png" className="arrowImg" alt="up arrow"/>                    </button>
                         <button id="schedDown" className="schedButton" onClick={()=>this.schedMove("down")} disabled={wait}>
-                            <img src="https://img.icons8.com/ultraviolet/40/000000/sort-down.png" className="arrowImg"/>
+                            <img src="https://img.icons8.com/ultraviolet/40/000000/sort-down.png" className="arrowImg" alt="down arrow"/>
                         </button>
                     </div>
                     <div id="schedDoneDiv" className="schedControl">

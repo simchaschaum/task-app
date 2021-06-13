@@ -1083,5 +1083,16 @@ footer{
 }
 
 .scheduleDone{
-  display: inline-block;
+  display: inline;
+}
+@media only screen and (max-width:700px){
+  img.scheduleDone:first-of-type{
+    display: none;
+  }
+  img.scheduleDone:last-of-type{
+    width: 20px;
+    height: auto;
+    margin-left: 5%;
+    margin-bottom: 10px
+  }
 }
