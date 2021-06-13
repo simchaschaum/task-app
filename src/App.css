@@ -1092,7 +1092,7 @@ footer{
   img.scheduleDone:last-of-type{
     width: 20px;
     height: auto;
-    margin-left: 5%;
+    margin-left: 5px;
     margin-bottom: 10px
   }
 }
