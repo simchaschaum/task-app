@@ -68,10 +68,10 @@ class Tasks extends React.Component{
                 .delete()
                 .then(()=>{
                     console.log(`${this.props.taskTitle} Deleted!`);
-                    this.props.loadUserSettings();
                     // this.props.updateSchedule(this.props.tasks);
                 })
                 .catch(error => console.log(error));
+            // this.props.deleteTask(this.props.taskID);
         };
     }
 
@@ -226,7 +226,7 @@ export class Notasks extends Component{
                     noTasks = "Your search found no tasks.";
                     break;
                 case "noTasks":
-                    noTasks = "There are no tasks to do.  Click the second button on the left to add something!";
+                    noTasks = "There are no tasks to do.  Click the 'add task' button to add something!";
                     break;
                 case "allDone":
                     noTasks = "Looks like you're all done! Congratulations.";

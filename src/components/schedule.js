@@ -101,8 +101,8 @@ export default Schedule;
 export const ScheduleDone = () => {
     return(
         <div id="scheduleDoneDiv">
-            <img className="scheduleDone" src="https://img.icons8.com/wired/40/000000/confetti.png"/>
+            <img className="scheduleDone" src="https://img.icons8.com/wired/40/000000/confetti.png" alt="confetti icon" />
             <h4 className="scheduleDone">You did everything on your schedule!</h4>
-            <img className="scheduleDone" src="https://img.icons8.com/wired/40/000000/confetti.png"/>
+            <img className="scheduleDone" src="https://img.icons8.com/wired/40/000000/confetti.png" alt="confetti icon"/>
         </div>)
 }

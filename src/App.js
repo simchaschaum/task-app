@@ -13,6 +13,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import LoginForm from './components/users/loginform';
 import Schedule, { ScheduleDone } from './components/schedule';
 import Button from 'react-bootstrap/Button';
+import { all } from 'core-js/fn/promise';
 
 
 var taskList = [];
@@ -378,7 +379,7 @@ dateFirst = () => {
         })
     }
   };
-
+// UPDATING DISPLAY:
 // updates the done status of the task in the display (happens concurrently to database updating)
 toggleDone = (done, id) => {
   let allTasks = this.state.tasks;
@@ -389,6 +390,10 @@ toggleDone = (done, id) => {
   } )
   this.setState({tasks: allTasks})
 }
+// deleteTask = (id) => {
+//   let allTasks = this.state.tasks.filter(task => task["id"] !== id)
+//   console.log(allTasks)
+// }
 
 menuShow = () => {
   this.setState({menuShow: this.state.menuShow ? false : true});  
@@ -621,6 +626,7 @@ render(){
                       selectTask={this.toggleSelected}
                       selectedTasks={this.state.selectedTasks}
                       clearTasks={this.state.selectedTasksCleared}
+                      deleteTask={(id)=>this.deleteTask(id)}
                     />
                   </div>
               ))           
