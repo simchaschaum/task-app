@@ -33,7 +33,6 @@ class Schedule extends React.Component{
         this.schedUpdate(schedule);
     }
     
-
     schedDone = () => { 
         var schedule = this.props.schedule;
         var index = this.props.index;
@@ -49,10 +48,10 @@ class Schedule extends React.Component{
     }
 
     schedUpdate = (schedule) => {
+        this.props.schedUpdate(schedule);
         users.doc(this.props.userID).update({
             "settings.schedule": schedule
         })
-        .then(()=>this.props.loadUserSettings());
     }
    
     render(){

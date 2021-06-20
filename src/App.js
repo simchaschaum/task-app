@@ -516,6 +516,10 @@ schedMove = (index, upDown) => {
   })
 }
 
+schedUpdate = (schedule) => {
+  this.setState({schedule: schedule})
+}
+
 showHideSchedule = () => {
   var bool = this.state.showSchedule ? false : true;
   this.setState({
@@ -751,6 +755,7 @@ render(){
           title={task.title}
           index={this.state.schedule.indexOf(task)}
           schedMove={this.schedMove}
+          schedUpdate={(schedule)=>this.schedUpdate(schedule)}
           taskID={task.id}
           taskDate={task.date}
           taskCategory={task.category}
