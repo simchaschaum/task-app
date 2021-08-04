@@ -71,7 +71,7 @@ class Tasks extends React.Component{
                     // this.props.updateSchedule(this.props.tasks);
                 })
                 .catch(error => console.log(error));
-            // this.props.deleteTask(this.props.taskID);
+            this.props.loadUserSettings();
         };
     }
 
@@ -147,7 +147,7 @@ class Tasks extends React.Component{
                             </div>
 
                             <div id="catShowDiv">
-                                 {this.props.taskCategory != "No Category" ?
+                                 {this.props.taskCategory !== "No Category" ?
                                      <div className="catShowDiv">
                                          <p className="catShowText">{this.props.taskCategory}</p> 
                                      </div>
@@ -157,7 +157,7 @@ class Tasks extends React.Component{
                                
                             {this.props.taskStar === true ? 
                                  <div className="toolTipContainer taskPriority taskTitle" id="starShowDiv">
-                                    <img id="star" className="icon" src="https://img.icons8.com/ios-filled/24/000000/star.png"/> 
+                                    <img id="star" className="icon" src="https://img.icons8.com/ios-filled/24/000000/star.png" alt="star icon"/> 
                                     <span className="toolTip toolTipAbove">{toolTips.star}</span>
                                 </div>
                             : null} 
@@ -179,7 +179,7 @@ class Tasks extends React.Component{
                             {/* Edit task button: */}
                                 <div className="toolTipContainer" id="editButton">
                                     <button className="editButton taskBtn btn-sm btn" onClick={this.editTask}>
-                                        <img className="icon"src="https://img.icons8.com/pastel-glyph/64/000000/edit--v1.png"/>
+                                        <img className="icon"src="https://img.icons8.com/pastel-glyph/64/000000/edit--v1.png" alt="pencil icon"/>
                                     </button>
                                     <span className="toolTip toolTipAbove">{toolTips.editTask}</span>
                                 </div>
@@ -196,8 +196,8 @@ class Tasks extends React.Component{
                                 <div className="toolTipContainer" id="doneButton">
                                     <button className="doneButton taskBtn btn btn-sm" onClick={this.toggleDone}>
                                         {this.props.taskDone ? 
-                                            <img className="icon" src="https://img.icons8.com/ios/100/000000/checked-2--v2.png"/> 
-                                            : <img className="icon" src="https://img.icons8.com/ios/100/000000/checked-2--v3.png"/> }
+                                            <img className="icon" src="https://img.icons8.com/ios/100/000000/checked-2--v2.png" alt="checked checkbox icon"/> 
+                                            : <img className="icon" src="https://img.icons8.com/ios/100/000000/checked-2--v3.png" alt="unchecked checkbox icon"/> }
                                     </button>
                                     <span className="toolTip toolTipAbove">
                                         {this.props.taskDone ? toolTips.undone : toolTips.done}

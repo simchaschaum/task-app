@@ -14,7 +14,7 @@ const firebaseConfig = {
   };
 
 firebase.initializeApp(firebaseConfig);
-firebase.auth();
+firebase.auth();  
 
 export const db = firebase.firestore();
 export const tasksCollection = db.collection('Tasks');

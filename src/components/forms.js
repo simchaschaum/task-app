@@ -63,7 +63,7 @@ class Form extends Component{
 
     submitNewDetails = (event) => {
         event.preventDefault();
-        if(!this.dateChecker(this.state.date) && this.state.date != ""){
+        if(!this.dateChecker(this.state.date) && this.state.date !== ""){
             alert("Please enter a valid date.");
         } else {
             if(this.state.title !== ""){
@@ -89,7 +89,7 @@ class Form extends Component{
 
     submitEditedDetails = (event) => {
         event.preventDefault();
-        if(this.state.dateEdited && !this.dateChecker(this.state.date) && this.state.date != ""){
+        if(this.state.dateEdited && !this.dateChecker(this.state.date) && this.state.date !== ""){
             alert("Please enter a valid date.");
         } else {
             var title = this.state.titleEdited === false ? this.props.taskToEdit.title : this.state.title;
